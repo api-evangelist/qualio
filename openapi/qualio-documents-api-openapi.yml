@@ -1,0 +1,3396 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Documents API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Documents
+paths:
+  /v1/documents/document/{documentId}:
+    get:
+      summary: Retrieve a document
+      description: "Retrieves a single document version by its numeric id, with full details including title, status, version, owner, reviewers/approvers, and tags. In Qualio, each version of a document has its own numeric id, while the document code (e.g. SOP-1) is shared across all versions â\x80\x94 this endpoint returns the specific version identified by `documentId`. Use the versions endpoints to list the other versions of the same document."
+      operationId: getDocument
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Successful document retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentDetailed'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Retrieves a single document version by its numeric id, with full details including title, status, version, owner, reviewers/approvers, and tags. In Qualio, each version of a document has its own numeric id, while the document code (e.g. SOP-1) is shared across all versions â\x80\x94 this endpoint returns the specific version identified by `documentId`. Use the versions endpoints to list the other versions of the same document."
+      operationId: getDocumentOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    patch:
+      summary: Update document people and tags
+      description: "Updates the approvers, reviewers, and/or tags of a document that is in **draft** status (for approvers and reviewers) or any status (for tags).\n\nThis is a **partial update**: only the fields included in the request body are modified. Omitted fields are left unchanged. Each supplied list fully replaces the current set for that role â\x80\x94 to add a single reviewer, include all existing reviewer IDs plus the new one.\n\n**Quality approvers vs other approvers**: Qualio distinguishes between quality approvers (users belonging to the Quality group) and other approvers. Supply them in separate lists; they are merged and stored together as the document's approver group.\n\n**Errors:**\n- `400` with slug `document_not_in_draft`: approvers or reviewers were supplied but the document is not in draft status.\n- `404`: the document does not exist or is not accessible to the API key's user."
+      operationId: updateDocument
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateDocumentPayload'
+      responses:
+        '200':
+          description: The document with its updated approvers, reviewers, and tags
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentDetailed'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/documents/document/{documentId}/content:
+    get:
+      summary: Retrieve document content
+      description: Retrieves the section content of a specific document version, identified by its numeric id. Content is returned per section (each with a title and HTML body). Use `GET /v1/documents/document/{documentId}` for the document's metadata, or the templates endpoints for the section structure of a document type.
+      operationId: getDocumentContent
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Successful document content retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentContentResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves the section content of a specific document version, identified by its numeric id. Content is returned per section (each with a title and HTML body). Use `GET /v1/documents/document/{documentId}` for the document's metadata, or the templates endpoints for the section structure of a document type.
+      operationId: getDocumentContentOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    patch:
+      summary: Update document content
+      description: 'Updates the HTML section content of a document that is in **draft** status.
+
+
+        This is a **partial update**: only the sections listed in the request body are modified. Sections not included retain their existing content unchanged. To replace all content, include every section position defined by the document template.
+
+
+        **Sections are identified by their `position` number** (1-indexed, matching the order defined by the document template). Use `GET /v1/documents/templates/{templateId}/content` to discover the positions and titles available for a given template.
+
+
+        **Content format**: Section content is stored and returned as HTML. Plain text is also accepted. Unsafe HTML is stripped on ingestion, and only a permitted set of tags and attributes is stored.
+
+
+        **Collaboration sessions**: Any in-progress collaborative editing session on this document is automatically cleared when this endpoint is called, ensuring the content provided here is what gets persisted. Do not call this endpoint while end-users are actively editing the same document in the Qualio UI, as it will discard their unsaved changes.
+
+
+        **Errors:**
+
+        - `400` with slug `document_not_in_draft`: the document exists but is not in draft status. Only draft documents can have their content updated via this endpoint.
+
+        - `404`: the document does not exist, belongs to a different organisation, or is not accessible to the API key''s user.'
+      operationId: updateDocumentContent
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateDocumentContentPayload'
+      responses:
+        '200':
+          description: The full updated content of the document, including all sections (both modified and unmodified)
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentContentResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/documents/document/{documentId}/status:
+    put:
+      summary: Change document status
+      description: 'Advances or reverts the lifecycle status of a document.
+
+
+        **The document must be accessible to the API key''s user.** The transition must be valid for the document''s current status. Invalid transitions are rejected with a 400 and the document is left unchanged.
+
+
+        **Valid status transitions:**
+
+
+        | From | To | Notes |
+
+        |------|----|-------|
+
+        | `draft` | `for_review` | Document must have at least one reviewer assigned |
+
+        | `draft` | `for_approval` | Document must have at least one approver (including a quality approver) |
+
+        | `for_review` | `for_approval` | Document must have at least one approver |
+
+        | `for_review` | `draft` | Reverts to draft |
+
+        | `for_approval` | `draft` | Reverts to draft |
+
+        | `approval_declined` | `draft` | Reverts to draft after a decline |
+
+        | `deleted` | `draft` | Restores a deleted document to draft |
+
+
+        Transitions that require electronic signature authentication (such as `for_approval` to `approved`, `approved` to `effective`, and `for_approval` to `approval_declined`) are not supported via this endpoint and will return a 400 with slug `esign_required`.
+
+
+        **Side effects, same as the Qualio UI:**
+
+        - Notifications are sent to reviewers or approvers on `for_review` and `for_approval` transitions
+
+        - The audit trail records the status change, the acting user, and any comment provided
+
+        - Reverting to `draft` clears any in-progress approvals and notifies affected users
+
+
+        **Errors:**
+
+        - `400`: the transition is not valid (e.g. no reviewers assigned, document is not in a state that permits the requested transition, or the transition requires e-signature). The error message describes the specific reason.
+
+        - `404`: the document does not exist or is not accessible to the API key''s user.'
+      operationId: changeDocumentStatus
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changeDocumentStatusPayload'
+      responses:
+        '200':
+          description: The document with its updated status and metadata. Use the returned `status` field to confirm the transition completed.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentStatusChangeResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Advances or reverts the lifecycle status of a document.
+
+
+        **The document must be accessible to the API key''s user.** The transition must be valid for the document''s current status. Invalid transitions are rejected with a 400 and the document is left unchanged.
+
+
+        **Valid status transitions:**
+
+
+        | From | To | Notes |
+
+        |------|----|-------|
+
+        | `draft` | `for_review` | Document must have at least one reviewer assigned |
+
+        | `draft` | `for_approval` | Document must have at least one approver (including a quality approver) |
+
+        | `for_review` | `for_approval` | Document must have at least one approver |
+
+        | `for_review` | `draft` | Reverts to draft |
+
+        | `for_approval` | `draft` | Reverts to draft |
+
+        | `approval_declined` | `draft` | Reverts to draft after a decline |
+
+        | `deleted` | `draft` | Restores a deleted document to draft |
+
+
+        Transitions that require electronic signature authentication (such as `for_approval` to `approved`, `approved` to `effective`, and `for_approval` to `approval_declined`) are not supported via this endpoint and will return a 400 with slug `esign_required`.
+
+
+        **Side effects, same as the Qualio UI:**
+
+        - Notifications are sent to reviewers or approvers on `for_review` and `for_approval` transitions
+
+        - The audit trail records the status change, the acting user, and any comment provided
+
+        - Reverting to `draft` clears any in-progress approvals and notifies affected users
+
+
+        **Errors:**
+
+        - `400`: the transition is not valid (e.g. no reviewers assigned, document is not in a state that permits the requested transition, or the transition requires e-signature). The error message describes the specific reason.
+
+        - `404`: the document does not exist or is not accessible to the API key''s user.'
+      operationId: changeDocumentStatusOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/document/{documentId}/versions:
+    get:
+      summary: List document versions by ID
+      description: Lists every version of a document, identified by the numeric id of any one of its versions, sorted newest version first. All versions of a document share the same code (e.g. SOP-1) but each has its own id and version number (e.g. 1.0, 2.0). Returns a summary of each version, letting you trace a document's revision history.
+      operationId: listDocumentVersions
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Successful document versions retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentVersionsResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists every version of a document, identified by the numeric id of any one of its versions, sorted newest version first. All versions of a document share the same code (e.g. SOP-1) but each has its own id and version number (e.g. 1.0, 2.0). Returns a summary of each version, letting you trace a document's revision history.
+      operationId: listDocumentVersionsOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/document/{documentId}/comments:
+    get:
+      summary: List comments on a document
+      description: Lists the comment and suggestion threads on a document version, identified by its numeric id. Each thread includes its status (Open, Resolved, Removed, Accepted, or Rejected), the commented-on content (if available), and any replies. Returns an empty list if the document has no comments.
+      operationId: listDocumentComments
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Successful document comments retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentCommentsResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists the comment and suggestion threads on a document version, identified by its numeric id. Each thread includes its status (Open, Resolved, Removed, Accepted, or Rejected), the commented-on content (if available), and any replies. Returns an empty list if the document has no comments.
+      operationId: listDocumentCommentsOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/documentId'
+        required: true
+        description: A unique identifier for a document version
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/document/code/{code}/versions:
+    get:
+      summary: List document versions by code
+      description: Lists every version of a document, identified by its document code (e.g. SOP-1, POL-42), sorted newest version first. The code is shared across all versions of a document; each version has its own id and version number. Returns a summary of each version. Use this when you know the human-readable code rather than a numeric version id.
+      operationId: listDocumentVersionsByCode
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: code
+        schema:
+          $ref: '#/components/schemas/documentCode'
+        required: true
+        description: A unique code identifier for a document (e.g. SOP-1, POL-42)
+      responses:
+        '200':
+          description: Successful document versions retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentVersionsResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists every version of a document, identified by its document code (e.g. SOP-1, POL-42), sorted newest version first. The code is shared across all versions of a document; each version has its own id and version number. Returns a summary of each version. Use this when you know the human-readable code rather than a numeric version id.
+      operationId: listDocumentVersionsByCodeOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: code
+        schema:
+          $ref: '#/components/schemas/documentCode'
+        required: true
+        description: A unique code identifier for a document (e.g. SOP-1, POL-42)
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/query:
+    get:
+      summary: Query documents
+      description: "Queries documents across your Qualio instance, returning a light summary of each (code, title, status, version, owner, etc.). Filter by document status (`draft`, `for_review`, `for_approval`, `approved`, `effective`, `superseded`, `retired`, and others) and paginate with offset/limit. Use this to find documents â\x80\x94 for example all effective SOPs, or documents currently awaiting approval â\x80\x94 then fetch full details or content with the per-document endpoints."
+      operationId: queryDocuments
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/documentStatus'
+        required: true
+        description: The different states of a document in Qualio
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      responses:
+        '200':
+          description: Successful document query response, with a light summary of each document
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentSummaryResponse'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Queries documents across your Qualio instance, returning a light summary of each (code, title, status, version, owner, etc.). Filter by document status (`draft`, `for_review`, `for_approval`, `approved`, `effective`, `superseded`, `retired`, and others) and paginate with offset/limit. Use this to find documents â\x80\x94 for example all effective SOPs, or documents currently awaiting approval â\x80\x94 then fetch full details or content with the per-document endpoints."
+      operationId: queryDocumentsOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/documentStatus'
+        required: true
+        description: The different states of a document in Qualio
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/templates:
+    get:
+      summary: List document templates
+      description: "Lists all active document templates for your instance. A document template defines a document type â\x80\x94 its section structure and the code prefix used to generate document codes (e.g. an 'SOP' template produces SOP-1, SOP-2â\x80¦). Each template includes its `template_matrix_id`, which is required when creating a new document."
+      operationId: listDocumentTemplates
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful templates query response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentTemplatesQueryResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists all active document templates for your instance. A document template defines a document type â\x80\x94 its section structure and the code prefix used to generate document codes (e.g. an 'SOP' template produces SOP-1, SOP-2â\x80¦). Each template includes its `template_matrix_id`, which is required when creating a new document."
+      operationId: listDocumentTemplatesOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/templates/{templateId}:
+    get:
+      summary: Retrieve a document template
+      description: Retrieves a single document template by id. A document template defines a document type, its section structure, and the code prefix used for documents created from it.
+      operationId: getDocumentTemplate
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Successful template response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentTemplateResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Template not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves a single document template by id. A document template defines a document type, its section structure, and the code prefix used for documents created from it.
+      operationId: getDocumentTemplateOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/templates/{templateId}/content:
+    get:
+      summary: Retrieve template content
+      description: Retrieves the section structure and default content of a document template, including each section's title and position. Use these positions when supplying section content to create or update a document from this template.
+      operationId: getDocumentTemplateContent
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Successful template content response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentTemplateContentResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Template not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves the section structure and default content of a document template, including each section's title and position. Use these positions when supplying section content to create or update a document from this template.
+      operationId: getDocumentTemplateContentOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/attachments/{id}:
+    get:
+      summary: Retrieve an attachment
+      description: "Retrieves metadata for a single attachment by its numeric id. Pass `download=true` as a query parameter to trigger a file download instead of returning JSON metadata. When downloading, also send `Accept: application/octet-stream` so the file is returned as raw binary; without it, the file body is returned as a base64-encoded string instead. Downloads are limited to files up to 10MB. Only send `Accept: application/octet-stream` together with `download=true` â\x80\x94 sending it without `download=true` will cause this endpoint to fail."
+      operationId: getAttachment
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          $ref: '#/components/schemas/attachmentId'
+        required: true
+        description: A unique identifier for an attachment
+      - in: query
+        name: download
+        schema:
+          description: Set to true to download the file instead of returning JSON metadata
+          example: false
+          type: boolean
+        description: Set to true to download the file instead of returning JSON metadata
+      responses:
+        '200':
+          description: Successful attachment retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attachment'
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Attachment not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Retrieves metadata for a single attachment by its numeric id. Pass `download=true` as a query parameter to trigger a file download instead of returning JSON metadata. When downloading, also send `Accept: application/octet-stream` so the file is returned as raw binary; without it, the file body is returned as a base64-encoded string instead. Downloads are limited to files up to 10MB. Only send `Accept: application/octet-stream` together with `download=true` â\x80\x94 sending it without `download=true` will cause this endpoint to fail."
+      operationId: getAttachmentOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: id
+        schema:
+          $ref: '#/components/schemas/attachmentId'
+        required: true
+        description: A unique identifier for an attachment
+      - in: query
+        name: download
+        schema:
+          description: Set to true to download the file instead of returning JSON metadata
+          example: false
+          type: boolean
+        description: Set to true to download the file instead of returning JSON metadata
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/documents/document:
+    post:
+      summary: Create a draft document
+      description: Creates a new draft document. The template (via its `template_matrix_id`) determines the document type and its section structure. The document is created in `draft` status; use the change-status endpoint to advance it through review and approval.
+      operationId: createDocument
+      tags:
+      - Documents
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createDocumentPayload'
+      responses:
+        '200':
+          description: Successful document creation response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createDocumentResponse'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Creates a new draft document. The template (via its `template_matrix_id`) determines the document type and its section structure. The document is created in `draft` status; use the change-status endpoint to advance it through review and approval.
+      operationId: createDocumentOptions
+      tags:
+      - Documents
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    attachmentId:
+      type: number
+      description: A unique identifier for an attachment
+      example: 1
+    updateDocumentContentPayload:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: number
+                description: The 1-indexed position of the section within the document, as defined by the document template. Sections not included in the request are left unchanged.
+                example: 1
+              content:
+                type: string
+                description: The new HTML content for the section. Must be valid HTML. Plain text is also accepted and will be stored as-is.
+                example: <p>Updated section content.</p>
+            required:
+            - position
+            - content
+          description: A list of sections to update, identified by position. Only the sections included here are modified; all other sections retain their existing content. To update all sections, include every section position defined by the document template.
+      required:
+      - sections
+      description: A partial update to the HTML section content of a draft document. Only sections included in the request are modified; all other sections retain their existing content.
+      example:
+        sections:
+        - position: 1
+          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients and regulatory stakeholders.</p>
+    documentContentResponse:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+                description: The section content as HTML.
+              position:
+                type: number
+              title:
+                type: string
+              attachments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    filename:
+                      type: string
+                  required:
+                  - id
+                  - filename
+                  additionalProperties: false
+                description: Attachments referenced within this section's content. Use `GET /v1/documents/attachments/{id}` to retrieve an attachment's full metadata or download it.
+            required:
+            - content
+            - position
+            - title
+            - attachments
+            additionalProperties: false
+      required:
+      - sections
+      additionalProperties: false
+      description: The content of a particular Qualio document version
+      example:
+        sections:
+        - title: Introduction
+          position: 1
+          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients, healthcare providers, and regulatory stakeholders.</p>
+          attachments: []
+        - title: Purpose
+          position: 2
+          content: <p>The purpose of this Security Policy is to:</p><ul><li><strong>Establish a systematic security approach</strong> for protecting our systems and data</li><li><strong>Define roles and responsibilities</strong> for security across the organization</li><li><strong>Ensure compliance</strong> with applicable standards and regulatory requirements</li></ul>
+          attachments: []
+        - title: Policy
+          position: 3
+          content: <h3>1. Scope</h3><p>This policy applies to all employees, contractors, and systems handling company or customer data.</p><h3>2. Access Control</h3><p>Access to systems shall be granted on a least-privilege basis and reviewed quarterly.</p>
+          attachments:
+          - id: 1
+            filename: Policy.docx
+    documentStatusChangeResponse:
+      type: object
+      properties:
+        document_id:
+          type: number
+        status:
+          type: string
+          enum:
+          - approval_declined
+          - approved
+          - deleted
+          - draft
+          - effective
+          - for_approval
+          - for_review
+          - for_retirement
+          - retired
+          - superseded
+        code:
+          type: string
+        type:
+          type: string
+        document_format:
+          type: string
+          enum:
+          - qualio_document
+          - file_document
+          description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+          example: qualio_document
+        title:
+          type: string
+        version:
+          type: string
+        document_matrix_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+        created_at:
+          type: string
+          format: date-time
+        effective_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+        next_periodic_review_due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        effective_upon_approval:
+          type: boolean
+      required:
+      - document_id
+      - status
+      - code
+      - type
+      - document_format
+      - title
+      - version
+      - document_matrix_id
+      - created_at
+      - effective_at
+      - modified_at
+      - url
+      - next_periodic_review_due_at
+      - effective_upon_approval
+      additionalProperties: false
+      description: The document with its updated status and key metadata, confirming the transition completed
+      example:
+        document_id: 1
+        status: effective
+        code: POL-1
+        type: Policy
+        document_format: qualio_document
+        title: Security policy
+        version: '1.0'
+        document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+        created_at: '2025-05-01T14:48:43.472Z'
+        effective_at: '2025-05-07T14:48:43.472Z'
+        modified_at: '2025-05-07T14:48:43.472Z'
+        url: https://app.qualio.com/library/documents/1
+        next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+        effective_upon_approval: false
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    updateDocumentPayload:
+      type: object
+      properties:
+        quality_approver_user_ids:
+          description: The complete list of quality approver user IDs for this document. Replaces the current quality approvers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 1
+          - 2
+          type: array
+          items:
+            type: number
+        other_approver_user_ids:
+          description: The complete list of non-quality approver user IDs for this document. Replaces the current other approvers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 3
+          - 4
+          type: array
+          items:
+            type: number
+        reviewer_user_ids:
+          description: The complete list of reviewer user IDs for this document. Replaces the current reviewers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 5
+          - 6
+          type: array
+          items:
+            type: number
+        editor_user_ids:
+          description: The complete list of editor user IDs for this document. Replaces the current editors. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 7
+          - 8
+          type: array
+          items:
+            type: number
+        tag_ids:
+          description: The complete list of tag IDs to apply to this document. Replaces the current tags. Omit to leave unchanged.
+          example:
+          - 10
+          - 11
+          type: array
+          items:
+            type: number
+      description: "A partial update to the people and tags on a draft document. Supply only the fields you want to change â\x80\x94 omitted fields are left unchanged. Each supplied list fully replaces the current set for that role."
+      example:
+        quality_approver_user_ids:
+        - 1
+        - 2
+        other_approver_user_ids:
+        - 3
+        - 4
+        reviewer_user_ids:
+        - 5
+        - 6
+        editor_user_ids:
+        - 7
+        - 8
+        tag_ids:
+        - 10
+        - 11
+    createDocumentPayload:
+      type: object
+      properties:
+        template_matrix_id:
+          type: string
+        title:
+          type: string
+        effective_on_approval:
+          type: boolean
+        training_required:
+          type: boolean
+        approver_user_ids:
+          type: array
+          items:
+            type: number
+        reviewer_user_ids:
+          type: array
+          items:
+            type: number
+        editor_user_ids:
+          type: array
+          items:
+            type: number
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+              position:
+                type: number
+            required:
+            - content
+            - position
+      required:
+      - template_matrix_id
+      - title
+      - effective_on_approval
+      - training_required
+      - sections
+      description: A request to create a new draft document. The template matrix id determines the type of the document created. Section positions start at 1, and the number of sections must not exceed what is defined in the corresponding template
+      example:
+        title: Security Policy
+        sections:
+        - content: This is the content in the first section of the document
+          position: 1
+        template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
+        effective_on_approval: false
+        training_required: false
+        approver_user_ids:
+        - 1
+        - 2
+        editor_user_ids:
+        - 3
+        - 4
+    attachment:
+      type: object
+      properties:
+        id:
+          type: number
+        filename:
+          type: string
+        date_added:
+          type: number
+        file_size:
+          anyOf:
+          - type: number
+          - type: 'null'
+      required:
+      - id
+      - filename
+      - date_added
+      - file_size
+      additionalProperties: false
+      description: Metadata for a Qualio attachment
+      example:
+        id: 1
+        filename: attachment.docx
+        date_added: 1782415612
+        file_size: 100000
+    documentTemplatesQueryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              prefix:
+                type: string
+              template_matrix_id:
+                type: string
+              status:
+                type: string
+            required:
+            - id
+            - name
+            - prefix
+            - template_matrix_id
+            - status
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A list of document templates
+      example:
+        items:
+        - id: 1
+          name: Policy
+          prefix: POL
+          template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
+          status: effective
+        total: 1
+    documentCommentsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                enum:
+                - comment
+                - suggestion
+              status:
+                type: string
+                enum:
+                - Open
+                - Resolved
+                - Removed
+                - Accepted
+                - Rejected
+              content:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+              author_full_name:
+                anyOf:
+                - type: string
+                - type: 'null'
+              content_commented_on:
+                anyOf:
+                - type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      data:
+                        type: string
+                    required:
+                    - name
+                    - data
+                    additionalProperties: false
+                - type: 'null'
+              last_updated_time:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              replies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    content:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    author_full_name:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                  required:
+                  - id
+                  - content
+                  - created_at
+                  additionalProperties: false
+            required:
+            - id
+            - type
+            - status
+            - content
+            - created_at
+            - replies
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: The comment threads on a Qualio document version
+      example:
+        items:
+        - id: c1a2b3c4-0001-4000-8000-000000000001
+          type: comment
+          status: Open
+          content: Please clarify the retention period referenced in section 2.
+          created_at: '2025-06-01T09:15:00.000Z'
+          author_full_name: Jane Doe
+          content_commented_on:
+          - name: Section 2
+            data: retention period of 7 years
+          last_updated_time: '2025-06-01T09:15:00.000Z'
+          replies:
+          - id: c1a2b3c4-0002-4000-8000-000000000002
+            content: Updated to 10 years per legal guidance.
+            created_at: '2025-06-01T10:00:00.000Z'
+            author_full_name: John Smith
+        total: 1
+    documentVersionsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              document_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - approval_declined
+                - approved
+                - deleted
+                - draft
+                - effective
+                - for_approval
+                - for_review
+                - for_retirement
+                - retired
+                - superseded
+              code:
+                type: string
+              type:
+                type: string
+              document_format:
+                type: string
+                enum:
+                - qualio_document
+                - file_document
+                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+                example: qualio_document
+              title:
+                type: string
+              version:
+                type: string
+              document_matrix_id:
+                anyOf:
+                - type: string
+                - type: 'null'
+              created_at:
+                type: string
+                format: date-time
+              effective_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              modified_at:
+                type: string
+                format: date-time
+              url:
+                type: string
+              next_periodic_review_due_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              effective_upon_approval:
+                type: boolean
+            required:
+            - document_id
+            - status
+            - code
+            - type
+            - document_format
+            - title
+            - version
+            - document_matrix_id
+            - created_at
+            - effective_at
+            - modified_at
+            - url
+            - next_periodic_review_due_at
+            - effective_upon_approval
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: All versions of a Qualio document, with a summary of each version
+      example:
+        items:
+        - document_id: 1
+          status: effective
+          code: POL-1
+          type: Policy
+          document_format: qualio_document
+          title: Security policy
+          version: '1.0'
+          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+          created_at: '2025-05-01T14:48:43.472Z'
+          effective_at: '2025-05-07T14:48:43.472Z'
+          modified_at: '2025-05-07T14:48:43.472Z'
+          url: https://app.qualio.com/library/documents/1
+          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+          effective_upon_approval: false
+        total: 1
+    documentTemplateContentResponse:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+                description: The section content as HTML.
+              position:
+                type: number
+              title:
+                type: string
+            required:
+            - content
+            - position
+            - title
+            additionalProperties: false
+      required:
+      - sections
+      additionalProperties: false
+      description: The content of a document template
+      example:
+        sections:
+        - title: Introduction
+          position: 1
+          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients, healthcare providers, and regulatory stakeholders.</p>
+        - title: Purpose
+          position: 2
+          content: <p>The purpose of this Security Policy is to:</p><ul><li><strong>Establish a systematic security approach</strong> for protecting our systems and data</li><li><strong>Define roles and responsibilities</strong> for security across the organization</li><li><strong>Ensure compliance</strong> with applicable standards and regulatory requirements</li></ul>
+        - title: Policy
+          position: 3
+          content: <h3>1. Scope</h3><p>This policy applies to all employees, contractors, and systems handling company or customer data.</p><h3>2. Access Control</h3><p>Access to systems shall be granted on a least-privilege basis and reviewed quarterly.</p>
+    documentTemplateResponse:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        prefix:
+          type: string
+        template_matrix_id:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - name
+      - prefix
+      - template_matrix_id
+      - status
+      additionalProperties: false
+      description: A document template
+      example:
+        id: 1
+        name: Policy
+        prefix: POL
+        template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
+        status: effective
+    documentDetailed:
+      type: object
+      properties:
+        document_id:
+          type: number
+        status:
+          type: string
+          enum:
+          - approval_declined
+          - approved
+          - deleted
+          - draft
+          - effective
+          - for_approval
+          - for_review
+          - for_retirement
+          - retired
+          - superseded
+        code:
+          type: string
+        type:
+          type: string
+        document_format:
+          type: string
+          enum:
+          - qualio_document
+          - file_document
+          description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+          example: qualio_document
+        title:
+          type: string
+        version:
+          type: string
+        document_matrix_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+        created_at:
+          type: string
+          format: date-time
+        effective_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+        next_periodic_review_due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        effective_upon_approval:
+          type: boolean
+        owner_user_id:
+          type: number
+        tag_ids:
+          type: array
+          items:
+            type: number
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              user_id:
+                type: number
+              is_done:
+                type: boolean
+              done_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - type
+            - user_id
+            - is_done
+            - done_at
+            additionalProperties: false
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              user_id:
+                type: number
+              is_done:
+                type: boolean
+              done_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - type
+            - user_id
+            - is_done
+            - done_at
+            additionalProperties: false
+        editors:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              user_id:
+                type: number
+              is_done:
+                type: boolean
+              done_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - type
+            - user_id
+            - is_done
+            - done_at
+            additionalProperties: false
+      required:
+      - document_id
+      - status
+      - code
+      - type
+      - document_format
+      - title
+      - version
+      - document_matrix_id
+      - created_at
+      - effective_at
+      - modified_at
+      - url
+      - next_periodic_review_due_at
+      - effective_upon_approval
+      - owner_user_id
+      - tag_ids
+      - reviewers
+      - approvers
+      - editors
+      additionalProperties: false
+      description: A Qualio document version, with additional details
+      example:
+        document_id: 1
+        status: effective
+        code: POL-1
+        type: Policy
+        document_format: qualio_document
+        title: Security policy
+        version: '1.0'
+        document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+        created_at: '2025-05-01T14:48:43.472Z'
+        effective_at: '2025-05-07T14:48:43.472Z'
+        modified_at: '2025-05-07T14:48:43.472Z'
+        url: https://app.qualio.com/library/documents/1
+        next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+        effective_upon_approval: false
+        owner_user_id: 9981
+        tag_ids:
+        - 12
+        - 13
+        - 14
+        reviewers:
+        - type: review
+          user_id: 1
+          is_done: true
+          done_at: '2025-07-07T14:48:43.472Z'
+        approvers:
+        - type: approve
+          user_id: 1
+          is_done: false
+          done_at: null
+        editors:
+        - type: edit
+          user_id: 1
+          is_done: false
+          done_at: null
+    documentId:
+      type: number
+      description: A unique identifier for a document version
+      example: 12345
+    documentSummaryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              document_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - approval_declined
+                - approved
+                - deleted
+                - draft
+                - effective
+                - for_approval
+                - for_review
+                - for_retirement
+                - retired
+                - superseded
+              code:
+                type: string
+              type:
+                type: string
+              document_format:
+                type: string
+                enum:
+                - qualio_document
+                - file_document
+                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+                example: qualio_document
+              title:
+                type: string
+              version:
+                type: string
+              document_matrix_id:
+                anyOf:
+                - type: string
+                - type: 'null'
+              created_at:
+                type: string
+                format: date-time
+              effective_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              modified_at:
+                type: string
+                format: date-time
+              url:
+                type: string
+              next_periodic_review_due_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              effective_upon_approval:
+                type: boolean
+            required:
+            - document_id
+            - status
+            - code
+            - type
+            - document_format
+            - title
+            - version
+            - document_matrix_id
+            - created_at
+            - effective_at
+            - modified_at
+            - url
+            - next_periodic_review_due_at
+            - effective_upon_approval
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A summary of the main attributes of a Qualio document version
+      example:
+        items:
+        - document_id: 1
+          status: effective
+          code: POL-1
+          type: Policy
+          document_format: qualio_document
+          title: Security policy
+          version: '1.0'
+          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+          created_at: '2025-05-01T14:48:43.472Z'
+          effective_at: '2025-05-07T14:48:43.472Z'
+          modified_at: '2025-05-07T14:48:43.472Z'
+          url: https://app.qualio.com/library/documents/1
+          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+          effective_upon_approval: false
+        total: 1
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    changeDocumentStatusPayload:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - draft
+          - for_review
+          - for_approval
+          - deleted
+          description: 'The target lifecycle status for the document. Only transitions that do not require electronic signature are supported. Invalid or esign-required transitions are rejected with a 400. Common sequences: draft to for_review, draft to for_approval, for_review to for_approval. Reverting to draft is supported from for_review, for_approval, and approval_declined.'
+          example: for_review
+        comment:
+          description: An optional comment to record alongside the status change, visible in the document's audit trail.
+          example: Reviewed by legal, ready for approval.
+          type: string
+      required:
+      - status
+      description: A request to advance or revert the lifecycle status of a draft document.
+      example:
+        status: for_review
+        comment: "Reviewed by legal â\x80\x94 ready for sign-off."
+    createDocumentResponse:
+      type: object
+      properties:
+        document_id:
+          type: number
+        status:
+          type: string
+          enum:
+          - approval_declined
+          - approved
+          - deleted
+          - draft
+          - effective
+          - for_approval
+          - for_review
+          - for_retirement
+          - retired
+          - superseded
+        code:
+          type: string
+        type:
+          type: string
+        document_format:
+          type: string
+          enum:
+          - qualio_document
+          - file_document
+          description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+          example: qualio_document
+        title:
+          type: string
+        version:
+          type: string
+        document_matrix_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+        created_at:
+          type: string
+          format: date-time
+        effective_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+        next_periodic_review_due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        effective_upon_approval:
+          type: boolean
+      required:
+      - document_id
+      - status
+      - code
+      - type
+      - document_format
+      - title
+      - version
+      - document_matrix_id
+      - created_at
+      - effective_at
+      - modified_at
+      - url
+      - next_periodic_review_due_at
+      - effective_upon_approval
+      additionalProperties: false
+      description: The newly created draft document, including its generated identifiers (document_id, code) and url
+      example:
+        document_id: 1
+        status: effective
+        code: POL-1
+        type: Policy
+        document_format: qualio_document
+        title: Security policy
+        version: '1.0'
+        document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+        created_at: '2025-05-01T14:48:43.472Z'
+        effective_at: '2025-05-07T14:48:43.472Z'
+        modified_at: '2025-05-07T14:48:43.472Z'
+        url: https://app.qualio.com/library/documents/1
+        next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+        effective_upon_approval: false
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    documentCode:
+      type: string
+      description: A unique code identifier for a document (e.g. SOP-1, POL-42)
+      example: SOP-1
+    documentStatus:
+      type: string
+      enum:
+      - approval_declined
+      - approved
+      - deleted
+      - draft
+      - effective
+      - for_approval
+      - for_review
+      - for_retirement
+      - retired
+      - superseded
+      description: The different states of a document in Qualio
+      example: effective
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

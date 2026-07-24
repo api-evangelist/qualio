@@ -1,0 +1,4858 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Compliance Intelligence API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Compliance Intelligence
+paths:
+  /v1/compliance/frameworks:
+    get:
+      summary: List frameworks
+      description: 'Lists the compliance frameworks in your Qualio instance. A framework is a compliance standard (for example ISO 13485, ISO 9001, or GDPR) that groups the requirements your organisation has committed to meet. Each framework has a status: disabled (not currently in use), implementing (controls are being set up), or monitoring (actively tracking compliance against the standard). Results are ordered by framework id. Use the offset and limit parameters to page through large sets; the total field in the response reports the full count of matching frameworks before pagination is applied. Filter by status to return only frameworks in a particular state; omit the parameter to return frameworks in any state.'
+      operationId: listComplianceFrameworks
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state.'
+          example: monitoring
+          type: string
+          enum:
+          - disabled
+          - implementing
+          - monitoring
+        description: 'Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Successful retrieval of compliance frameworks.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the framework.
+                          example: 1
+                        name:
+                          type: string
+                          description: The display name of the compliance framework.
+                          example: ISO 13485
+                        description:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: An optional human-readable description of the framework.
+                          example: 'Medical devices: Quality management systems'
+                        status:
+                          type: string
+                          enum:
+                          - disabled
+                          - implementing
+                          - monitoring
+                          description: 'The current status of the framework. disabled: not currently in use. implementing: controls are being set up. monitoring: actively tracking compliance.'
+                          example: monitoring
+                      required:
+                      - id
+                      - name
+                      - description
+                      - status
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A paginated list of compliance frameworks.
+                example:
+                  total: 2
+                  items:
+                  - id: 1
+                    name: ISO 13485
+                    description: 'Medical devices: Quality management systems'
+                    status: monitoring
+                  - id: 2
+                    name: ISO 9001
+                    description: null
+                    status: implementing
+                ref: complianceFrameworkListResponse
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Lists the compliance frameworks in your Qualio instance. A framework is a compliance standard (for example ISO 13485, ISO 9001, or GDPR) that groups the requirements your organisation has committed to meet. Each framework has a status: disabled (not currently in use), implementing (controls are being set up), or monitoring (actively tracking compliance against the standard). Results are ordered by framework id. Use the offset and limit parameters to page through large sets; the total field in the response reports the full count of matching frameworks before pagination is applied. Filter by status to return only frameworks in a particular state; omit the parameter to return frameworks in any state.'
+      operationId: listComplianceFrameworksOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state.'
+          example: monitoring
+          type: string
+          enum:
+          - disabled
+          - implementing
+          - monitoring
+        description: 'Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a framework
+      description: Creates a new compliance framework in your Qualio instance. Provide a name and an optional description. The framework is created with a disabled status and must be activated in the Qualio application before requirements can be tracked against it. The id returned in the response can be used to retrieve or update the framework via the other Compliance Intelligence endpoints.
+      operationId: createComplianceFramework
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  description: The display name of the new compliance framework.
+                  example: ISO 13485
+                description:
+                  description: An optional human-readable description of the framework.
+                  example: 'Medical devices: Quality management systems'
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - name
+              description: The framework to create.
+              example:
+                name: ISO 13485
+                description: 'Medical devices: Quality management systems'
+              ref: createComplianceFrameworkRequest
+      responses:
+        '201':
+          description: Framework created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the framework.
+                    example: 1
+                  name:
+                    type: string
+                    description: The display name of the compliance framework.
+                    example: ISO 13485
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the framework.
+                    example: 'Medical devices: Quality management systems'
+                  status:
+                    type: string
+                    enum:
+                    - disabled
+                    - implementing
+                    - monitoring
+                    description: 'The current status of the framework. disabled: not currently in use. implementing: controls are being set up. monitoring: actively tracking compliance.'
+                    example: monitoring
+                  stats:
+                    anyOf:
+                    - type: object
+                      properties:
+                        total_requirements:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Total number of requirements in the framework.
+                          example: 42
+                        passed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements with a met assessment.
+                          example: 30
+                        failed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements flagged as attention required.
+                          example: 5
+                        not_assessed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements that have not yet been fully assessed. Includes requirements in not_started and in_progress states.
+                          example: 7
+                      required:
+                      - total_requirements
+                      - passed
+                      - failed
+                      - not_assessed
+                      additionalProperties: false
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - status
+                additionalProperties: false
+                description: The newly created framework.
+                example:
+                  id: 10
+                  name: ISO 13485
+                  description: 'Medical devices: Quality management systems'
+                  status: disabled
+                  stats: null
+                ref: createdComplianceFramework
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/frameworks/{frameworkId}:
+    put:
+      summary: Update a framework
+      description: 'Updates a compliance framework identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it. To change the framework lifecycle status, use PATCH /v1/compliance/frameworks/{frameworkId}/status.'
+      operationId: updateComplianceFramework
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: New display name for the framework. Omit to leave unchanged.
+                  example: ISO 13485 (2016)
+                  type: string
+                  minLength: 1
+                description:
+                  description: New description for the framework. Omit to leave unchanged. Pass null to clear an existing description.
+                  example: 'Medical devices: Quality management systems'
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              description: Fields to update on the framework.
+              example:
+                name: ISO 13485 (2016)
+                description: 'Medical devices: Quality management systems'
+              ref: updateComplianceFrameworkRequest
+      responses:
+        '200':
+          description: Framework updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the framework.
+                    example: 1
+                  name:
+                    type: string
+                    description: The display name of the compliance framework.
+                    example: ISO 13485
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the framework.
+                    example: 'Medical devices: Quality management systems'
+                  status:
+                    type: string
+                    enum:
+                    - disabled
+                    - implementing
+                    - monitoring
+                    description: 'The current status of the framework. disabled: not currently in use. implementing: controls are being set up. monitoring: actively tracking compliance.'
+                    example: monitoring
+                  stats:
+                    description: Assessment statistics for the framework. Populated when the framework status is implementing or monitoring. null or absent when the framework is disabled.
+                    example: null
+                    anyOf:
+                    - type: object
+                      properties:
+                        total_requirements:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Total number of requirements in the framework.
+                          example: 42
+                        passed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements with a met assessment.
+                          example: 30
+                        failed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements flagged as attention required.
+                          example: 5
+                        not_assessed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements that have not yet been fully assessed. Includes requirements in not_started and in_progress states.
+                          example: 7
+                      required:
+                      - total_requirements
+                      - passed
+                      - failed
+                      - not_assessed
+                      additionalProperties: false
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - status
+                additionalProperties: false
+                description: The updated framework.
+                example:
+                  id: 1
+                  name: ISO 13485 (2016)
+                  description: 'Medical devices: Quality management systems'
+                  status: monitoring
+                  stats: null
+                ref: updatedComplianceFramework
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Framework not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Updates a compliance framework identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it. To change the framework lifecycle status, use PATCH /v1/compliance/frameworks/{frameworkId}/status.'
+      operationId: updateComplianceFrameworkOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    get:
+      summary: Get a framework
+      description: 'Returns the details of a single compliance framework identified by its numeric id. The stats field is populated when the framework status is implementing or monitoring, and is null when the framework is disabled. Stats break down the framework requirements by assessment outcome: passed counts requirements with a met assessment, failed counts requirements flagged as attention required, and not_assessed counts requirements that are not_started or in_progress. The sum of passed, failed, and not_assessed equals total_requirements.'
+      operationId: getComplianceFramework
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      responses:
+        '200':
+          description: Successful retrieval of the compliance framework.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the framework.
+                    example: 1
+                  name:
+                    type: string
+                    description: The display name of the compliance framework.
+                    example: ISO 13485
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the framework.
+                    example: 'Medical devices: Quality management systems'
+                  status:
+                    type: string
+                    enum:
+                    - disabled
+                    - implementing
+                    - monitoring
+                    description: 'The current status of the framework. disabled: not currently in use. implementing: controls are being set up. monitoring: actively tracking compliance.'
+                    example: monitoring
+                  stats:
+                    description: Assessment statistics for the framework. Populated when the framework status is implementing or monitoring. null or absent when the framework is disabled.
+                    example: null
+                    anyOf:
+                    - type: object
+                      properties:
+                        total_requirements:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Total number of requirements in the framework.
+                          example: 42
+                        passed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements with a met assessment.
+                          example: 30
+                        failed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements flagged as attention required.
+                          example: 5
+                        not_assessed:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                          description: Number of requirements that have not yet been fully assessed. Includes requirements in not_started and in_progress states.
+                          example: 7
+                      required:
+                      - total_requirements
+                      - passed
+                      - failed
+                      - not_assessed
+                      additionalProperties: false
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - status
+                additionalProperties: false
+                description: The requested compliance framework.
+                example:
+                  id: 1
+                  name: ISO 13485
+                  description: 'Medical devices: Quality management systems'
+                  status: monitoring
+                  stats:
+                    total_requirements: 42
+                    passed: 30
+                    failed: 5
+                    not_assessed: 7
+                ref: complianceFrameworkDetail
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Framework not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    delete:
+      summary: Delete a framework
+      description: Permanently deletes a custom compliance framework identified by its numeric id. Only frameworks created by your organisation can be deleted. Qualio-managed frameworks (built-in standards such as ISO 13485 or GDPR) cannot be deleted and will return a 403 if you attempt to do so. Deletion removes the framework and its associated requirements from your instance. This action cannot be undone. A successful deletion returns no content.
+      operationId: deleteComplianceFramework
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      responses:
+        '204':
+          description: Framework deleted successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties: {}
+                  additionalProperties: false
+                - type: 'null'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Framework not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/frameworks/{frameworkId}/status:
+    patch:
+      summary: Update a framework status
+      description: 'Updates the lifecycle status of a compliance framework for your Qualio instance. The status controls whether the framework is actively tracked: disabled (not currently in use), implementing (controls are being set up), or monitoring (activated for active compliance tracking).'
+      operationId: updateComplianceFrameworkStatus
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - disabled
+                  - implementing
+                  - monitoring
+                  description: 'The new lifecycle status for the framework. disabled: deactivates the framework. implementing: marks the framework as being set up. monitoring: activates the framework for active compliance tracking.'
+                  example: monitoring
+              required:
+              - status
+              description: The new status to apply to the framework.
+              example:
+                status: monitoring
+              ref: updateComplianceFrameworkStatusRequest
+      responses:
+        '200':
+          description: Framework status updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  framework_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the framework whose status was updated.
+                    example: 1
+                  status:
+                    type: string
+                    enum:
+                    - disabled
+                    - implementing
+                    - monitoring
+                    description: The current lifecycle status of the framework.
+                    example: monitoring
+                required:
+                - framework_id
+                - status
+                additionalProperties: false
+                description: The updated framework status.
+                example:
+                  framework_id: 1
+                  status: monitoring
+                ref: complianceFrameworkStatus
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Framework not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Updates the lifecycle status of a compliance framework for your Qualio instance. The status controls whether the framework is actively tracked: disabled (not currently in use), implementing (controls are being set up), or monitoring (activated for active compliance tracking).'
+      operationId: updateComplianceFrameworkStatusOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: frameworkId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance framework.
+          example: 1
+        required: true
+        description: The numeric id of the compliance framework.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/compliance/requirements:
+    get:
+      summary: List requirements
+      description: Lists the compliance requirements in your Qualio instance. A requirement is an individual clause or control obligation from a compliance framework that your organisation has committed to meet. Each requirement belongs to exactly one framework and carries a requirement_number (for example a clause reference such as 7.1), a short name, and optional full normative text. Use the framework_id parameter to return requirements for a specific framework only. Omit it to return requirements across all frameworks visible to your instance. Results are ordered by requirement id. Use offset and limit to page through large sets; the total field in the response reports the full count before pagination is applied.
+      operationId: listComplianceRequirements
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks.
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Successful retrieval of compliance requirements.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the requirement.
+                          example: 101
+                        framework_id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The id of the framework this requirement belongs to.
+                          example: 1
+                        requirement_number:
+                          type: string
+                          description: The alphanumeric identifier for the requirement within its framework. For example, a clause number such as 7.1 or a section reference such as A.5.1.
+                          example: '7.1'
+                        name:
+                          type: string
+                          description: The short title of the requirement.
+                          example: Planning of product realisation
+                        description:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: An optional description of the requirement.
+                          example: null
+                      required:
+                      - id
+                      - framework_id
+                      - requirement_number
+                      - name
+                      - description
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A paginated list of compliance requirements.
+                example:
+                  total: 2
+                  items:
+                  - id: 101
+                    framework_id: 1
+                    requirement_number: '7.1'
+                    name: Planning of product realisation
+                    description: null
+                  - id: 102
+                    framework_id: 1
+                    requirement_number: '7.2'
+                    name: Customer-related processes
+                    description: null
+                ref: complianceRequirementListResponse
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists the compliance requirements in your Qualio instance. A requirement is an individual clause or control obligation from a compliance framework that your organisation has committed to meet. Each requirement belongs to exactly one framework and carries a requirement_number (for example a clause reference such as 7.1), a short name, and optional full normative text. Use the framework_id parameter to return requirements for a specific framework only. Omit it to return requirements across all frameworks visible to your instance. Results are ordered by requirement id. Use offset and limit to page through large sets; the total field in the response reports the full count before pagination is applied.
+      operationId: listComplianceRequirementsOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks.
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a requirement
+      description: 'Creates a new compliance requirement and associates it with an existing framework. Provide the framework_id of the framework the requirement belongs to, a unique requirement_number within that framework (for example a clause reference such as 7.1), and a short name. The description and requirement_text fields are optional: omit them or pass null when not available. The id returned in the response can be used to retrieve the requirement via the List requirements endpoint.'
+      operationId: createComplianceRequirement
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                framework_id:
+                  type: integer
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                  description: The id of the framework this requirement belongs to.
+                  example: 1
+                requirement_number:
+                  type: string
+                  minLength: 1
+                  description: The alphanumeric identifier for the requirement within its framework. For example, a clause number such as 7.1 or a section reference such as A.5.1.
+                  example: '7.1'
+                name:
+                  type: string
+                  minLength: 1
+                  description: The short title of the requirement.
+                  example: Planning of product realisation
+                description:
+                  description: An optional description of the requirement.
+                  example: null
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - framework_id
+              - requirement_number
+              - name
+              description: The requirement to create.
+              example:
+                framework_id: 1
+                requirement_number: '7.1'
+                name: Planning of product realisation
+                description: null
+              ref: createComplianceRequirementRequest
+      responses:
+        '201':
+          description: Requirement created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the requirement.
+                    example: 101
+                  framework_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the framework this requirement belongs to.
+                    example: 1
+                  requirement_number:
+                    type: string
+                    description: The alphanumeric identifier for the requirement within its framework. For example, a clause number such as 7.1 or a section reference such as A.5.1.
+                    example: '7.1'
+                  name:
+                    type: string
+                    description: The short title of the requirement.
+                    example: Planning of product realisation
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional description of the requirement.
+                    example: null
+                required:
+                - id
+                - framework_id
+                - requirement_number
+                - name
+                - description
+                additionalProperties: false
+                description: The newly created requirement.
+                example:
+                  id: 101
+                  framework_id: 1
+                  requirement_number: '7.1'
+                  name: Planning of product realisation
+                  description: null
+                ref: createdComplianceRequirement
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Framework not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/requirements/{requirementId}:
+    put:
+      summary: Update a requirement
+      description: 'Updates a compliance requirement identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it.'
+      operationId: updateComplianceRequirement
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: requirementId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance requirement.
+          example: 101
+        required: true
+        description: The numeric id of the compliance requirement.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: New short title for the requirement. Omit to leave unchanged.
+                  example: Updated planning of product realisation
+                  type: string
+                  minLength: 1
+                requirement_number:
+                  description: New alphanumeric identifier for the requirement. Omit to leave unchanged.
+                  example: 7.1.1
+                  type: string
+                  minLength: 1
+                description:
+                  description: New description for the requirement. Omit to leave unchanged. Pass null to clear an existing description.
+                  example: null
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              description: Fields to update on the requirement.
+              example:
+                name: Planning of product realisation (revised)
+                requirement_number: 7.1.1
+                description: null
+              ref: updateComplianceRequirementRequest
+      responses:
+        '200':
+          description: Requirement updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the requirement.
+                    example: 101
+                  framework_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the framework this requirement belongs to.
+                    example: 1
+                  requirement_number:
+                    type: string
+                    description: The alphanumeric identifier for the requirement within its framework. For example, a clause number such as 7.1 or a section reference such as A.5.1.
+                    example: '7.1'
+                  name:
+                    type: string
+                    description: The short title of the requirement.
+                    example: Planning of product realisation
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional description of the requirement.
+                    example: null
+                required:
+                - id
+                - framework_id
+                - requirement_number
+                - name
+                - description
+                additionalProperties: false
+                description: The updated requirement.
+                example:
+                  id: 101
+                  framework_id: 1
+                  requirement_number: 7.1.1
+                  name: Planning of product realisation (revised)
+                  description: null
+                ref: updatedComplianceRequirement
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Requirement not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Updates a compliance requirement identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it.'
+      operationId: updateComplianceRequirementOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: requirementId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance requirement.
+          example: 101
+        required: true
+        description: The numeric id of the compliance requirement.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    delete:
+      summary: Delete a requirement
+      description: Permanently deletes a custom compliance requirement identified by its numeric id. Only requirements created by your organisation can be deleted. Qualio-managed requirements (built-in clauses from standards such as ISO 13485 or GDPR) cannot be deleted and will return a 403 if you attempt to do so. Deletion removes the requirement and cleans up any open compliance gaps that were exclusively linked to it. This action cannot be undone. A successful deletion returns no content.
+      operationId: deleteComplianceRequirement
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: requirementId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance requirement.
+          example: 101
+        required: true
+        description: The numeric id of the compliance requirement.
+      responses:
+        '204':
+          description: Requirement deleted successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties: {}
+                  additionalProperties: false
+                - type: 'null'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Requirement not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/requirements/{requirementId}/status:
+    patch:
+      summary: Update a requirement status
+      description: "Updates the assessment status of a compliance requirement for your Qualio instance. The status reflects the current compliance posture for the requirement: not_started (assessment has not begun), in_progress (assessment is underway), met (the requirement is satisfied), attention_required (the requirement needs attention), or not_applicable (the requirement does not apply â\x80\x94 a justification is required). A justification must be provided when setting the status to not_applicable."
+      operationId: updateComplianceRequirementStatus
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: requirementId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance requirement.
+          example: 101
+        required: true
+        description: The numeric id of the compliance requirement.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - not_started
+                  - in_progress
+                  - met
+                  - attention_required
+                  - not_applicable
+                  description: "The new assessment status for the requirement. not_started: assessment has not begun. in_progress: assessment is underway. met: the requirement is satisfied. attention_required: the requirement needs attention. not_applicable: the requirement does not apply â\x80\x94 justification is required."
+                  example: met
+                justification:
+                  description: Required when status is not_applicable. Explains why the requirement does not apply to this instance.
+                  example: Exempt under clause 1.2
+                  type: string
+              required:
+              - status
+              description: The new status to apply to the requirement.
+              example:
+                status: met
+              ref: updateComplianceRequirementStatusRequest
+      responses:
+        '200':
+          description: Requirement status updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requirement_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the requirement whose status was updated.
+                    example: 101
+                  status:
+                    type: string
+                    enum:
+                    - not_started
+                    - in_progress
+                    - met
+                    - attention_required
+                    - not_applicable
+                    description: The current assessment status of the requirement.
+                    example: met
+                  justification:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: The justification provided when status is not_applicable. null for all other statuses.
+                    example: null
+                required:
+                - requirement_id
+                - status
+                - justification
+                additionalProperties: false
+                description: The updated requirement status.
+                example:
+                  requirement_id: 101
+                  status: met
+                  justification: null
+                ref: complianceRequirementStatus
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Requirement not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Updates the assessment status of a compliance requirement for your Qualio instance. The status reflects the current compliance posture for the requirement: not_started (assessment has not begun), in_progress (assessment is underway), met (the requirement is satisfied), attention_required (the requirement needs attention), or not_applicable (the requirement does not apply â\x80\x94 a justification is required). A justification must be provided when setting the status to not_applicable."
+      operationId: updateComplianceRequirementStatusOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: requirementId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance requirement.
+          example: 101
+        required: true
+        description: The numeric id of the compliance requirement.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/compliance/controls:
+    get:
+      summary: List controls
+      description: 'Lists the compliance controls in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Controls are either Qualio-managed (built-in, with a QMC- code prefix) or created by your organisation (with a C- code prefix). Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun). Use the framework_id parameter to return only controls linked to requirements of a specific framework, and the status parameter to return only controls in a particular state. Omit either parameter to apply no filter on that dimension. Results are ordered by control id. Use offset and limit to page through large sets; the total field in the response reports the full count of matching controls before pagination is applied.'
+      operationId: listComplianceControls
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks.
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state.'
+          example: ready
+          type: string
+          enum:
+          - ready
+          - not_ready
+          - not_applicable
+          - not_started
+        description: 'Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Successful retrieval of compliance controls.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the control.
+                          example: 1
+                        code:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The human-readable control code. Qualio-managed controls are prefixed with QMC (for example QMC-1); controls created by your organisation are prefixed with C (for example C-15). null when the control has no assigned code.
+                          example: QMC-1
+                        name:
+                          type: string
+                          description: The display name of the control.
+                          example: Access Control Policy
+                        description:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: An optional human-readable description of the control.
+                          example: Restricts system access to authorised users.
+                        category:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: An optional category used to group related controls.
+                          example: Information Security
+                        status:
+                          anyOf:
+                          - type: string
+                            enum:
+                            - ready
+                            - not_ready
+                            - not_applicable
+                            - not_started
+                          - type: 'null'
+                          description: 'The current implementation status of the control. ready: the control is implemented and effective. not_ready: the control is in progress. not_applicable: the control does not apply to this instance. not_started: work on the control has not begun. null when no status has been determined.'
+                          example: ready
+                      required:
+                      - id
+                      - code
+                      - name
+                      - description
+                      - category
+                      - status
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A paginated list of compliance controls.
+                example:
+                  total: 2
+                  items:
+                  - id: 1
+                    code: QMC-1
+                    name: Access Control Policy
+                    description: Restricts system access to authorised users.
+                    category: Information Security
+                    status: ready
+                  - id: 2
+                    code: C-15
+                    name: Data Backup
+                    description: null
+                    category: null
+                    status: not_started
+                ref: complianceControlListResponse
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Lists the compliance controls in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Controls are either Qualio-managed (built-in, with a QMC- code prefix) or created by your organisation (with a C- code prefix). Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun). Use the framework_id parameter to return only controls linked to requirements of a specific framework, and the status parameter to return only controls in a particular state. Omit either parameter to apply no filter on that dimension. Results are ordered by control id. Use offset and limit to page through large sets; the total field in the response reports the full count of matching controls before pagination is applied.'
+      operationId: listComplianceControlsOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks.
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state.'
+          example: ready
+          type: string
+          enum:
+          - ready
+          - not_ready
+          - not_applicable
+          - not_started
+        description: 'Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a control
+      description: Creates a new compliance control in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Provide a name and, optionally, a description and category. The control is created with a generated C- code and starts in the not_started status; use the other Compliance Intelligence endpoints to link it to requirements and track its implementation.
+      operationId: createComplianceControl
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  description: The display name of the new control.
+                  example: Access Control Policy
+                description:
+                  description: An optional human-readable description of the control.
+                  example: Restricts system access to authorised users.
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                category:
+                  description: An optional category used to group related controls.
+                  example: Information Security
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - name
+              description: The control to create.
+              example:
+                name: Access Control Policy
+                description: Restricts system access to authorised users.
+                category: Information Security
+              ref: createComplianceControlRequest
+      responses:
+        '201':
+          description: Control created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the control.
+                    example: 1
+                  code:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: The human-readable control code. Qualio-managed controls are prefixed with QMC (for example QMC-1); controls created by your organisation are prefixed with C (for example C-15). null when the control has no assigned code.
+                    example: QMC-1
+                  name:
+                    type: string
+                    description: The display name of the control.
+                    example: Access Control Policy
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the control.
+                    example: Restricts system access to authorised users.
+                  category:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional category used to group related controls.
+                    example: Information Security
+                  status:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - ready
+                      - not_ready
+                      - not_applicable
+                      - not_started
+                    - type: 'null'
+                    description: 'The current implementation status of the control. ready: the control is implemented and effective. not_ready: the control is in progress. not_applicable: the control does not apply to this instance. not_started: work on the control has not begun. null when no status has been determined.'
+                    example: ready
+                required:
+                - id
+                - code
+                - name
+                - description
+                - category
+                - status
+                additionalProperties: false
+                description: The newly created control.
+                example:
+                  id: 15
+                  code: C-15
+                  name: Access Control Policy
+                  description: Restricts system access to authorised users.
+                  category: Information Security
+                  status: not_started
+                ref: createdComplianceControl
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/controls/{controlId}:
+    get:
+      summary: Get a control
+      description: 'Retrieves a single compliance control in your Qualio instance, including the evidence and definitions linked to it. A control is a measure your organisation implements to satisfy one or more compliance requirements. The definitions array holds evidence documenting how the control is designed; the evidence array holds evidence demonstrating that the control is operating. Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun).'
+      operationId: getComplianceControl
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: controlId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance control.
+          example: 1
+        required: true
+        description: The numeric id of the compliance control.
+      responses:
+        '200':
+          description: Successful retrieval of the compliance control.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the control.
+                    example: 1
+                  code:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: The human-readable control code. Qualio-managed controls are prefixed with QMC (for example QMC-1); controls created by your organisation are prefixed with C (for example C-15). null when the control has no assigned code.
+                    example: QMC-1
+                  name:
+                    type: string
+                    description: The display name of the control.
+                    example: Access Control Policy
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the control.
+                    example: Restricts system access to authorised users.
+                  category:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional category used to group related controls.
+                    example: Information Security
+                  status:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - ready
+                      - not_ready
+                      - not_applicable
+                      - not_started
+                    - type: 'null'
+                    description: 'The current implementation status of the control. ready: the control is implemented and effective. not_ready: the control is in progress. not_applicable: the control does not apply to this instance. not_started: work on the control has not begun. null when no status has been determined.'
+                    example: ready
+                  guidelines:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: Optional guidance describing how to implement and satisfy the control.
+                    example: Apply the principle of least privilege when granting access.
+                  evidence:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the evidence item.
+                          example: 100
+                        control_id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The id of the control this evidence belongs to.
+                          example: 1
+                        evidence_type:
+                          type: string
+                          enum:
+                          - definition
+                          - execution
+                          - execution_only
+                          description: 'The kind of evidence. definition: documents how the control is designed. execution and execution_only: demonstrate that the control is operating.'
+                          example: execution
+                        source:
+                          type: string
+                          enum:
+                          - qualio
+                          - external
+                          - text_input
+                          description: 'Where the evidence originates. qualio: a linked Qualio document. external: an externally uploaded file. text_input: free text entered directly.'
+                          example: qualio
+                        link:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: A link to the underlying evidence, when applicable. null for free-text evidence.
+                          example: https://app.qualio.com/documents/1
+                        title:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The title of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        content:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The free-text content of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        created_at:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                          description: The time the evidence was created, as an ISO 8601 timestamp. null when unknown.
+                          example: '2026-01-01T12:00:00Z'
+                      required:
+                      - id
+                      - control_id
+                      - evidence_type
+                      - source
+                      - link
+                      - title
+                      - content
+                      - created_at
+                      additionalProperties: false
+                    description: Execution evidence demonstrating that the control is operating.
+                  definitions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the evidence item.
+                          example: 100
+                        control_id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The id of the control this evidence belongs to.
+                          example: 1
+                        evidence_type:
+                          type: string
+                          enum:
+                          - definition
+                          - execution
+                          - execution_only
+                          description: 'The kind of evidence. definition: documents how the control is designed. execution and execution_only: demonstrate that the control is operating.'
+                          example: execution
+                        source:
+                          type: string
+                          enum:
+                          - qualio
+                          - external
+                          - text_input
+                          description: 'Where the evidence originates. qualio: a linked Qualio document. external: an externally uploaded file. text_input: free text entered directly.'
+                          example: qualio
+                        link:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: A link to the underlying evidence, when applicable. null for free-text evidence.
+                          example: https://app.qualio.com/documents/1
+                        title:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The title of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        content:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The free-text content of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        created_at:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                          description: The time the evidence was created, as an ISO 8601 timestamp. null when unknown.
+                          example: '2026-01-01T12:00:00Z'
+                      required:
+                      - id
+                      - control_id
+                      - evidence_type
+                      - source
+                      - link
+                      - title
+                      - content
+                      - created_at
+                      additionalProperties: false
+                    description: Definition evidence documenting how the control is designed.
+                required:
+                - id
+                - code
+                - name
+                - description
+                - category
+                - status
+                - guidelines
+                - evidence
+                - definitions
+                additionalProperties: false
+                description: The compliance control, including its evidence and definitions.
+                example:
+                  id: 1
+                  code: QMC-1
+                  name: Access Control Policy
+                  description: Restricts system access to authorised users.
+                  category: Information Security
+                  status: ready
+                  guidelines: Apply the principle of least privilege when granting access.
+                  evidence:
+                  - id: 200
+                    control_id: 1
+                    evidence_type: execution
+                    source: qualio
+                    link: https://app.qualio.com/documents/1
+                    title: null
+                    content: null
+                    created_at: '2026-01-01T12:00:00Z'
+                  definitions:
+                  - id: 100
+                    control_id: 1
+                    evidence_type: definition
+                    source: text_input
+                    link: null
+                    title: Access Control Policy
+                    content: Documents the organisation's access control policy.
+                    created_at: '2026-01-01T12:00:00Z'
+                ref: complianceControlDetail
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Control not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Retrieves a single compliance control in your Qualio instance, including the evidence and definitions linked to it. A control is a measure your organisation implements to satisfy one or more compliance requirements. The definitions array holds evidence documenting how the control is designed; the evidence array holds evidence demonstrating that the control is operating. Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun).'
+      operationId: getComplianceControlOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: controlId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance control.
+          example: 1
+        required: true
+        description: The numeric id of the compliance control.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    put:
+      summary: Update a control
+      description: 'Updates a compliance control in your Qualio instance. This is a partial update: include only the fields you want to change, and omit the rest. Pass null for description or category to clear them. Use the status field to update the control''s implementation status (a justification is required when setting it to not_applicable). Use requirement_ids to replace the set of requirements the control is mapped to; pass an empty array to clear the mappings, or omit it to leave them as they are.'
+      operationId: updateComplianceControl
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: controlId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance control.
+          example: 1
+        required: true
+        description: The numeric id of the compliance control.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: New display name for the control. Omit to leave unchanged.
+                  example: Access Control Policy
+                  type: string
+                  minLength: 1
+                description:
+                  description: New description for the control. Omit to leave unchanged. Pass null to clear an existing description.
+                  example: Restricts system access to authorised users.
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                category:
+                  description: New category for the control. Omit to leave unchanged. Pass null to clear an existing category.
+                  example: Information Security
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                status:
+                  description: New implementation status for the control. Omit to leave unchanged. A justification is required when setting the status to not_applicable.
+                  example: ready
+                  type: string
+                  enum:
+                  - ready
+                  - not_ready
+                  - not_applicable
+                  - not_started
+                justification:
+                  description: Required when status is not_applicable. Explains why the control does not apply to this instance.
+                  example: Not applicable to this product line.
+                  type: string
+                requirement_ids:
+                  description: Replaces the control's mapped requirements with this set of requirement ids. Omit to leave the existing mappings unchanged; pass an empty array to clear them.
+                  example:
+                  - 101
+                  - 102
+                  type: array
+                  items:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+              description: Fields to update on the control.
+              example:
+                name: Access Control Policy
+                description: Restricts system access to authorised users.
+                category: Information Security
+                status: ready
+                requirement_ids:
+                - 101
+                - 102
+              ref: updateComplianceControlRequest
+      responses:
+        '200':
+          description: Control updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the control.
+                    example: 1
+                  code:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: The human-readable control code. Qualio-managed controls are prefixed with QMC (for example QMC-1); controls created by your organisation are prefixed with C (for example C-15). null when the control has no assigned code.
+                    example: QMC-1
+                  name:
+                    type: string
+                    description: The display name of the control.
+                    example: Access Control Policy
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional human-readable description of the control.
+                    example: Restricts system access to authorised users.
+                  category:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: An optional category used to group related controls.
+                    example: Information Security
+                  status:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - ready
+                      - not_ready
+                      - not_applicable
+                      - not_started
+                    - type: 'null'
+                    description: 'The current implementation status of the control. ready: the control is implemented and effective. not_ready: the control is in progress. not_applicable: the control does not apply to this instance. not_started: work on the control has not begun. null when no status has been determined.'
+                    example: ready
+                required:
+                - id
+                - code
+                - name
+                - description
+                - category
+                - status
+                additionalProperties: false
+                description: The updated control.
+                example:
+                  id: 15
+                  code: C-15
+                  name: Access Control Policy
+                  description: Restricts system access to authorised users.
+                  category: Information Security
+                  status: ready
+                ref: updatedComplianceControl
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Control not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/evidence:
+    get:
+      summary: List evidence
+      description: "Lists the compliance evidence in your Qualio instance. Evidence is the documentation and records that demonstrate a control is defined and operating â\x80\x94 for example linked Qualio documents, externally uploaded files, or free-text notes. Use the control_id parameter to return only the evidence linked to a specific control; omit it to return evidence across all controls. Results are ordered by evidence id. Use offset and limit to page through large sets; the total field in the response reports the full count of matching evidence before pagination is applied."
+      operationId: listComplianceEvidence
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: control_id
+        schema:
+          description: Filter results to evidence linked to this control id. Omit to return evidence across all controls.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to evidence linked to this control id. Omit to return evidence across all controls.
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Successful retrieval of compliance evidence.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the evidence item.
+                          example: 100
+                        control_id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The id of the control this evidence belongs to.
+                          example: 1
+                        evidence_type:
+                          type: string
+                          enum:
+                          - definition
+                          - execution
+                          - execution_only
+                          description: 'The kind of evidence. definition: documents how the control is designed. execution and execution_only: demonstrate that the control is operating.'
+                          example: execution
+                        source:
+                          type: string
+                          enum:
+                          - qualio
+                          - external
+                          - text_input
+                          description: 'Where the evidence originates. qualio: a linked Qualio document. external: an externally uploaded file. text_input: free text entered directly.'
+                          example: qualio
+                        link:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: A link to the underlying evidence, when applicable. null for free-text evidence.
+                          example: https://app.qualio.com/documents/1
+                        title:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The title of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        content:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: The free-text content of the evidence, when applicable. Populated for free-text evidence; null otherwise.
+                          example: null
+                        created_at:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                          description: The time the evidence was created, as an ISO 8601 timestamp. null when unknown.
+                          example: '2026-01-01T12:00:00Z'
+                      required:
+                      - id
+                      - control_id
+                      - evidence_type
+                      - source
+                      - link
+                      - title
+                      - content
+                      - created_at
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A paginated list of compliance evidence.
+                example:
+                  total: 2
+                  items:
+                  - id: 200
+                    control_id: 1
+                    evidence_type: execution
+                    source: qualio
+                    link: https://app.qualio.com/documents/1
+                    title: null
+                    content: null
+                    created_at: '2026-01-01T12:00:00Z'
+                  - id: 100
+                    control_id: 1
+                    evidence_type: definition
+                    source: text_input
+                    link: null
+                    title: Access Control Policy
+                    content: Documents the organisation's access control policy.
+                    created_at: '2026-01-01T12:00:00Z'
+                ref: complianceEvidenceListResponse
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists the compliance evidence in your Qualio instance. Evidence is the documentation and records that demonstrate a control is defined and operating â\x80\x94 for example linked Qualio documents, externally uploaded files, or free-text notes. Use the control_id parameter to return only the evidence linked to a specific control; omit it to return evidence across all controls. Results are ordered by evidence id. Use offset and limit to page through large sets; the total field in the response reports the full count of matching evidence before pagination is applied."
+      operationId: listComplianceEvidenceOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: control_id
+        schema:
+          description: Filter results to evidence linked to this control id. Omit to return evidence across all controls.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to evidence linked to this control id. Omit to return evidence across all controls.
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/compliance/gaps:
+    get:
+      summary: List gaps
+      description: "Lists the compliance gaps in your Qualio instance. A gap is a shortfall identified against a control â\x80\x94 for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. Use the framework_id parameter to return only gaps on controls linked to a specific framework, the status parameter to return only gaps in a particular state (open, resolved, dismissed), and the severity parameter to return only gaps of a given severity (high, medium, low). Omit a parameter to apply no filter on that dimension. Use offset and limit to page through large sets; the total field in the response reports the full count of matching gaps before pagination is applied."
+      operationId: listComplianceGaps
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks.
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state.'
+          example: open
+          type: string
+          enum:
+          - open
+          - resolved
+          - dismissed
+        description: 'Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state.'
+      - in: query
+        name: severity
+        schema:
+          description: 'Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity.'
+          example: high
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+        description: 'Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Successful retrieval of compliance gaps.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The unique numeric identifier of the gap.
+                          example: 500
+                        control_id:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                          description: The id of the control this gap was raised against.
+                          example: 1
+                        summary:
+                          type: string
+                          description: A short summary of the gap.
+                          example: Missing objective evidence
+                        description:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: A fuller description of the gap. null when none is available.
+                          example: The control has no objective evidence demonstrating it is operating.
+                        recommendation:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          description: A recommended action to resolve the gap. null when none is available.
+                          example: Attach objective evidence to the control.
+                        severity:
+                          type: string
+                          enum:
+                          - high
+                          - medium
+                          - low
+                          description: 'The severity of the gap. high: significant compliance risk. medium: moderate risk. low: minor risk.'
+                          example: high
+                        status:
+                          type: string
+                          enum:
+                          - open
+                          - resolved
+                          - dismissed
+                          description: 'The current status of the gap. open: the gap is outstanding. resolved: the gap has been addressed. dismissed: the gap was reviewed and set aside.'
+                          example: open
+                        created_at:
+                          type: string
+                          format: date-time
+                          description: The time the gap was created, as an ISO 8601 timestamp.
+                          example: '2026-01-01T12:00:00Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                          description: The time the gap was last updated, as an ISO 8601 timestamp.
+                          example: '2026-01-02T12:00:00Z'
+                      required:
+                      - id
+                      - control_id
+                      - summary
+                      - description
+                      - recommendation
+                      - severity
+                      - status
+                      - created_at
+                      - updated_at
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A paginated list of compliance gaps.
+                example:
+                  total: 1
+                  items:
+                  - id: 500
+                    control_id: 1
+                    summary: Missing objective evidence
+                    description: The control has no objective evidence demonstrating it is operating.
+                    recommendation: Attach objective evidence to the control.
+                    severity: high
+                    status: open
+                    created_at: '2026-01-01T12:00:00Z'
+                    updated_at: '2026-01-02T12:00:00Z'
+                ref: complianceGapListResponse
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists the compliance gaps in your Qualio instance. A gap is a shortfall identified against a control â\x80\x94 for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. Use the framework_id parameter to return only gaps on controls linked to a specific framework, the status parameter to return only gaps in a particular state (open, resolved, dismissed), and the severity parameter to return only gaps of a given severity (high, medium, low). Omit a parameter to apply no filter on that dimension. Use offset and limit to page through large sets; the total field in the response reports the full count of matching gaps before pagination is applied."
+      operationId: listComplianceGapsOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: framework_id
+        schema:
+          description: Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks.
+          example: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks.
+      - in: query
+        name: status
+        schema:
+          description: 'Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state.'
+          example: open
+          type: string
+          enum:
+          - open
+          - resolved
+          - dismissed
+        description: 'Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state.'
+      - in: query
+        name: severity
+        schema:
+          description: 'Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity.'
+          example: high
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+        description: 'Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity.'
+      - in: query
+        name: offset
+        schema:
+          description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+          example: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        description: Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0.
+      - in: query
+        name: limit
+        schema:
+          description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+          example: 25
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a gap
+      description: "Creates a new compliance gap in your Qualio instance. A gap records a shortfall against a control â\x80\x94 for example missing objective evidence or evidence that does not satisfy the control's requirements. Provide the control, a summary, description, recommendation, severity, and gap type. Optionally link the gap to one or more requirements by including the requirements array. The gap is created in the open status."
+      operationId: createComplianceGap
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                control_id:
+                  type: integer
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                  description: The id of the control this gap is raised against.
+                  example: 1
+                summary:
+                  type: string
+                  minLength: 1
+                  description: A short summary of the gap.
+                  example: Missing objective evidence
+                description:
+                  type: string
+                  minLength: 1
+                  description: A fuller description of the gap.
+                  example: The control has no objective evidence demonstrating it is operating.
+                recommendation:
+                  type: string
+                  minLength: 1
+                  description: A recommended action to resolve the gap.
+                  example: Attach objective evidence to the control.
+                severity:
+                  type: string
+                  enum:
+                  - high
+                  - medium
+                  - low
+                  description: 'The severity of the gap. high: significant compliance risk. medium: moderate risk. low: minor risk.'
+                  example: high
+                type:
+                  type: string
+                  enum:
+                  - Missing process definition
+                  - Process definition gaps
+                  - No evidence provided
+                  - Insufficient evidence
+                  - Evidence not aligned with process
+                  - Evidence not current
+                  - Process not followed
+                  description: The type of gap being raised.
+                  example: No evidence provided
+                requirements:
+                  description: Requirements to link to this gap. Omit or pass an empty array to create an unlinked gap.
+                  example:
+                  - requirement_id: 101
+                    framework_id: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      requirement_id:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: The id of the requirement to link to this gap.
+                        example: 101
+                      framework_id:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: The id of the framework the requirement belongs to.
+                        example: 1
+                    required:
+                    - requirement_id
+                    - framework_id
+              required:
+              - control_id
+              - summary
+              - description
+              - recommendation
+              - severity
+              - type
+              description: The gap to create.
+              example:
+                control_id: 1
+                summary: Missing objective evidence
+                description: The control has no objective evidence demonstrating it is operating.
+                recommendation: Attach objective evidence to the control.
+                severity: high
+                type: No evidence provided
+                requirements:
+                - requirement_id: 101
+                  framework_id: 1
+              ref: createComplianceGapRequest
+      responses:
+        '201':
+          description: Gap created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the gap.
+                    example: 500
+                  control_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the control this gap was raised against.
+                    example: 1
+                  summary:
+                    type: string
+                    description: A short summary of the gap.
+                    example: Missing objective evidence
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A fuller description of the gap. null when none is available.
+                    example: The control has no objective evidence demonstrating it is operating.
+                  recommendation:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A recommended action to resolve the gap. null when none is available.
+                    example: Attach objective evidence to the control.
+                  severity:
+                    type: string
+                    enum:
+                    - high
+                    - medium
+                    - low
+                    description: 'The severity of the gap. high: significant compliance risk. medium: moderate risk. low: minor risk.'
+                    example: high
+                  status:
+                    type: string
+                    enum:
+                    - open
+                    - resolved
+                    - dismissed
+                    description: 'The current status of the gap. open: the gap is outstanding. resolved: the gap has been addressed. dismissed: the gap was reviewed and set aside.'
+                    example: open
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was created, as an ISO 8601 timestamp.
+                    example: '2026-01-01T12:00:00Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was last updated, as an ISO 8601 timestamp.
+                    example: '2026-01-02T12:00:00Z'
+                required:
+                - id
+                - control_id
+                - summary
+                - description
+                - recommendation
+                - severity
+                - status
+                - created_at
+                - updated_at
+                additionalProperties: false
+                description: The newly created gap.
+                example:
+                  id: 501
+                  control_id: 1
+                  summary: Missing objective evidence
+                  description: The control has no objective evidence demonstrating it is operating.
+                  recommendation: Attach objective evidence to the control.
+                  severity: high
+                  status: open
+                  created_at: '2026-01-01T12:00:00Z'
+                  updated_at: '2026-01-01T12:00:00Z'
+                ref: createdComplianceGap
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/compliance/gaps/{gapId}:
+    get:
+      summary: Get a gap
+      description: "Retrieves a single compliance gap in your Qualio instance. A gap is a shortfall identified against a control â\x80\x94 for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. The status field reports whether the gap is open, resolved or dismissed, and severity reports its level (high, medium, low)."
+      operationId: getComplianceGap
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: gapId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance gap.
+          example: 500
+        required: true
+        description: The numeric id of the compliance gap.
+      responses:
+        '200':
+          description: Successful retrieval of the compliance gap.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the gap.
+                    example: 500
+                  control_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the control this gap was raised against.
+                    example: 1
+                  summary:
+                    type: string
+                    description: A short summary of the gap.
+                    example: Missing objective evidence
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A fuller description of the gap. null when none is available.
+                    example: The control has no objective evidence demonstrating it is operating.
+                  recommendation:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A recommended action to resolve the gap. null when none is available.
+                    example: Attach objective evidence to the control.
+                  severity:
+                    type: string
+                    enum:
+                    - high
+                    - medium
+                    - low
+                    description: 'The severity of the gap. high: significant compliance risk. medium: moderate risk. low: minor risk.'
+                    example: high
+                  status:
+                    type: string
+                    enum:
+                    - open
+                    - resolved
+                    - dismissed
+                    description: 'The current status of the gap. open: the gap is outstanding. resolved: the gap has been addressed. dismissed: the gap was reviewed and set aside.'
+                    example: open
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was created, as an ISO 8601 timestamp.
+                    example: '2026-01-01T12:00:00Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was last updated, as an ISO 8601 timestamp.
+                    example: '2026-01-02T12:00:00Z'
+                required:
+                - id
+                - control_id
+                - summary
+                - description
+                - recommendation
+                - severity
+                - status
+                - created_at
+                - updated_at
+                additionalProperties: false
+                description: The compliance gap.
+                example:
+                  id: 500
+                  control_id: 1
+                  summary: Missing objective evidence
+                  description: The control has no objective evidence demonstrating it is operating.
+                  recommendation: Attach objective evidence to the control.
+                  severity: high
+                  status: open
+                  created_at: '2026-01-01T12:00:00Z'
+                  updated_at: '2026-01-02T12:00:00Z'
+                ref: complianceGap
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Gap not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Retrieves a single compliance gap in your Qualio instance. A gap is a shortfall identified against a control â\x80\x94 for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. The status field reports whether the gap is open, resolved or dismissed, and severity reports its level (high, medium, low)."
+      operationId: getComplianceGapOptions
+      tags:
+      - Compliance Intelligence
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: gapId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance gap.
+          example: 500
+        required: true
+        description: The numeric id of the compliance gap.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    put:
+      summary: Update a gap
+      description: Updates the status of a compliance gap in your Qualio instance. Accepted status values are open, resolved, and dismissed. A reason is required and will be recorded in the gap's audit trail.
+      operationId: updateComplianceGap
+      tags:
+      - Compliance Intelligence
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: gapId
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          description: The numeric id of the compliance gap.
+          example: 500
+        required: true
+        description: The numeric id of the compliance gap.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - open
+                  - resolved
+                  - dismissed
+                  description: 'New status for the gap. Accepted values: open, resolved, dismissed.'
+                  example: resolved
+                reason:
+                  type: string
+                  minLength: 1
+                  description: Explains why the status is being changed.
+                  example: Objective evidence has been attached and verified.
+              required:
+              - status
+              - reason
+              description: Fields to update on the gap.
+              example:
+                status: resolved
+                reason: Objective evidence has been attached and verified.
+              ref: updateComplianceGapRequest
+      responses:
+        '200':
+          description: Gap updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The unique numeric identifier of the gap.
+                    example: 500
+                  control_id:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                    description: The id of the control this gap was raised against.
+                    example: 1
+                  summary:
+                    type: string
+                    description: A short summary of the gap.
+                    example: Missing objective evidence
+                  description:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A fuller description of the gap. null when none is available.
+                    example: The control has no objective evidence demonstrating it is operating.
+                  recommendation:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    description: A recommended action to resolve the gap. null when none is available.
+                    example: Attach objective evidence to the control.
+                  severity:
+                    type: string
+                    enum:
+                    - high
+                    - medium
+                    - low
+                    description: 'The severity of the gap. high: significant compliance risk. medium: moderate risk. low: minor risk.'
+                    example: high
+                  status:
+                    type: string
+                    enum:
+                    - open
+                    - resolved
+                    - dismissed
+                    description: 'The current status of the gap. open: the gap is outstanding. resolved: the gap has been addressed. dismissed: the gap was reviewed and set aside.'
+                    example: open
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was created, as an ISO 8601 timestamp.
+                    example: '2026-01-01T12:00:00Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: The time the gap was last updated, as an ISO 8601 timestamp.
+                    example: '2026-01-02T12:00:00Z'
+                required:
+                - id
+                - control_id
+                - summary
+                - description
+                - recommendation
+                - severity
+                - status
+                - created_at
+                - updated_at
+                additionalProperties: false
+                description: The updated gap.
+                example:
+                  id: 500
+                  control_id: 1
+                  summary: Missing objective evidence
+                  description: The control has no objective evidence demonstrating it is operating.
+                  recommendation: Attach objective evidence to the control.
+                  severity: medium
+                  status: resolved
+                  created_at: '2026-01-01T12:00:00Z'
+                  updated_at: '2026-01-03T12:00:00Z'
+                ref: updatedComplianceGap
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Gap not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+components:
+  schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

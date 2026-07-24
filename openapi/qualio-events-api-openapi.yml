@@ -1,0 +1,2048 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Events API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Events
+paths:
+  /v1/events/events/{code}:
+    get:
+      summary: Retrieve an event
+      description: "Retrieves a single quality event in full detail by its code (e.g. CAPA-1, NCR-12), as shown in Qualio. A quality event is a structured record of a quality-related incident or action â\x80\x94 such as a CAPA (corrective/preventive action), non-conformance/non-compliance, complaint, deviation, or audit finding; the code's prefix indicates its type. The detailed view includes the event's status, owner, dates, risk, tags, escalation links, and the contents of each workflow step."
+      operationId: getEvent
+      tags:
+      - Events
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: code
+        schema:
+          $ref: '#/components/schemas/eventCode'
+        required: true
+        description: A unique identifier for an Event, that includes a prefix that corresponds to its type
+      responses:
+        '200':
+          description: Successful event retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventDetailed'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Event not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Retrieves a single quality event in full detail by its code (e.g. CAPA-1, NCR-12), as shown in Qualio. A quality event is a structured record of a quality-related incident or action â\x80\x94 such as a CAPA (corrective/preventive action), non-conformance/non-compliance, complaint, deviation, or audit finding; the code's prefix indicates its type. The detailed view includes the event's status, owner, dates, risk, tags, escalation links, and the contents of each workflow step."
+      operationId: getEventOptions
+      tags:
+      - Events
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: code
+        schema:
+          $ref: '#/components/schemas/eventCode'
+        required: true
+        description: A unique identifier for an Event, that includes a prefix that corresponds to its type
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/events/events:
+    get:
+      summary: Query events
+      description: "Queries quality events across your Qualio instance, returning a summary of each. Quality events are structured records of quality-related incidents and actions â\x80\x94 CAPAs, non-conformances, complaints, deviations, audit findings, and other custom types. Filter by status (`open`, `closed`, `imported`, `rejected`, `cancelled`), by owner (owner_user_id), and by event type (event_template_matrix_id, from the templates endpoint), and paginate with offset/limit. Use this to find events â\x80\x94 for example all open CAPAs or events owned by a given user."
+      operationId: queryEvents
+      tags:
+      - Events
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/eventStatus'
+        required: true
+        description: The status of a given event
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: owner_user_id
+        schema:
+          $ref: '#/components/schemas/userIdParam'
+        description: A unique identifier for a user in Qualio
+      - in: query
+        name: event_template_matrix_id
+        schema:
+          $ref: '#/components/schemas/eventTemplateMatrixIdParam'
+        description: A unique identifier for an event template in Qualio, use this to filter the results by event type
+      responses:
+        '200':
+          description: Successful event query response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventQueryResponse'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Queries quality events across your Qualio instance, returning a summary of each. Quality events are structured records of quality-related incidents and actions â\x80\x94 CAPAs, non-conformances, complaints, deviations, audit findings, and other custom types. Filter by status (`open`, `closed`, `imported`, `rejected`, `cancelled`), by owner (owner_user_id), and by event type (event_template_matrix_id, from the templates endpoint), and paginate with offset/limit. Use this to find events â\x80\x94 for example all open CAPAs or events owned by a given user."
+      operationId: queryEventsOptions
+      tags:
+      - Events
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/eventStatus'
+        required: true
+        description: The status of a given event
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: owner_user_id
+        schema:
+          $ref: '#/components/schemas/userIdParam'
+        description: A unique identifier for a user in Qualio
+      - in: query
+        name: event_template_matrix_id
+        schema:
+          $ref: '#/components/schemas/eventTemplateMatrixIdParam'
+        description: A unique identifier for an event template in Qualio, use this to filter the results by event type
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create an event
+      description: A request to create an event based on an event template. The event_template_matrix_id should correspond to the type of event you wish to create, which can be found on the response from querying templates. If you wish to populate values within the steps, use template_step_matrix_id from the desired step in the template, Then use field_matrix_id from the template to select what field to populate (form steps), or section_id from the template to select what section to populate (content steps).You do not have to set all of the fields or sections for your request to be valid, these can be completed later in the UI.If populating a field of type change_request, product, root_cause, registry, design_controls, training_plan, document_template, event_template, or task, you can use the code (ID visible in the UI) to populate the field.For the users field, you can use the email address of the user to populate the field. For suppliers, you can use the supplier name. You will see examples of these in the sample code.The event will be created with the owner set to the default owner for the event template, if available, and will list the API key user otherwise.
+      operationId: createEvent
+      tags:
+      - Events
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createEventPayload'
+      responses:
+        '200':
+          description: Successfully created an event
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/events/templates:
+    get:
+      summary: List event templates
+      description: "Lists all effective event templates in your Qualio instance. An event template defines a type of quality event (e.g. CAPA, NCR, complaint) â\x80\x94 its code prefix and the workflow steps that events of that type follow. Each template includes its `event_template_matrix_id`, which is used to filter events by type and to create a new event of that type."
+      operationId: listEventTemplates
+      tags:
+      - Events
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful event template query response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventTemplateResp'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists all effective event templates in your Qualio instance. An event template defines a type of quality event (e.g. CAPA, NCR, complaint) â\x80\x94 its code prefix and the workflow steps that events of that type follow. Each template includes its `event_template_matrix_id`, which is used to filter events by type and to create a new event of that type."
+      operationId: listEventTemplatesOptions
+      tags:
+      - Events
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/events/templates/{eventTemplateMatrixId}:
+    get:
+      summary: Retrieve an event template
+      description: Retrieves a single event template in full detail by its `event_template_matrix_id`, including its ordered workflow steps. Steps may be form steps (with fields to complete), content steps (with sections), or task steps. Use the step, field, and section identifiers returned here to populate values when creating an event of this type.
+      operationId: getEventTemplate
+      tags:
+      - Events
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: eventTemplateMatrixId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Successful event template response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventTemplateDetailedResp'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Event template not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves a single event template in full detail by its `event_template_matrix_id`, including its ordered workflow steps. Steps may be form steps (with fields to complete), content steps (with sections), or task steps. Use the step, field, and section identifiers returned here to populate values when creating an event of this type.
+      operationId: getEventTemplateOptions
+      tags:
+      - Events
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: eventTemplateMatrixId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    eventTemplateFormFieldMultiOption:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+          - text
+          - rich_text
+          - date
+          - dropdown
+          - boolean
+          - numeric
+          - attachment
+          - document
+          - event
+          - supplier
+          - user
+          - radio
+          - checkbox
+          - section
+          - change_request
+          - product
+          - root_cause
+          - registry
+          - design_controls
+          - training_plan
+          - document_template
+          - event_template
+          - task
+        order:
+          type: number
+        field_matrix_id:
+          type: string
+          format: uuid
+        helptext:
+          anyOf:
+          - type: string
+          - type: 'null'
+        mandatory:
+          type: boolean
+        default_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+        multi:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+      required:
+      - label
+      - type
+      - field_matrix_id
+      - mandatory
+      - multi
+      - options
+      additionalProperties: false
+      description: A multi-option form field in an event template
+    event:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - closed
+          - open
+          - imported
+          - rejected
+          - cancelled
+        url:
+          type: string
+        owner_user_id:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        due_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+        closed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+      required:
+      - code
+      - title
+      - description
+      - status
+      - url
+      - owner_user_id
+      - created_at
+      - due_at
+      - modified_at
+      - closed_at
+      additionalProperties: false
+      description: An event in Qualio, e.g. a corrective action, a complaint, a non-compliance, etc
+      example:
+        code: NCR-12
+        title: 'Non Compliance: procedure was not followed'
+        description: An incidence of a non compliance with a work instuction, procedure or policy
+        status: open
+        url: https://app.qualio.com/quality-events/events/123456
+        owner_user_id: 1
+        created_at: '2020-01-01T00:00:00Z'
+        due_at: '2020-01-02T00:00:00Z'
+        modified_at: '2020-01-01T00:00:00Z'
+        closed_at: null
+    createEventFormStep:
+      type: object
+      properties:
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              field_matrix_id:
+                type: string
+                format: uuid
+              values:
+                type: array
+                items:
+                  type: string
+            required:
+            - field_matrix_id
+            - values
+      required:
+      - template_step_matrix_id
+      - fields
+      description: A object containing form fields to populate
+    eventStatus:
+      type: string
+      enum:
+      - closed
+      - open
+      - imported
+      - rejected
+      - cancelled
+      description: The status of a given event
+      example: open
+    eventStepForm:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: form
+        order:
+          type: number
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              type:
+                type: string
+                enum:
+                - text
+                - rich_text
+                - date
+                - dropdown
+                - boolean
+                - numeric
+                - attachment
+                - document
+                - event
+                - supplier
+                - user
+                - radio
+                - checkbox
+                - section
+                - change_request
+                - product
+                - root_cause
+                - registry
+                - design_controls
+                - training_plan
+                - document_template
+                - event_template
+                - task
+              order:
+                type: number
+              helptext:
+                anyOf:
+                - type: string
+                - type: 'null'
+              mandatory:
+                type: boolean
+              default_content:
+                anyOf:
+                - type: string
+                - type: 'null'
+              multi:
+                type: boolean
+              values:
+                type: array
+                items:
+                  anyOf:
+                  - type: string
+                  - type: object
+                    properties:
+                      link:
+                        type: string
+                      name:
+                        type: string
+                      label:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      status:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      code:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                    required:
+                    - link
+                    - name
+                    additionalProperties: false
+            required:
+            - label
+            - type
+            - mandatory
+            - multi
+            - values
+            additionalProperties: false
+        form_status:
+          anyOf:
+          - type: string
+            enum:
+            - draft
+            - for_review
+            - for_approval
+            - approved
+            - approval_declined
+            - superseded
+            - cancelled
+          - type: 'null'
+        owner_user_id:
+          anyOf:
+          - type: number
+          - type: 'null'
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - fields
+      - form_status
+      - owner_user_id
+      - created_at
+      - modified_at
+      - approvers
+      - reviewers
+      additionalProperties: false
+      description: A form step in an event
+    eventDetailed:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - closed
+          - open
+          - imported
+          - rejected
+          - cancelled
+        url:
+          type: string
+        owner_user_id:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        due_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+        closed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+        escalated_from:
+          type: array
+          items:
+            type: string
+        escalated_to:
+          type: array
+          items:
+            type: string
+        tag_ids:
+          type: array
+          items:
+            type: number
+        steps:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/eventStepForm'
+            - $ref: '#/components/schemas/eventStepContent'
+            - $ref: '#/components/schemas/eventStepTasks'
+      required:
+      - code
+      - title
+      - description
+      - status
+      - url
+      - owner_user_id
+      - created_at
+      - due_at
+      - modified_at
+      - closed_at
+      - risk
+      - escalated_from
+      - escalated_to
+      - tag_ids
+      - steps
+      additionalProperties: false
+      description: A more detailed view of a single event in Qualio, e.g. a corrective action, a complaint, a non-compliance, etc
+      example:
+        code: NCR-12
+        title: 'Non Compliance: procedure was not followed'
+        description: An incidence of a non compliance with a work instuction, procedure or policy
+        status: open
+        url: https://app.qualio.com/quality-events/events/123456
+        owner_user_id: 1
+        created_at: '2020-01-01T00:00:00Z'
+        due_at: '2020-01-02T00:00:00Z'
+        modified_at: '2020-01-01T00:00:00Z'
+        closed_at: null
+        risk: 1+ Acceptable
+        escalated_from:
+        - COM-1
+        escalated_to:
+        - NCR-21
+        tag_ids:
+        - 21
+        - 92
+        steps:
+        - label: Introduction
+          type: content
+          order: 0
+          sections:
+          - label: Overview
+            order: 0
+            section_id: 1
+            content: This Non-Compliance Report (NCR) template is used to document and track non-conformances in your quality management system. Please complete all required fields and follow the workflow steps.
+          content_status: effective
+          owner_user_id: 1
+          created_at: '2020-01-01T00:00:00Z'
+          modified_at: '2020-01-01T00:00:00Z'
+          approvers:
+          - user_id: 5
+            action_done: true
+          - user_id: 6
+            action_done: false
+          reviewers:
+          - user_id: 4
+            action_done: true
+        - label: Non Compliance Details
+          type: form
+          order: 1
+          fields:
+          - label: Description
+            type: text
+            order: 0
+            mandatory: true
+            multi: false
+            values:
+            - Procedure was not followed
+          - label: Severity
+            type: dropdown
+            order: 1
+            mandatory: true
+            multi: false
+            values:
+            - Minor
+          - label: Related Incidents
+            type: event
+            order: 2
+            mandatory: false
+            multi: true
+            values:
+            - link: https://app.qualio.com/quality-events/events/123456
+              name: 'Non Compliance: procedure was not followed'
+              label: Non Compliance
+              status: open
+              code: NCR-12
+          form_status: approved
+          owner_user_id: 1
+          created_at: '2020-01-01T00:00:00Z'
+          modified_at: '2020-01-01T00:00:00Z'
+          approvers:
+          - user_id: 7
+            action_done: true
+          reviewers:
+          - user_id: 8
+            action_done: true
+          - user_id: 9
+            action_done: false
+        - label: Corrective Actions
+          type: tasks
+          order: 2
+          tasks:
+          - title: Investigate root cause
+            owner_user_id: 2
+            status: open
+            description: Determine the underlying cause of the non-compliance.
+            code: '#T-1'
+            due_at: '2020-01-05T00:00:00Z'
+            updated_at: '2020-01-01T00:00:00Z'
+            closed_at: null
+          - title: Implement corrective action
+            owner_user_id: 3
+            status: open
+            description: Apply the agreed corrective action and monitor effectiveness.
+            code: '#T-2'
+            due_at: '2020-01-10T00:00:00Z'
+            updated_at: '2020-01-01T00:00:00Z'
+            closed_at: null
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    createEventContentStep:
+      type: object
+      properties:
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              template_section_id:
+                type: number
+              content:
+                type: string
+            required:
+            - template_section_id
+            - content
+      required:
+      - template_step_matrix_id
+      - sections
+      description: A object containing content sections to populate
+    eventTemplateFormField:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+          - text
+          - rich_text
+          - date
+          - dropdown
+          - boolean
+          - numeric
+          - attachment
+          - document
+          - event
+          - supplier
+          - user
+          - radio
+          - checkbox
+          - section
+          - change_request
+          - product
+          - root_cause
+          - registry
+          - design_controls
+          - training_plan
+          - document_template
+          - event_template
+          - task
+        order:
+          type: number
+        field_matrix_id:
+          type: string
+          format: uuid
+        helptext:
+          anyOf:
+          - type: string
+          - type: 'null'
+        mandatory:
+          type: boolean
+        default_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+        multi:
+          type: boolean
+      required:
+      - label
+      - type
+      - field_matrix_id
+      - mandatory
+      - multi
+      additionalProperties: false
+      description: A form field in an event template
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    eventTemplateContentStep:
+      type: object
+      properties:
+        label:
+          type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          const: content
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              order:
+                type: number
+              template_section_id:
+                type: number
+              content:
+                type: string
+            required:
+            - label
+            - template_section_id
+            - content
+            additionalProperties: false
+      required:
+      - label
+      - template_step_matrix_id
+      - type
+      - sections
+      additionalProperties: false
+      description: A content step in an event template
+    eventQueryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              status:
+                type: string
+                enum:
+                - closed
+                - open
+                - imported
+                - rejected
+                - cancelled
+              url:
+                type: string
+              owner_user_id:
+                type: number
+              created_at:
+                type: string
+                format: date-time
+              due_at:
+                type: string
+                format: date-time
+              modified_at:
+                type: string
+                format: date-time
+              closed_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - code
+            - title
+            - description
+            - status
+            - url
+            - owner_user_id
+            - created_at
+            - due_at
+            - modified_at
+            - closed_at
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: An series of Events, based on the results of your query
+      example:
+        items:
+        - code: NCR-12
+          title: 'Non Compliance: procedure was not followed'
+          description: An incidence of a non compliance with a work instuction, procedure or policy
+          status: open
+          url: https://app.qualio.com/quality-events/events/123456
+          owner_user_id: 1
+          created_at: '2020-01-01T00:00:00Z'
+          due_at: '2020-01-02T00:00:00Z'
+          modified_at: '2020-01-01T00:00:00Z'
+          closed_at: null
+        total: 1
+    eventStepTasks:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: tasks
+        order:
+          type: number
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              owner_user_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - open
+                - closed_fail
+                - closed_success
+              description:
+                type: string
+              code:
+                type: string
+              due_at:
+                type: string
+                format: date-time
+              updated_at:
+                type: string
+                format: date-time
+              closed_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - title
+            - owner_user_id
+            - status
+            - description
+            - code
+            - due_at
+            - updated_at
+            - closed_at
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - tasks
+      additionalProperties: false
+      description: A tasks step in an event
+    createEventTaskStep:
+      type: object
+      properties:
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              owner_user_id:
+                type: number
+              time_limit_days:
+                type: number
+                minimum: 1
+                maximum: 999999999
+            required:
+            - title
+            - description
+            - owner_user_id
+            - time_limit_days
+      required:
+      - template_step_matrix_id
+      - tasks
+      description: A object containing tasks to create on the step
+    eventTemplateTaskStep:
+      type: object
+      properties:
+        label:
+          type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          const: tasks
+      required:
+      - label
+      - template_step_matrix_id
+      - type
+      additionalProperties: false
+      description: A tasks step in an event template
+    userIdParam:
+      description: A unique identifier for a user in Qualio
+      example: 12345
+      type: number
+    createEventPayload:
+      type: object
+      properties:
+        event_template_matrix_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          maxLength: 512
+        steps:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/createEventFormStep'
+            - $ref: '#/components/schemas/createEventContentStep'
+            - $ref: '#/components/schemas/createEventTaskStep'
+      required:
+      - event_template_matrix_id
+      - title
+      description: A request to create an event based on an event template. The event_template_matrix_id should correspond to the type of event you wish to create, which can be found on the response from querying templates. If you wish to populate values within the steps, use template_step_matrix_id from the desired step in the template, Then use field_matrix_id from the template to select what field to populate (form steps), or section_id from the template to select what section to populate (content steps).You do not have to set all of the fields or sections for your request to be valid, these can be completed later in the UI.If populating a field of type change_request, product, root_cause, registry, design_controls, training_plan, document_template, event_template, or task, you can use the code (ID visible in the UI) to populate the field.For the users field, you can use the email address of the user to populate the field. For suppliers, you can use the supplier name. You will see examples of these in the sample code.The event will be created with the owner set to the default owner for the event template, if available, and will list the API key user otherwise.
+      example:
+        title: 'Non Compliance: procedure was not followed'
+        description: An incidence of a non compliance with a work instuction, procedure or policy
+        event_template_matrix_id: c3e000df-4e7e-4916-b5dc-b236a83b3fe5
+        steps:
+        - template_step_matrix_id: a1b2c3d4-e5f6-4789-a012-b3c4d5e6f789
+          sections:
+          - template_section_id: 1
+            content: This Non-Compliance Report (NCR) documents a deviation from standard operating procedures.
+        - template_step_matrix_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          fields:
+          - field_matrix_id: c3d4e5f6-a7b8-4901-c234-d5e6f7a8b901
+            values:
+            - Procedure was not followed during assembly
+          - field_matrix_id: d4e5f6a7-b8c9-4012-d345-e6f7a8b9c012
+            values:
+            - Minor
+          - field_matrix_id: e5f6a7b8-c9d0-4123-e456-f7a8b9c0d123
+            values:
+            - '2025-01-01'
+          - field_matrix_id: f6a7b8c9-d0e1-4234-f567-a8b9c0d1e234
+            values:
+            - Manufacturing
+          - field_matrix_id: a7b8c9d0-e1f2-4345-a678-b9c0d1e2f345
+            values:
+            - 'true'
+          - field_matrix_id: b8c9d0e1-f2a3-4456-b789-c0d1e2f3a456
+            values:
+            - Product A
+            - Product B
+            - Product C
+            - Product D
+          - field_matrix_id: c9d0e1f2-a3b4-4567-c890-d1e2f3a4b567
+            values:
+            - '123456'
+          - field_matrix_id: d0e1f2a3-b4c5-4678-d901-e2f3a4b5c678
+            values:
+            - '1000.75'
+          - field_matrix_id: fdd7d0fa-d9b0-11f0-a30a-be7f281741c5
+            values:
+            - INC-123
+            - INC-999
+          - field_matrix_id: db423422-d9b0-11f0-a30a-be7f281741c5
+            values:
+            - manager1@qualio.com
+            - manager2@qualio.com
+        - template_step_matrix_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          tasks:
+          - title: Investigate root cause
+            description: Determine the underlying cause of the non-compliance.
+            owner_user_id: 2
+            time_limit_days: 10
+    eventTemplateMatrixIdParam:
+      description: A unique identifier for an event template in Qualio, use this to filter the results by event type
+      example: b2c3d4e5-f6a7-8901-bcde-f12345678901
+      type: string
+      format: uuid
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    eventTemplateDetailedResp:
+      type: object
+      properties:
+        prefix:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - for_approval
+          - approval_declined
+          - effective
+          - superseded
+          - archived
+        event_template_matrix_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+        steps:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/eventTemplateFormStep'
+            - $ref: '#/components/schemas/eventTemplateContentStep'
+            - $ref: '#/components/schemas/eventTemplateTaskStep'
+      required:
+      - prefix
+      - title
+      - status
+      - event_template_matrix_id
+      - url
+      - steps
+      additionalProperties: false
+      description: A detailed version of an event template, including steps
+      example:
+        title: Non Compliance
+        status: effective
+        url: https://app.qualio.com/quality-events/templates/123456
+        prefix: NCR
+        event_template_matrix_id: c3e000df-4e7e-4916-b5dc-b236a83b3fe5
+        steps:
+        - label: Introduction
+          type: content
+          order: 0
+          template_step_matrix_id: a1b2c3d4-e5f6-4789-a012-b3c4d5e6f789
+          sections:
+          - label: Overview
+            order: 0
+            template_section_id: 1
+            content: This Non-Compliance Report (NCR) template is used to document and track non-conformances in your quality management system. Please complete all required fields and follow the workflow steps.
+          - label: Instructions
+            order: 1
+            template_section_id: 2
+            content: '1. Fill out the form with all relevant details
+
+              2. Attach any supporting documentation
+
+              3. Complete the assigned tasks
+
+              4. Review and submit for approval'
+        - label: Non Compliance Details
+          type: form
+          order: 1
+          template_step_matrix_id: b2c3d4e5-f6a7-4890-b123-c4d5e6f7a890
+          fields:
+          - label: Description
+            type: rich_text
+            order: 0
+            field_matrix_id: c3d4e5f6-a7b8-4901-c234-d5e6f7a8b901
+            helptext: Provide a detailed description of the non-compliance
+            mandatory: true
+            default_content: null
+            multi: false
+          - label: Severity
+            type: dropdown
+            order: 1
+            field_matrix_id: d4e5f6a7-b8c9-4012-d345-e6f7a8b9c012
+            helptext: Select the severity level of this non-compliance
+            mandatory: true
+            default_content: null
+            multi: false
+            options:
+            - Critical
+            - Major
+            - Minor
+            - Observation
+          - label: Discovered Date
+            type: date
+            order: 2
+            field_matrix_id: e5f6a7b8-c9d0-4123-e456-f7a8b9c0d123
+            helptext: When was this non-compliance discovered?
+            mandatory: true
+            default_content: null
+            multi: false
+          - label: Department
+            type: radio
+            order: 3
+            field_matrix_id: f6a7b8c9-d0e1-4234-f567-a8b9c0d1e234
+            helptext: Select the department where the non-compliance occurred
+            mandatory: false
+            default_content: null
+            multi: false
+            options:
+            - Manufacturing
+            - Quality Assurance
+            - Research & Development
+            - Operations
+            - Other
+          - label: Requires Immediate Action
+            type: boolean
+            order: 4
+            field_matrix_id: a7b8c9d0-e1f2-4345-a678-b9c0d1e2f345
+            helptext: Check if this requires immediate corrective action
+            mandatory: false
+            default_content: null
+            multi: false
+          - label: Affected Products
+            type: checkbox
+            order: 5
+            field_matrix_id: b8c9d0e1-f2a3-4456-b789-c0d1e2f3a456
+            helptext: Select all products affected by this non-compliance
+            mandatory: false
+            default_content: null
+            multi: true
+            options:
+            - Product A
+            - Product B
+            - Product C
+            - Product D
+          - label: Reference Number
+            type: text
+            order: 6
+            field_matrix_id: c9d0e1f2-a3b4-4567-c890-d1e2f3a4b567
+            helptext: Internal reference number if applicable
+            mandatory: false
+            default_content: null
+            multi: false
+          - label: Estimated Cost Impact
+            type: numeric
+            order: 7
+            field_matrix_id: d0e1f2a3-b4c5-4678-d901-e2f3a4b5c678
+            helptext: Estimated financial impact in USD
+            mandatory: false
+            default_content: null
+            multi: false
+          - label: Related Incidents
+            type: event
+            order: 8
+            field_matrix_id: fdd7d0fa-d9b0-11f0-a30a-be7f281741c5
+            helptext: Select the related incidents
+            mandatory: false
+            default_content: null
+            multi: true
+          - label: Responsible Managers
+            type: user
+            order: 9
+            field_matrix_id: db423422-d9b0-11f0-a30a-be7f281741c5
+            helptext: Select the responsible managers
+            mandatory: false
+            default_content: null
+            multi: true
+        - label: Corrective Actions
+          type: tasks
+          template_step_matrix_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          order: 2
+    eventCode:
+      type: string
+      description: A unique identifier for an Event, that includes a prefix that corresponds to its type
+      example: CAPA-1
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    eventTemplateResp:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              prefix:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+                enum:
+                - draft
+                - for_approval
+                - approval_declined
+                - effective
+                - superseded
+                - archived
+              event_template_matrix_id:
+                type: string
+                format: uuid
+              url:
+                type: string
+            required:
+            - prefix
+            - title
+            - status
+            - event_template_matrix_id
+            - url
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A list of event templates for your Qualio instance
+      example:
+        items:
+        - title: Non Compliance
+          status: effective
+          url: https://app.qualio.com/quality-events/templates/123456
+          prefix: NCR
+          event_template_matrix_id: c3e000df-4e7e-4916-b5dc-b236a83b3fe5
+        total: 1
+    eventTemplateFormStep:
+      type: object
+      properties:
+        label:
+          type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          const: form
+        fields:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/eventTemplateFormFieldMultiOption'
+            - $ref: '#/components/schemas/eventTemplateFormField'
+      required:
+      - label
+      - template_step_matrix_id
+      - type
+      - fields
+      additionalProperties: false
+      description: A form step in an event template
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    eventStepContent:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: content
+        order:
+          type: number
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              order:
+                type: number
+              section_id:
+                type: number
+              content:
+                type: string
+            required:
+            - label
+            - section_id
+            - content
+            additionalProperties: false
+        content_status:
+          anyOf:
+          - type: string
+            enum:
+            - approval_declined
+            - approved
+            - deleted
+            - draft
+            - effective
+            - for_approval
+            - for_review
+            - for_retirement
+            - retired
+            - superseded
+          - type: 'null'
+        owner_user_id:
+          anyOf:
+          - type: number
+          - type: 'null'
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - sections
+      - content_status
+      - owner_user_id
+      - created_at
+      - modified_at
+      - approvers
+      - reviewers
+      additionalProperties: false
+      description: A content step in an event
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

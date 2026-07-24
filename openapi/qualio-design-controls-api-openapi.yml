@@ -1,0 +1,3211 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Design Controls API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Design Controls
+paths:
+  /v1/design-controls/products:
+    get:
+      summary: List products
+      description: 'Lists the design control products in your Qualio instance. Design Controls (also called Product Development) is Qualio''s module for medical-device design control and traceability: each product groups the requirements, test cases, and risks that demonstrate it is properly designed, verified, and risk-managed (per FDA / ISO 14971). A product is identified by a UUID; use that id with the requirements, test-case, risk, and test-result endpoints. Returns each product''s id, name, and tag ids.'
+      operationId: listDesignControlProducts
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful design controls products retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        tag_ids:
+                          type: array
+                          items:
+                            type: number
+                      required:
+                      - id
+                      - name
+                      - tag_ids
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A list of design control products
+                example:
+                  items:
+                  - id: 123e4567-e89b-12d3-a456-426614174000
+                    name: Cardio pump
+                    tag_ids:
+                    - 12
+                    - 21
+                    - 31
+                  total: 1
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Lists the design control products in your Qualio instance. Design Controls (also called Product Development) is Qualio''s module for medical-device design control and traceability: each product groups the requirements, test cases, and risks that demonstrate it is properly designed, verified, and risk-managed (per FDA / ISO 14971). A product is identified by a UUID; use that id with the requirements, test-case, risk, and test-result endpoints. Returns each product''s id, name, and tag ids.'
+      operationId: listDesignControlProductsOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/design-controls/products/{productId}/test-cases:
+    get:
+      summary: List test cases
+      description: Lists the test cases for a design control product, identified by its UUID. A test case documents a verification procedure that proves one or more requirements are satisfied. Each item includes its id, auto-generated code (e.g. TC-1), title, type, change-control status, source, the traceability issues flagged by design-control policy (e.g. a failing or outdated test result), and its latest recorded test result.
+      operationId: listProductTestCases
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Successful design controls test cases retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        title:
+                          type: string
+                        code:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        type:
+                          type: string
+                          enum:
+                          - testCase1
+                          - testCase2
+                          - testCase3
+                        changeControlStatus:
+                          type: string
+                          enum:
+                          - unstaged
+                          - staged
+                          - approved
+                          - not_approved
+                        source:
+                          type: string
+                          minLength: 1
+                        source_url:
+                          type: string
+                          format: uri
+                        issues:
+                          type: object
+                          propertyNames:
+                            type: string
+                            enum:
+                            - REQUIRES_PARENT
+                            - UNMITIGATED
+                            - REQUIRES_CHILD
+                            - UNTESTED_REQUIREMENT
+                            - FAILING_TEST
+                            - OUTDATED_TESTRESULT
+                          additionalProperties:
+                            type: boolean
+                          required:
+                          - REQUIRES_PARENT
+                          - UNMITIGATED
+                          - REQUIRES_CHILD
+                          - UNTESTED_REQUIREMENT
+                          - FAILING_TEST
+                          - OUTDATED_TESTRESULT
+                        testResult:
+                          type: object
+                          properties:
+                            result:
+                              type: string
+                              enum:
+                              - passed
+                              - failed
+                              - blocked
+                            date:
+                              type: string
+                              format: date-time
+                            comment:
+                              type: string
+                              maxLength: 255
+                            tester:
+                              type: string
+                              minLength: 1
+                              maxLength: 255
+                            url:
+                              type: string
+                            source:
+                              type: string
+                          required:
+                          - result
+                          - date
+                          - tester
+                          additionalProperties: false
+                        description:
+                          description: An optional description of the item. Accepts plain text up to 150,000 characters.
+                          type: string
+                          maxLength: 150000
+                      required:
+                      - id
+                      - title
+                      - code
+                      - created_at
+                      - updated_at
+                      - type
+                      - changeControlStatus
+                      - source
+                      - issues
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A list of design control test cases
+                example:
+                  items:
+                  - id: 123e4567-e89b-12d3-a456-426614174000
+                    title: Test case 1
+                    code: TC-1
+                    created_at: '2021-01-01T00:00:00.000Z'
+                    updated_at: '2021-01-01T00:00:00.000Z'
+                    type: testCase1
+                    changeControlStatus: unstaged
+                    source: Source 1
+                    testResult:
+                      result: passed
+                      date: '2021-01-01T00:00:00.000Z'
+                      comment: Test case 1 passed
+                      tester: Tester 1
+                      source: developer-api
+                    issues:
+                      REQUIRES_PARENT: false
+                      UNMITIGATED: false
+                      REQUIRES_CHILD: false
+                      UNTESTED_REQUIREMENT: false
+                      FAILING_TEST: false
+                      OUTDATED_TESTRESULT: false
+                  total: 1
+                ref: testCase
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists the test cases for a design control product, identified by its UUID. A test case documents a verification procedure that proves one or more requirements are satisfied. Each item includes its id, auto-generated code (e.g. TC-1), title, type, change-control status, source, the traceability issues flagged by design-control policy (e.g. a failing or outdated test result), and its latest recorded test result.
+      operationId: listProductTestCasesOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a test case
+      description: 'Create a test case in a design control product. A test case documents a verification procedure used to confirm that one or more product requirements are satisfied. The type field identifies which test case template slot to use: testCase1, testCase2, and testCase3 map to the first, second, and third configured templates respectively. A code is generated automatically when none is supplied. Use the links or requirements fields to add traceability connections to existing quality items by providing their codes or UUIDs. Type-matching is enforced: testCase1 can only link to req1 requirements, testCase2 to req2, and testCase3 to req3. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. Providing an id that already exists in the product returns 409 Conflict.'
+      operationId: createProductTestCase
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The title of the item, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the item. Accepts plain text up to 150,000 characters.
+                  type: string
+                  maxLength: 150000
+                links:
+                  description: 'An array of quality item codes or UUIDs to establish as trace links. You may supply codes (such as REQ-1 or TC-5) or UUIDs. If a supplied value is not found in the product, it is stored as an unresolved link and resolved automatically when the target item is created later. Type-matching rules apply: see the notes on test_cases for requirements and on the type field for test cases.'
+                  type: array
+                  items:
+                    type: string
+                requirements:
+                  description: An array of requirement codes or UUIDs to link for traceability coverage. Entries are combined with links and test_cases and processed together. The same type-matching rules apply.
+                  type: array
+                  items:
+                    type: string
+                type:
+                  type: string
+                  enum:
+                  - testCase1
+                  - testCase2
+                  - testCase3
+                  description: 'The test case template slot to use for this item. Qualio products support up to three test case templates; testCase1, testCase2, and testCase3 correspond to the first, second, and third configured templates. Check your product configuration in Qualio to determine which value to supply. The type also governs which requirements this test case can be linked to: testCase1 can only be linked to req1 requirements, testCase2 to req2, and testCase3 to req3. Attempting to link a test case to a requirement of a different template number returns 400.'
+              required:
+              - title
+              - type
+              description: A request body to create a new test case in a design control product. Supply a title and a type to identify the test case template slot to use. An optional id may be provided to assign a specific identifier; when omitted the server generates one automatically. A short code is always auto-generated by the server from the product type configuration counter. Use links and requirements to establish traceability connections to existing quality items by supplying their codes or UUIDs. Supplying an id that already belongs to an existing test case in this product returns 409 Conflict.
+              example:
+                title: Verify pump pressure under maximum load
+                type: testCase1
+                description: Apply maximum rated load to the pump for 30 minutes and confirm that pressure remains within the specified safety range throughout the test.
+                links:
+                - REQ-1
+                - REQ-5
+              ref: createTestCase
+      responses:
+        '201':
+          description: Test case created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    enum:
+                    - testCase1
+                    - testCase2
+                    - testCase3
+                    description: The quality item category. Can be testCase1, testCase2, or testCase3
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                additionalProperties: false
+                description: The test case that was created.
+                example:
+                  id: 9d8c7b6a-5e4f-4321-8c0b-7a6d5e4f3c2b
+                  title: Verify pump pressure under maximum load
+                  code: TC-42
+                  type: testCase1
+                  source: jira
+                  source_url: https://your-company.atlassian.net/browse/TC-42
+                  created_at: '2025-05-21T10:00:00.000Z'
+                  updated_at: '2025-05-21T10:00:00.000Z'
+                  issues: {}
+                ref: createdTestCase
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '409':
+          description: A test case with the provided id already exists in this product.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/testCaseConflictResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/design-controls/products/{productId}/requirements:
+    get:
+      summary: List requirements
+      description: "Lists the requirements for a design control product, identified by its UUID. A requirement describes a condition or capability the product must satisfy, organised into levels (req1â\x80\x93req4). Each item includes its id, auto-generated code (e.g. REQ-1), title, type, change-control status, source, and the traceability issues flagged by design-control policy (e.g. a requirement with no test case, or a child requirement missing its parent)."
+      operationId: listProductRequirements
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Successful design controls requirements retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        title:
+                          type: string
+                        code:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        type:
+                          type: string
+                          enum:
+                          - req1
+                          - req2
+                          - req3
+                          - req4
+                        changeControlStatus:
+                          type: string
+                          enum:
+                          - unstaged
+                          - staged
+                          - approved
+                          - not_approved
+                        source:
+                          type: string
+                          minLength: 1
+                        source_url:
+                          type: string
+                          format: uri
+                        issues:
+                          type: object
+                          propertyNames:
+                            type: string
+                            enum:
+                            - REQUIRES_PARENT
+                            - UNMITIGATED
+                            - REQUIRES_CHILD
+                            - UNTESTED_REQUIREMENT
+                            - FAILING_TEST
+                            - OUTDATED_TESTRESULT
+                          additionalProperties:
+                            type: boolean
+                          required:
+                          - REQUIRES_PARENT
+                          - UNMITIGATED
+                          - REQUIRES_CHILD
+                          - UNTESTED_REQUIREMENT
+                          - FAILING_TEST
+                          - OUTDATED_TESTRESULT
+                        description:
+                          description: An optional description of the item. Accepts plain text up to 150,000 characters.
+                          type: string
+                          maxLength: 150000
+                      required:
+                      - id
+                      - title
+                      - code
+                      - created_at
+                      - updated_at
+                      - type
+                      - changeControlStatus
+                      - source
+                      - issues
+                      additionalProperties: false
+                  total:
+                    type: number
+                required:
+                - items
+                - total
+                additionalProperties: false
+                description: A list of design control requirements
+                example:
+                  items:
+                  - id: 123e4567-e89b-12d3-a456-426614174000
+                    title: Requirement 1
+                    code: RC-1
+                    created_at: '2021-01-01T00:00:00.000Z'
+                    updated_at: '2021-01-01T00:00:00.000Z'
+                    type: req1
+                    changeControlStatus: approved
+                    source: jira
+                    source_url: https://test.atlassian.com/jira/RC-1
+                    issues:
+                      REQUIRES_PARENT: false
+                      UNMITIGATED: false
+                      REQUIRES_CHILD: false
+                      UNTESTED_REQUIREMENT: false
+                      FAILING_TEST: false
+                      OUTDATED_TESTRESULT: false
+                  total: 1
+                ref: designControlQualityItem
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists the requirements for a design control product, identified by its UUID. A requirement describes a condition or capability the product must satisfy, organised into levels (req1â\x80\x93req4). Each item includes its id, auto-generated code (e.g. REQ-1), title, type, change-control status, source, and the traceability issues flagged by design-control policy (e.g. a requirement with no test case, or a child requirement missing its parent)."
+      operationId: listProductRequirementsOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a requirement
+      description: 'Create a requirement in a design control product. A requirement describes a condition or capability the product must satisfy. The type field identifies which requirement template slot to use: req1, req2, req3, and req4 map to the first, second, third, and fourth configured templates respectively. A code is generated automatically when none is supplied. Use the links, requirements, or test_cases fields to add traceability connections to existing quality items by providing their codes or UUIDs. Type-matching is enforced: req1 can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot link to any test case type. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. Providing an id that already exists in the product returns 409 Conflict.'
+      operationId: createProductRequirement
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The title of the item, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the item. Accepts plain text up to 150,000 characters.
+                  type: string
+                  maxLength: 150000
+                links:
+                  description: 'An array of quality item codes or UUIDs to establish as trace links. You may supply codes (such as REQ-1 or TC-5) or UUIDs. If a supplied value is not found in the product, it is stored as an unresolved link and resolved automatically when the target item is created later. Type-matching rules apply: see the notes on test_cases for requirements and on the type field for test cases.'
+                  type: array
+                  items:
+                    type: string
+                requirements:
+                  description: An array of requirement codes or UUIDs to link for traceability coverage. Entries are combined with links and test_cases and processed together. The same type-matching rules apply.
+                  type: array
+                  items:
+                    type: string
+                type:
+                  type: string
+                  enum:
+                  - req1
+                  - req2
+                  - req3
+                  - req4
+                  description: 'The requirement template slot to use for this item. Qualio products support up to four requirement templates; req1, req2, req3, and req4 correspond to the first, second, third, and fourth configured templates. Check your product configuration in Qualio to determine which value to supply. The type also governs which test cases this requirement can be linked to: req1 can only be linked to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot be directly linked to any test case type. Attempting to link incompatible types returns 400.'
+                test_cases:
+                  description: 'An array of test case codes or UUIDs to link to this requirement, establishing coverage traceability. The test case template number must match the requirement template number: a req1 requirement can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. Supplying a test case whose type does not match returns 400. If a supplied code or UUID is not found in the product, it is stored as an unresolved link and resolved automatically when the target item is created. Entries are combined with links and requirements and processed together.'
+                  type: array
+                  items:
+                    type: string
+              required:
+              - title
+              - type
+              description: A request body to create a new requirement in a design control product. Supply a title and a type to identify the requirement template slot to use. An optional id may be provided to assign a specific identifier; when omitted the server generates one automatically. A short code is always auto-generated by the server from the product type configuration counter. Use links, requirements, and test_cases to establish traceability connections to existing quality items by supplying their codes or UUIDs. Supplying an id that already belongs to an existing requirement in this product returns 409 Conflict.
+              example:
+                title: Pump pressure must remain within safe operating range
+                type: req1
+                description: The pump shall maintain output pressure between 0.5 bar and 4.0 bar under all rated operating conditions.
+                test_cases:
+                - TC-1
+                - TC-3
+              ref: createRequirement
+      responses:
+        '201':
+          description: Requirement created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    enum:
+                    - req1
+                    - req2
+                    - req3
+                    - req4
+                    description: The quality item category. Can be req1, req2, req3 or req4.
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                additionalProperties: false
+                description: The requirement that was created.
+                example:
+                  id: 3f8b2c14-7d6e-4a9f-bc21-5e0d9a1f23b4
+                  title: Pump pressure must remain within safe operating range
+                  code: REQ-42
+                  type: req1
+                  source: jira
+                  source_url: https://your-company.atlassian.net/browse/REQ-42
+                  created_at: '2025-05-21T10:00:00.000Z'
+                  updated_at: '2025-05-21T10:00:00.000Z'
+                  issues: {}
+                ref: createdRequirement
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '409':
+          description: A requirement with the provided id already exists in this product.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/requirementConflictResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/design-controls/products/{productId}/test-results:
+    post:
+      summary: Record a test result
+      description: "Records a test result against a test case in a design control product. A test result captures the outcome of executing a test case â\x80\x94 `passed`, `failed`, or `blocked` â\x80\x94 along with the execution date, who ran it, optional notes, a link to external evidence, and attachments. The latest result is reflected on the test case and feeds the product's verification/traceability status. Identify the target test case by its id or code in the request body."
+      operationId: createProductTestResult
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                result:
+                  type: string
+                  enum:
+                  - passed
+                  - failed
+                  - blocked
+                date:
+                  type: string
+                  format: date-time
+                comment:
+                  type: string
+                  maxLength: 255
+                tester:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                test_case_id:
+                  type: string
+                  format: uuid
+              required:
+              - result
+              - tester
+              - test_case_id
+              description: A test result to add to a test case
+              example:
+                test_case_id: 123e4567-e89b-12d3-a456-426614174000
+                result: passed
+                date: '2021-01-01T00:00:00.000Z'
+                comment: Test case 1 passed
+                tester: Tester 1
+              ref: createTestResult
+      responses:
+        '200':
+          description: Successful design controls test result creation
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    enum:
+                    - passed
+                    - failed
+                    - blocked
+                  date:
+                    type: string
+                    format: date-time
+                  comment:
+                    type: string
+                    maxLength: 255
+                  tester:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  url:
+                    type: string
+                  source:
+                    type: string
+                required:
+                - result
+                - date
+                - tester
+                additionalProperties: false
+                description: A test result
+                example:
+                  result: passed
+                  date: '2021-01-01T00:00:00.000Z'
+                  comment: Test case 1 passed
+                  tester: Tester 1
+                  source: developer-api
+                ref: testResult
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Records a test result against a test case in a design control product. A test result captures the outcome of executing a test case â\x80\x94 `passed`, `failed`, or `blocked` â\x80\x94 along with the execution date, who ran it, optional notes, a link to external evidence, and attachments. The latest result is reflected on the test case and feeds the product's verification/traceability status. Identify the target test case by its id or code in the request body."
+      operationId: createProductTestResultOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/design-controls/products/{productId}/test-cases/{testCaseId}:
+    put:
+      summary: Update a test case
+      description: 'Update an existing test case in a design control product. The request body replaces the mutable fields of the test case: title, type, and description. The type field must match the existing type of the test case; changing the type across categories is not supported and returns 400. The links and requirements fields define the complete set of desired trace links and replace all existing trace links on the test case. Omit both links and requirements to leave existing trace links unchanged. The id, code, and source of the test case are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductTestCase
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: testCaseId
+        schema:
+          $ref: '#/components/schemas/testCaseId'
+        required: true
+        description: The unique identifier of the test case to update. This is the id returned when the test case was created.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The updated title of the item, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the item. Accepts plain text up to 150,000 characters. Omit this field to leave the existing description unchanged.
+                  type: string
+                  maxLength: 150000
+                links:
+                  description: 'The complete desired set of trace link codes or UUIDs for this item. Both requirement codes and test case codes are accepted, for example REQ-1 or TC-5. This field replaces all existing trace links. Type-matching rules apply: requirement and test case template numbers must match.'
+                  type: array
+                  items:
+                    type: string
+                requirements:
+                  description: An array of requirement codes or UUIDs to link for traceability coverage. Entries are combined with links and replace all existing trace links together. The same type-matching rules apply.
+                  type: array
+                  items:
+                    type: string
+                type:
+                  type: string
+                  enum:
+                  - testCase1
+                  - testCase2
+                  - testCase3
+                  description: 'The test case template slot for this item. Must match the existing type of the test case; changing the type across categories is not supported and returns 400. Use testCase1, testCase2, or testCase3 to match the first, second, or third configured template in the product. Type-matching is also enforced on links: testCase1 can only link to req1 requirements, testCase2 to req2, and testCase3 to req3.'
+              required:
+              - title
+              - type
+              description: A request body to update an existing test case in a design control product. The type field must match the existing type of the test case; attempting to change the type across categories returns 400. The links and requirements fields replace all existing trace links on the test case when provided. Omitting both leaves existing trace links unchanged.
+              example:
+                title: Verify pump pressure under maximum and minimum load
+                type: testCase1
+                description: Apply maximum rated load to the pump for 30 minutes, then minimum load for 15 minutes, and confirm that pressure remains within the specified safety range throughout.
+                links:
+                - REQ-1
+                - REQ-5
+                - REQ-9
+              ref: updateTestCase
+      responses:
+        '200':
+          description: Test case updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    enum:
+                    - testCase1
+                    - testCase2
+                    - testCase3
+                    description: The quality item category. Can be testCase1, testCase2, or testCase3
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                additionalProperties: false
+                description: The test case after the update was applied.
+                example:
+                  id: 9d8c7b6a-5e4f-4321-8c0b-7a6d5e4f3c2b
+                  title: Verify pump pressure under maximum load
+                  code: TC-42
+                  type: testCase1
+                  source: jira
+                  source_url: https://your-company.atlassian.net/browse/TC-42
+                  created_at: '2025-05-21T10:00:00.000Z'
+                  updated_at: '2025-05-21T10:00:00.000Z'
+                  issues: {}
+                ref: updatedTestCase
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product or test case not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Update an existing test case in a design control product. The request body replaces the mutable fields of the test case: title, type, and description. The type field must match the existing type of the test case; changing the type across categories is not supported and returns 400. The links and requirements fields define the complete set of desired trace links and replace all existing trace links on the test case. Omit both links and requirements to leave existing trace links unchanged. The id, code, and source of the test case are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductTestCaseOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: testCaseId
+        schema:
+          $ref: '#/components/schemas/testCaseId'
+        required: true
+        description: The unique identifier of the test case to update. This is the id returned when the test case was created.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/design-controls/products/{productId}/requirements/{requirementId}:
+    put:
+      summary: Update a requirement
+      description: 'Update an existing requirement in a design control product. The request body replaces the mutable fields of the requirement: title, type, and description. The type field must match the existing type of the requirement; changing the type across categories is not supported and returns 400. The links, requirements, and test_cases fields define the complete desired set of trace links and replace all existing trace links on the requirement. Omit all three to leave existing trace links unchanged. Type-matching is enforced: req1 can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot link to any test case type. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. The id, code, and source of the requirement are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductRequirement
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: requirementId
+        schema:
+          $ref: '#/components/schemas/requirementId'
+        required: true
+        description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The updated title of the item, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the item. Accepts plain text up to 150,000 characters. Omit this field to leave the existing description unchanged.
+                  type: string
+                  maxLength: 150000
+                links:
+                  description: 'The complete desired set of trace link codes or UUIDs for this item. Both requirement codes and test case codes are accepted, for example REQ-1 or TC-5. This field replaces all existing trace links. Type-matching rules apply: requirement and test case template numbers must match.'
+                  type: array
+                  items:
+                    type: string
+                requirements:
+                  description: An array of requirement codes or UUIDs to link for traceability coverage. Entries are combined with links and replace all existing trace links together. The same type-matching rules apply.
+                  type: array
+                  items:
+                    type: string
+                type:
+                  type: string
+                  enum:
+                  - req1
+                  - req2
+                  - req3
+                  - req4
+                  description: 'The requirement template slot for this item. Must match the existing type of the requirement; changing the type across categories is not supported and returns 400. Use req1, req2, req3, or req4 to match the first, second, third, or fourth configured template in the product. Type-matching is also enforced on links: req1 can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot link to any test case type.'
+                test_cases:
+                  description: 'An array of test case codes or UUIDs to link to this requirement, establishing coverage traceability. The test case template number must match the requirement template number: req1 links to testCase1, req2 to testCase2, and req3 to testCase3. Supplying a mismatched type returns 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. Entries are combined with links and requirements and replace all existing trace links together.'
+                  type: array
+                  items:
+                    type: string
+              required:
+              - title
+              - type
+              description: A request body to update an existing requirement in a design control product. The type field must match the existing type of the requirement; changing the type across categories is not supported and returns 400. The links, requirements, and test_cases fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting all three leaves existing trace links unchanged. The id, code, and source of the requirement are immutable and cannot be changed by this endpoint.
+              example:
+                title: Pump pressure must remain within safe and extended operating range
+                type: req1
+                description: The pump shall maintain output pressure between 0.5 bar and 5.0 bar under all rated operating conditions, including transient startup and shutdown phases.
+                test_cases:
+                - TC-1
+                - TC-3
+                - TC-7
+              ref: updateRequirement
+      responses:
+        '200':
+          description: Requirement updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    enum:
+                    - req1
+                    - req2
+                    - req3
+                    - req4
+                    description: The quality item category. Can be req1, req2, req3 or req4.
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                additionalProperties: false
+                description: The requirement after the update was applied.
+                example:
+                  id: 3f8b2c14-7d6e-4a9f-bc21-5e0d9a1f23b4
+                  title: Pump pressure must remain within safe operating range
+                  code: REQ-42
+                  type: req1
+                  source: jira
+                  source_url: https://your-company.atlassian.net/browse/REQ-42
+                  created_at: '2025-05-21T10:00:00.000Z'
+                  updated_at: '2025-05-21T10:00:00.000Z'
+                  issues: {}
+                ref: updatedRequirement
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product or requirement not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Update an existing requirement in a design control product. The request body replaces the mutable fields of the requirement: title, type, and description. The type field must match the existing type of the requirement; changing the type across categories is not supported and returns 400. The links, requirements, and test_cases fields define the complete desired set of trace links and replace all existing trace links on the requirement. Omit all three to leave existing trace links unchanged. Type-matching is enforced: req1 can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot link to any test case type. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. The id, code, and source of the requirement are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductRequirementOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: requirementId
+        schema:
+          $ref: '#/components/schemas/requirementId'
+        required: true
+        description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/design-controls/products/{productId}/risks:
+    post:
+      summary: Create a risk
+      description: Create a risk in a design control product. Set subType to iso for ISO 14971 qualitative risk analysis or fmea for Failure Mode and Effects Analysis. An optional id may be provided for idempotency; when omitted the server generates one automatically. A short code is always auto-generated by the server. ISO risks accept hazard, foreseeableUseMisuse, hazardSituation, and harm fields, with string-based preMitigation and postMitigation assessments. FMEA risks accept failureMode, failureModeEffects, failureCauses, and evaluationMethod fields, with numeric preMitigation and postMitigation scores (1 to 10). postMitigation requires riskControl to be provided. Use sources for upstream items this risk stems from and mitigations for downstream items that mitigate this risk. Providing an id that already exists in the product returns 409 Conflict.
+      operationId: createProductRisk
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The title of the risk, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the risk. Accepts plain text.
+                  type: string
+                riskControl:
+                  type: object
+                  properties:
+                    mitigation:
+                      type: string
+                      minLength: 1
+                      description: A description of the control measure applied to reduce or eliminate the risk.
+                  required:
+                  - mitigation
+                  description: The risk control measure. Required before a post-mitigation assessment can be recorded.
+                sources:
+                  description: An array of quality item codes or UUIDs that are the upstream sources of this risk, for example requirement codes. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created.
+                  type: array
+                  items:
+                    type: string
+                mitigations:
+                  description: An array of quality item codes or UUIDs for items that mitigate this risk downstream, for example requirement or test case codes. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created.
+                  type: array
+                  items:
+                    type: string
+                subType:
+                  type: string
+                  enum:
+                  - iso
+                  - fmea
+                  description: 'The risk assessment methodology. Use iso for ISO 14971 qualitative risk analysis with probability and severity string scales. Use fmea for Failure Mode and Effects Analysis with numeric severity, occurrence, and detectability scores (1 to 10). The subType determines which assessment fields apply: iso uses hazard, foreseeableUseMisuse, hazardSituation, and harm; fmea uses failureMode, failureModeEffects, failureCauses, and evaluationMethod.'
+                hazard:
+                  description: The hazard associated with this risk. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                foreseeableUseMisuse:
+                  description: The reasonably foreseeable use or misuse scenario. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                hazardSituation:
+                  description: The hazardous situation resulting from the hazard. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                harm:
+                  description: The harm that could result from the hazardous situation. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureMode:
+                  description: A description of the way in which a component or process could fail. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureModeEffects:
+                  description: The effects of the failure mode on the system or end user. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureCauses:
+                  description: The root causes that lead to the failure mode. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                evaluationMethod:
+                  description: Current controls or evaluation methods in place to detect the failure mode. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                preMitigation:
+                  description: 'Pre-mitigation assessment. For iso risks: an object with probability (string), severity (string), and optionally riskLevel (string). For fmea risks: an object with severity, occurrence, and detectability as positive integers (1 to 10).'
+                  anyOf:
+                  - type: object
+                    properties:
+                      probability:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the probability of occurrence, taken from the probability scale configured in the product.
+                      severity:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the severity of harm, taken from the severity scale configured in the product.
+                      riskLevel:
+                        description: The overall risk level derived from probability and severity. When omitted the server calculates it from the configured risk matrix.
+                        type: string
+                    required:
+                    - probability
+                    - severity
+                  - type: object
+                    properties:
+                      severity:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Severity score from 1 to 10 representing the impact of the failure mode.
+                      occurrence:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Occurrence score from 1 to 10 representing the likelihood that the failure mode will occur.
+                      detectability:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Detectability score from 1 to 10 representing the likelihood that the failure mode will be detected before reaching the end user. Lower values mean higher detectability.
+                    required:
+                    - severity
+                    - occurrence
+                    - detectability
+                postMitigation:
+                  description: Post-mitigation assessment after the risk control is applied. Shape is identical to preMitigation for the given subType. Requires riskControl to be set.
+                  anyOf:
+                  - type: object
+                    properties:
+                      probability:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the probability of occurrence, taken from the probability scale configured in the product.
+                      severity:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the severity of harm, taken from the severity scale configured in the product.
+                      riskLevel:
+                        description: The overall risk level derived from probability and severity. When omitted the server calculates it from the configured risk matrix.
+                        type: string
+                    required:
+                    - probability
+                    - severity
+                  - type: object
+                    properties:
+                      severity:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Severity score from 1 to 10 representing the impact of the failure mode.
+                      occurrence:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Occurrence score from 1 to 10 representing the likelihood that the failure mode will occur.
+                      detectability:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Detectability score from 1 to 10 representing the likelihood that the failure mode will be detected before reaching the end user. Lower values mean higher detectability.
+                    required:
+                    - severity
+                    - occurrence
+                    - detectability
+              required:
+              - title
+              - subType
+              description: 'A request body to create a new risk in a design control product. The subType field selects the risk assessment methodology: iso for ISO 14971 qualitative risk analysis, fmea for Failure Mode and Effects Analysis. An optional id may be provided to assign a specific identifier; when omitted the server generates one automatically. A short code is always auto-generated by the server. ISO risks support hazard, foreseeableUseMisuse, hazardSituation, harm, and string-based preMitigation and postMitigation assessments. FMEA risks support failureMode, failureModeEffects, failureCauses, evaluationMethod, and numeric preMitigation and postMitigation assessments (scores 1 to 10). postMitigation requires riskControl to be provided. Use sources to link items this risk stems from (upstream) and mitigations to link items that mitigate this risk (downstream). Supplying an id that already exists in this product returns 409 Conflict.'
+              example:
+                title: Risk of pump over-pressurisation causing patient harm
+                subType: iso
+                description: If the pump delivers pressure above the rated maximum, the patient may be harmed.
+                hazard: Mechanical failure of pressure regulation valve
+                hazardSituation: Pump delivers pressure above rated maximum during infusion
+                harm: Patient trauma due to over-pressurisation
+                preMitigation:
+                  probability: Occasional
+                  severity: Critical
+                  riskLevel: High
+                riskControl:
+                  mitigation: Add a secondary pressure relief valve rated at 110% of maximum operating pressure
+                postMitigation:
+                  probability: Remote
+                  severity: Critical
+                  riskLevel: Medium
+                sources:
+                - REQ-1
+                mitigations:
+                - REQ-5
+                - TC-1
+              ref: createRisk
+      responses:
+        '201':
+          description: Risk created successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    const: risk
+                    description: The quality item category. Always risk for items created by this endpoint.
+                  subType:
+                    type: string
+                    enum:
+                    - iso
+                    - fmea
+                    description: 'The risk assessment methodology used for this risk: iso or fmea.'
+                  riskControl:
+                    type: object
+                    properties:
+                      mitigation:
+                        type: string
+                        minLength: 1
+                        description: A description of the control measure applied to reduce or eliminate the risk.
+                    required:
+                    - mitigation
+                    additionalProperties: false
+                    description: The risk control measure. Required before a post-mitigation assessment can be recorded.
+                  hazard:
+                    description: The hazard. Present when subType is iso.
+                    type: string
+                  foreseeableUseMisuse:
+                    description: The foreseeable use or misuse scenario. Present when subType is iso.
+                    type: string
+                  hazardSituation:
+                    description: The hazardous situation. Present when subType is iso.
+                    type: string
+                  harm:
+                    description: The harm that could result. Present when subType is iso.
+                    type: string
+                  failureMode:
+                    description: The failure mode description. Present when subType is fmea.
+                    type: string
+                  failureModeEffects:
+                    description: The effects of the failure mode. Present when subType is fmea.
+                    type: string
+                  failureCauses:
+                    description: The root causes of the failure mode. Present when subType is fmea.
+                    type: string
+                  evaluationMethod:
+                    description: Current controls or evaluation methods. Present when subType is fmea.
+                    type: string
+                  preMitigation:
+                    description: Pre-mitigation assessment. For iso risks contains probability, severity, and optionally riskLevel strings. For fmea risks contains numeric severity, occurrence, and detectability scores.
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                      - type: number
+                  postMitigation:
+                    description: Post-mitigation assessment after the risk control is applied. Shape is the same as preMitigation for the given subType.
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                      - type: number
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                - subType
+                additionalProperties: false
+                description: The risk that was created.
+                example:
+                  id: a1c3e5f7-2b4d-4068-9a8c-1d2e3f405162
+                  title: Risk of pump over-pressurisation causing patient harm
+                  code: RISK-1
+                  type: risk
+                  subType: iso
+                  source: developer-api
+                  created_at: '2026-05-22T09:00:00.000Z'
+                  updated_at: '2026-05-22T09:00:00.000Z'
+                  issues: {}
+                  hazard: Mechanical failure of pressure regulation valve
+                  hazardSituation: Pump delivers pressure above rated maximum during infusion
+                  harm: Patient trauma due to over-pressurisation
+                  riskControl:
+                    mitigation: Add a secondary pressure relief valve rated at 110% of maximum operating pressure
+                  preMitigation:
+                    probability: Occasional
+                    severity: Critical
+                    riskLevel: High
+                  postMitigation:
+                    probability: Remote
+                    severity: Critical
+                    riskLevel: Medium
+                ref: createdRisk
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '409':
+          description: A risk with the provided id already exists in this product.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/riskConflictResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Create a risk in a design control product. Set subType to iso for ISO 14971 qualitative risk analysis or fmea for Failure Mode and Effects Analysis. An optional id may be provided for idempotency; when omitted the server generates one automatically. A short code is always auto-generated by the server. ISO risks accept hazard, foreseeableUseMisuse, hazardSituation, and harm fields, with string-based preMitigation and postMitigation assessments. FMEA risks accept failureMode, failureModeEffects, failureCauses, and evaluationMethod fields, with numeric preMitigation and postMitigation scores (1 to 10). postMitigation requires riskControl to be provided. Use sources for upstream items this risk stems from and mitigations for downstream items that mitigate this risk. Providing an id that already exists in the product returns 409 Conflict.
+      operationId: createProductRiskOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/design-controls/products/{productId}/risks/{riskId}:
+    put:
+      summary: Update a risk
+      description: 'Update an existing risk in a design control product. The subType field must match the existing subType of the risk; changing the subType is not supported and returns 400. The request body replaces the mutable fields of the risk: title, subType, description, and all sub-type-specific assessment and narrative fields. The sources and mitigations fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting both leaves existing trace links unchanged. The id and code of the risk are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductRisk
+      tags:
+      - Design Controls
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: riskId
+        schema:
+          $ref: '#/components/schemas/riskId'
+        required: true
+        description: The unique identifier of the risk to update. This is the id returned when the risk was created.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The title of the risk, displayed in the Qualio UI. Must be between 1 and 255 characters.
+                description:
+                  description: An optional description of the risk. Accepts plain text.
+                  type: string
+                riskControl:
+                  type: object
+                  properties:
+                    mitigation:
+                      type: string
+                      minLength: 1
+                      description: A description of the control measure applied to reduce or eliminate the risk.
+                  required:
+                  - mitigation
+                  description: The risk control measure. Required before a post-mitigation assessment can be recorded.
+                sources:
+                  description: An array of quality item codes or UUIDs that are the upstream sources of this risk, for example requirement codes. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created.
+                  type: array
+                  items:
+                    type: string
+                mitigations:
+                  description: An array of quality item codes or UUIDs for items that mitigate this risk downstream, for example requirement or test case codes. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created.
+                  type: array
+                  items:
+                    type: string
+                subType:
+                  type: string
+                  enum:
+                  - iso
+                  - fmea
+                  description: The risk assessment methodology. Must match the existing subType of the risk; changing the subType is not supported and returns 400. iso uses probability and severity string scales; fmea uses numeric severity, occurrence, and detectability scores (1 to 10).
+                hazard:
+                  description: The hazard associated with this risk. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                foreseeableUseMisuse:
+                  description: The reasonably foreseeable use or misuse scenario. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                hazardSituation:
+                  description: The hazardous situation resulting from the hazard. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                harm:
+                  description: The harm that could result from the hazardous situation. Only applicable when subType is iso. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureMode:
+                  description: A description of the way in which a component or process could fail. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureModeEffects:
+                  description: The effects of the failure mode on the system or end user. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                failureCauses:
+                  description: The root causes that lead to the failure mode. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                evaluationMethod:
+                  description: Current controls or evaluation methods in place to detect the failure mode. Only applicable when subType is fmea. Max 1000 characters.
+                  type: string
+                  maxLength: 1000
+                preMitigation:
+                  description: 'Pre-mitigation assessment. For iso risks: an object with probability (string), severity (string), and optionally riskLevel (string). For fmea risks: an object with severity, occurrence, and detectability as positive integers (1 to 10).'
+                  anyOf:
+                  - type: object
+                    properties:
+                      probability:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the probability of occurrence, taken from the probability scale configured in the product.
+                      severity:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the severity of harm, taken from the severity scale configured in the product.
+                      riskLevel:
+                        description: The overall risk level derived from probability and severity. When omitted the server calculates it from the configured risk matrix.
+                        type: string
+                    required:
+                    - probability
+                    - severity
+                  - type: object
+                    properties:
+                      severity:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Severity score from 1 to 10 representing the impact of the failure mode.
+                      occurrence:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Occurrence score from 1 to 10 representing the likelihood that the failure mode will occur.
+                      detectability:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Detectability score from 1 to 10 representing the likelihood that the failure mode will be detected before reaching the end user. Lower values mean higher detectability.
+                    required:
+                    - severity
+                    - occurrence
+                    - detectability
+                postMitigation:
+                  description: Post-mitigation assessment after the risk control is applied. Shape is identical to preMitigation for the given subType. Requires riskControl to be set.
+                  anyOf:
+                  - type: object
+                    properties:
+                      probability:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the probability of occurrence, taken from the probability scale configured in the product.
+                      severity:
+                        type: string
+                        minLength: 1
+                        description: A qualitative or quantitative label for the severity of harm, taken from the severity scale configured in the product.
+                      riskLevel:
+                        description: The overall risk level derived from probability and severity. When omitted the server calculates it from the configured risk matrix.
+                        type: string
+                    required:
+                    - probability
+                    - severity
+                  - type: object
+                    properties:
+                      severity:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Severity score from 1 to 10 representing the impact of the failure mode.
+                      occurrence:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Occurrence score from 1 to 10 representing the likelihood that the failure mode will occur.
+                      detectability:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                        description: Detectability score from 1 to 10 representing the likelihood that the failure mode will be detected before reaching the end user. Lower values mean higher detectability.
+                    required:
+                    - severity
+                    - occurrence
+                    - detectability
+              required:
+              - title
+              - subType
+              description: A request body to update an existing risk in a design control product. The subType field must match the existing subType of the risk; changing the subType is not supported and returns 400. The sources and mitigations fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting both leaves existing trace links unchanged. The id and code of the risk are immutable and cannot be changed by this endpoint.
+              example:
+                title: Risk of pump over-pressurisation causing patient harm (revised)
+                subType: iso
+                hazard: Mechanical failure of pressure regulation valve
+                hazardSituation: Pump delivers pressure above rated maximum during infusion
+                harm: Patient trauma due to over-pressurisation
+                preMitigation:
+                  probability: Occasional
+                  severity: Critical
+                  riskLevel: High
+                riskControl:
+                  mitigation: Add a secondary pressure relief valve and software interlock
+                postMitigation:
+                  probability: Remote
+                  severity: Critical
+                  riskLevel: Low
+                mitigations:
+                - REQ-5
+                - REQ-12
+                - TC-1
+              ref: updateRisk
+      responses:
+        '200':
+          description: Risk updated successfully.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier of the created item.
+                  title:
+                    type: string
+                    description: The title of the item.
+                  code:
+                    description: The short identifier visible in the Qualio UI.
+                    type: string
+                  description:
+                    description: The content of the object
+                    type: string
+                  source:
+                    type: string
+                    description: The system associated with this item. Set at creation time from the source field in the request, defaulting to developer-api. This value is immutable after creation.
+                  source_url:
+                    description: The URL linking back to the corresponding entry in the source system. Reflects the url field from the request.
+                    type: string
+                    format: uri
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was created.
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: An ISO 8601 timestamp recording when the item was last modified.
+                  issues:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: boolean
+                    description: A map of policy violation flags. Keys are policy statement identifiers such as REQUIRES_CHILD, UNTESTED_REQUIREMENT, or FAILING_TEST. Newly created items have no active violations and this object is empty.
+                  type:
+                    type: string
+                    const: risk
+                    description: The quality item category. Always risk for items created by this endpoint.
+                  subType:
+                    type: string
+                    enum:
+                    - iso
+                    - fmea
+                    description: 'The risk assessment methodology used for this risk: iso or fmea.'
+                  riskControl:
+                    type: object
+                    properties:
+                      mitigation:
+                        type: string
+                        minLength: 1
+                        description: A description of the control measure applied to reduce or eliminate the risk.
+                    required:
+                    - mitigation
+                    additionalProperties: false
+                    description: The risk control measure. Required before a post-mitigation assessment can be recorded.
+                  hazard:
+                    description: The hazard. Present when subType is iso.
+                    type: string
+                  foreseeableUseMisuse:
+                    description: The foreseeable use or misuse scenario. Present when subType is iso.
+                    type: string
+                  hazardSituation:
+                    description: The hazardous situation. Present when subType is iso.
+                    type: string
+                  harm:
+                    description: The harm that could result. Present when subType is iso.
+                    type: string
+                  failureMode:
+                    description: The failure mode description. Present when subType is fmea.
+                    type: string
+                  failureModeEffects:
+                    description: The effects of the failure mode. Present when subType is fmea.
+                    type: string
+                  failureCauses:
+                    description: The root causes of the failure mode. Present when subType is fmea.
+                    type: string
+                  evaluationMethod:
+                    description: Current controls or evaluation methods. Present when subType is fmea.
+                    type: string
+                  preMitigation:
+                    description: Pre-mitigation assessment. For iso risks contains probability, severity, and optionally riskLevel strings. For fmea risks contains numeric severity, occurrence, and detectability scores.
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                      - type: number
+                  postMitigation:
+                    description: Post-mitigation assessment after the risk control is applied. Shape is the same as preMitigation for the given subType.
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                      - type: number
+                required:
+                - id
+                - title
+                - source
+                - created_at
+                - updated_at
+                - issues
+                - type
+                - subType
+                additionalProperties: false
+                description: The risk after the update was applied.
+                example:
+                  id: a1c3e5f7-2b4d-4068-9a8c-1d2e3f405162
+                  title: Risk of pump over-pressurisation causing patient harm
+                  code: RISK-1
+                  type: risk
+                  subType: iso
+                  source: developer-api
+                  created_at: '2026-05-22T09:00:00.000Z'
+                  updated_at: '2026-05-22T09:00:00.000Z'
+                  issues: {}
+                  hazard: Mechanical failure of pressure regulation valve
+                  hazardSituation: Pump delivers pressure above rated maximum during infusion
+                  harm: Patient trauma due to over-pressurisation
+                  riskControl:
+                    mitigation: Add a secondary pressure relief valve rated at 110% of maximum operating pressure
+                  preMitigation:
+                    probability: Occasional
+                    severity: Critical
+                    riskLevel: High
+                  postMitigation:
+                    probability: Remote
+                    severity: Critical
+                    riskLevel: Medium
+                ref: updatedRisk
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Product or risk not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Update an existing risk in a design control product. The subType field must match the existing subType of the risk; changing the subType is not supported and returns 400. The request body replaces the mutable fields of the risk: title, subType, description, and all sub-type-specific assessment and narrative fields. The sources and mitigations fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting both leaves existing trace links unchanged. The id and code of the risk are immutable and cannot be changed by this endpoint.'
+      operationId: updateProductRiskOptions
+      tags:
+      - Design Controls
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: productId
+        schema:
+          $ref: '#/components/schemas/dcProductId'
+        required: true
+        description: A design control product id
+      - in: path
+        name: riskId
+        schema:
+          $ref: '#/components/schemas/riskId'
+        required: true
+        description: The unique identifier of the risk to update. This is the id returned when the risk was created.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    riskConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A risk with this id already exists
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    dcProductId:
+      type: string
+      format: uuid
+      description: A design control product id
+      example: 123e4567-e89b-12d3-a456-426614174000
+    riskId:
+      type: string
+      format: uuid
+      description: The unique identifier of the risk to update. This is the id returned when the risk was created.
+      example: 333e4567-e89b-12d3-a456-426614174003
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    requirementId:
+      type: string
+      format: uuid
+      description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
+      example: 223e4567-e89b-12d3-a456-426614174002
+    testCaseId:
+      type: string
+      format: uuid
+      description: The unique identifier of the test case to update. This is the id returned when the test case was created.
+      example: 123e4567-e89b-12d3-a456-426614174001
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    testCaseConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A test case with this id already exists
+    requirementConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A requirement with this id already exists
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

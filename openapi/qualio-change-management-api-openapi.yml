@@ -1,0 +1,789 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Change Management API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Change Management
+paths:
+  /v1/change-management/change-controls:
+    get:
+      summary: List change controls
+      description: "Lists change controls for your Qualio instance. A change control (CC) is a formal, auditable record that documents and routes a change for review and approval â\x80\x94 typically a change to one or more controlled documents, which appear as the change control's linked items. Each entry includes its id (e.g. CC-123), title, owner, status (`open` or `closed`), timestamps, and content sections. Supports filtering by status, ordering, and pagination."
+      operationId: listChangeControls
+      tags:
+      - Change Management
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/statusParam'
+        description: The status of a domain object
+      - in: query
+        name: orderBy
+        schema:
+          $ref: '#/components/schemas/orderByParam'
+        description: The field to order the results by
+      responses:
+        '200':
+          description: Successful change control entries retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/changeControlResp'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists change controls for your Qualio instance. A change control (CC) is a formal, auditable record that documents and routes a change for review and approval â\x80\x94 typically a change to one or more controlled documents, which appear as the change control's linked items. Each entry includes its id (e.g. CC-123), title, owner, status (`open` or `closed`), timestamps, and content sections. Supports filtering by status, ordering, and pagination."
+      operationId: listChangeControlsOptions
+      tags:
+      - Change Management
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/statusParam'
+        description: The status of a domain object
+      - in: query
+        name: orderBy
+        schema:
+          $ref: '#/components/schemas/orderByParam'
+        description: The field to order the results by
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a change control
+      description: Creates a change control for a draft document. A change control is the formal workflow record that documents and routes the proposed change for review and approval. Provide the document and the content `sections`; the section positions must match those defined by the change control template and start at position 1.
+      operationId: createChangeControl
+      tags:
+      - Change Management
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCC'
+      responses:
+        '200':
+          description: Successful change control entries retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdCC'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/change-management/change-requests:
+    get:
+      summary: List change requests
+      description: Lists change requests for your Qualio instance. A change request (CR) is a formal record used to propose, track, and approve changes to controlled documents. Each entry includes its code (e.g. DCR-1), title, owner, status, timestamps, and linked change items. Supports filtering by status, text search, ordering, and pagination.
+      operationId: listChangeRequests
+      tags:
+      - Change Management
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/statusParam'
+        description: The status of a domain object
+      - in: query
+        name: orderBy
+        schema:
+          $ref: '#/components/schemas/orderByParam'
+        description: The field to order the results by
+      responses:
+        '200':
+          description: Successful change request list retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/changeRequestResp'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists change requests for your Qualio instance. A change request (CR) is a formal record used to propose, track, and approve changes to controlled documents. Each entry includes its code (e.g. DCR-1), title, owner, status, timestamps, and linked change items. Supports filtering by status, text search, ordering, and pagination.
+      operationId: listChangeRequestsOptions
+      tags:
+      - Change Management
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/statusParam'
+        description: The status of a domain object
+      - in: query
+        name: orderBy
+        schema:
+          $ref: '#/components/schemas/orderByParam'
+        description: The field to order the results by
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    changeRequestResp:
+      type: object
+      properties:
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+              owner:
+                type: string
+              created_time:
+                type: string
+                format: date-time
+              closed_time:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              change_items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    code:
+                      type: string
+                    version:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                      - document
+                      - supplier
+                      - event
+                  required:
+                  - title
+                  - code
+                  - version
+                  - type
+                  additionalProperties: false
+            required:
+            - code
+            - title
+            - status
+            - owner
+            - created_time
+            - closed_time
+            - change_items
+            additionalProperties: false
+      required:
+      - total
+      - items
+      additionalProperties: false
+      description: A paginated list of change requests
+      example:
+        total: 1
+        items:
+        - code: DCR-1
+          title: Update Privacy Policy
+          status: in_progress
+          owner: John Smith
+          created_time: '2024-07-30T18:00:00.000Z'
+          closed_time: null
+          change_items:
+          - title: Privacy Policy
+            code: POL-1
+            version: '2.0'
+            type: document
+    statusParam:
+      description: The status of a domain object
+      example: Closed
+      type: string
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    createCC:
+      type: object
+      properties:
+        document_id:
+          type: number
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+              position:
+                type: number
+            required:
+            - content
+            - position
+      required:
+      - document_id
+      - sections
+      description: The request to create a change control, the sections must match those in the change control template, and position starts at 1
+      example:
+        document_id: 1
+        sections:
+        - content: This change is to our privacy policy to bring it in line with GDPR
+          position: 1
+        - content: There is no impact to our other documented processes, and employees will be trained on this document before it becomes effective
+          position: 2
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    orderByParam:
+      description: The field to order the results by
+      example: created_date
+      type: string
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    createdCC:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+        owner:
+          type: string
+        created_time:
+          type: string
+          format: date-time
+        closed_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        change_items:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              code:
+                type: string
+              version:
+                type: string
+              type:
+                type: string
+                enum:
+                - document
+                - supplier
+                - event
+            required:
+            - title
+            - code
+            - version
+            - type
+            additionalProperties: false
+      required:
+      - id
+      - title
+      - status
+      - owner
+      - created_time
+      - closed_time
+      - change_items
+      additionalProperties: false
+      description: A successfully created change control
+      example:
+        id: CC-1-123
+        title: Test Change Control
+        status: open
+        created_time: '2024-07-30T18:00:00.000Z'
+        closed_time: '2024-07-29T18:00:00.000Z'
+        owner: Kai Havertz
+        change_items:
+        - title: Test Policy
+          code: POL-1
+          version: '1.0'
+          type: document
+    changeControlResp:
+      type: object
+      properties:
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+              owner:
+                type: string
+              created_time:
+                type: string
+                format: date-time
+              closed_time:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              change_items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    code:
+                      type: string
+                    version:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                      - document
+                      - supplier
+                      - event
+                  required:
+                  - title
+                  - code
+                  - version
+                  - type
+                  additionalProperties: false
+            required:
+            - id
+            - title
+            - status
+            - owner
+            - created_time
+            - closed_time
+            - change_items
+            additionalProperties: false
+      required:
+      - total
+      - items
+      additionalProperties: false
+      description: A series of change control entries
+      example:
+        total: 1
+        items:
+        - id: CC-1-123
+          title: Test Change Control
+          status: open
+          created_time: '2024-07-30T18:00:00.000Z'
+          closed_time: '2024-07-29T18:00:00.000Z'
+          owner: Kai Havertz
+          change_items:
+          - title: Test Policy
+            code: POL-1
+            version: '1.0'
+            type: document
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

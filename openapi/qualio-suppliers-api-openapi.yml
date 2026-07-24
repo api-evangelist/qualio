@@ -1,0 +1,1268 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Suppliers API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Suppliers
+paths:
+  /v1/suppliers/suppliers:
+    get:
+      summary: List suppliers
+      description: "Lists suppliers in your Qualio instance filtered by status. Supplier Quality Management (SQM) maintains your approved vendor list and supplier qualification records â\x80\x94 the external vendors and contractors your company assesses, approves, and monitors. Filter by status: `APPROVED`, `REVIEW_PENDING`, `REJECTED`, `DRAFT`, or `ARCHIVED`. Returns each supplier's id, name, status, assigned risk level, intended use, and contact details."
+      operationId: listSuppliers
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - REVIEW_PENDING
+          - APPROVED
+          - REJECTED
+          - DRAFT
+          - ARCHIVED
+        required: true
+      responses:
+        '200':
+          description: Successful retrieval of suppliers for a given status
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/supplierResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists suppliers in your Qualio instance filtered by status. Supplier Quality Management (SQM) maintains your approved vendor list and supplier qualification records â\x80\x94 the external vendors and contractors your company assesses, approves, and monitors. Filter by status: `APPROVED`, `REVIEW_PENDING`, `REJECTED`, `DRAFT`, or `ARCHIVED`. Returns each supplier's id, name, status, assigned risk level, intended use, and contact details."
+      operationId: listSuppliersOptions
+      tags:
+      - Suppliers
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - REVIEW_PENDING
+          - APPROVED
+          - REJECTED
+          - DRAFT
+          - ARCHIVED
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    post:
+      summary: Create a supplier
+      description: Creates a new supplier (vendor) record in Supplier Quality Management. Provide the name and, optionally, the intended use, sponsor, risk level (risk_id, from the risk-levels endpoint), and contact details. The supplier is created in a draft state and progresses through review and approval before becoming an approved vendor.
+      operationId: createSupplier
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createSupplier'
+      responses:
+        '200':
+          description: Successful creation of supplier
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/supplier'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/suppliers/suppliers/{supplierId}:
+    get:
+      summary: Retrieve a supplier
+      description: Retrieves a single supplier by its id, including name, status, assigned risk level, intended use, sponsor, approval date, and contact information.
+      operationId: getSupplier
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          $ref: '#/components/schemas/supplierId'
+        required: true
+        description: A unique identifier for a supplier
+      responses:
+        '200':
+          description: Successful retrieval of supplier
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/supplier'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Supplier not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves a single supplier by its id, including name, status, assigned risk level, intended use, sponsor, approval date, and contact information.
+      operationId: getSupplierOptions
+      tags:
+      - Suppliers
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          $ref: '#/components/schemas/supplierId'
+        required: true
+        description: A unique identifier for a supplier
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    put:
+      summary: Update a supplier
+      description: "Updates an existing supplier, identified by its id. Replaces the supplier's editable details â\x80\x94 name, intended use, sponsor, risk level (risk_id), and contact information."
+      operationId: updateSupplier
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          $ref: '#/components/schemas/supplierId'
+        required: true
+        description: A unique identifier for a supplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createSupplier'
+      responses:
+        '200':
+          description: Successful update of a supplier
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/supplier'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Supplier not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/suppliers/risks:
+    get:
+      summary: List risk levels
+      description: Lists the supplier risk levels configured for your company. Risk levels (e.g. High, Medium, Low) are company-defined ratings assigned to suppliers to reflect the risk they pose; each carries an id, title, description, and a periodic-review interval that drives how often the supplier should be re-audited. Use a risk level's id as the `risk_id` when creating or updating a supplier.
+      operationId: listSupplierRisks
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful retrieval of risks
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/risksResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists the supplier risk levels configured for your company. Risk levels (e.g. High, Medium, Low) are company-defined ratings assigned to suppliers to reflect the risk they pose; each carries an id, title, description, and a periodic-review interval that drives how often the supplier should be re-audited. Use a risk level's id as the `risk_id` when creating or updating a supplier.
+      operationId: listSupplierRisksOptions
+      tags:
+      - Suppliers
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/suppliers/suppliers/{supplierId}/audits:
+    get:
+      summary: List supplier audits
+      description: 'Lists the audits recorded against a supplier, identified by the supplier''s id. Supplier audits capture your assessments of a vendor: each returns its id, name, type, status, planned/actual dates, owner, notes, and any attached documents. Deleted (archived) audits are not returned.'
+      operationId: listSupplierAudits
+      tags:
+      - Suppliers
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          $ref: '#/components/schemas/supplierId'
+        required: true
+        description: A unique identifier for a supplier
+      responses:
+        '200':
+          description: Successful retrieval of the supplier's audits
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/supplierAuditsResponse'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: 'Lists the audits recorded against a supplier, identified by the supplier''s id. Supplier audits capture your assessments of a vendor: each returns its id, name, type, status, planned/actual dates, owner, notes, and any attached documents. Deleted (archived) audits are not returned.'
+      operationId: listSupplierAuditsOptions
+      tags:
+      - Suppliers
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          $ref: '#/components/schemas/supplierId'
+        required: true
+        description: A unique identifier for a supplier
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    supplier:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_information:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+            website:
+              type: string
+            notes:
+              type: string
+          additionalProperties: false
+        intended_use:
+          type: string
+        sponsor_user_id:
+          type: number
+        supplier_id:
+          type: string
+        archived:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - REVIEW_PENDING
+          - APPROVED
+          - REJECTED
+          - DRAFT
+          - ARCHIVED
+        created_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+        approved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        risk_type:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            title:
+              type: string
+            description:
+              type: string
+            periodic_review:
+              type: number
+          additionalProperties: false
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              full_name:
+                type: string
+              email:
+                type: string
+            required:
+            - user_id
+            - full_name
+            - email
+            additionalProperties: false
+      required:
+      - name
+      - supplier_id
+      - archived
+      - status
+      - created_at
+      - modified_at
+      - approved_at
+      - due_at
+      - approvers
+      additionalProperties: false
+      description: A supplier
+      example:
+        name: Acme
+        contact_information:
+          name: Mr Acme
+          email: info@acme.com
+          address: 1 Acme st, Acme, NY
+          notes: Call in emergency only
+          phone: 555-1234-345
+        intended_use: Chemical reagents only
+        sponsor_user_id: 999
+        archived: false
+        status: APPROVED
+        created_at: '2020-01-01T00:00:00Z'
+        modified_at: '2020-01-01T00:00:00Z'
+        approved_at: '2020-03-01T00:00:00Z'
+        due_at: '2021-01-01T00:00:00Z'
+        supplier_id: asdf-asdasd-asdas-adss
+        risk_type:
+          id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+          title: Risk 1
+          description: Risk 1 description
+          periodic_review: 1
+        approvers:
+        - user_id: 999
+          full_name: Mr Acme
+          email: info@acme.com
+    createSupplier:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_information:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+            website:
+              type: string
+            notes:
+              type: string
+        intended_use:
+          type: string
+        sponsor_user_id:
+          type: number
+        risk_id:
+          type: string
+          format: uuid
+      required:
+      - name
+      description: A request to create a new supplier, or update an existing one
+      example:
+        name: Acme
+        intended_use: Chemical reagents only
+        contact_information:
+          name: Mr Acme
+          email: info@acme.com
+          address: 1 Acme st, Acme, NY
+          notes: Call in emergency only
+          phone: 555-1234-345
+        sponsor_user_id: 999
+        risk_id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+    supplierId:
+      type: string
+      description: A unique identifier for a supplier
+      example: qwerty-qwerty-qwerty-qwerty
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    risksResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                anyOf:
+                - type: string
+                  const: Risk
+                - type: string
+                  const: Type
+                - type: string
+                  const: Document
+                - type: string
+                  const: Audit
+              options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    periodic_review:
+                      type: number
+                  additionalProperties: false
+            required:
+            - type
+            - options
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+      description: An array of risks configured for your company
+      example:
+        items:
+        - type: Risk
+          options:
+          - id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+            title: Risk 1
+            description: Risk 1 description
+            periodic_review: 1
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    supplierResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              contact_information:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  phone:
+                    type: string
+                  address:
+                    type: string
+                  website:
+                    type: string
+                  notes:
+                    type: string
+                additionalProperties: false
+              intended_use:
+                type: string
+              sponsor_user_id:
+                type: number
+              supplier_id:
+                type: string
+              archived:
+                type: boolean
+              status:
+                type: string
+                enum:
+                - REVIEW_PENDING
+                - APPROVED
+                - REJECTED
+                - DRAFT
+                - ARCHIVED
+              created_at:
+                type: string
+                format: date-time
+              modified_at:
+                type: string
+                format: date-time
+              approved_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              due_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              risk_type:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  periodic_review:
+                    type: number
+                additionalProperties: false
+              approvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: number
+                    full_name:
+                      type: string
+                    email:
+                      type: string
+                  required:
+                  - user_id
+                  - full_name
+                  - email
+                  additionalProperties: false
+            required:
+            - name
+            - supplier_id
+            - archived
+            - status
+            - created_at
+            - modified_at
+            - approved_at
+            - due_at
+            - approvers
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+      description: An Array of suppliers
+      example:
+        items:
+        - name: Acme
+          contact_information:
+            name: Mr Acme
+            email: info@acme.com
+            address: 1 Acme st, Acme, NY
+            notes: Call in emergency only
+            phone: 555-1234-345
+          intended_use: Chemical reagents only
+          sponsor_user_id: 999
+          archived: false
+          status: APPROVED
+          created_at: '2020-01-01T00:00:00Z'
+          modified_at: '2020-01-01T00:00:00Z'
+          approved_at: '2020-03-01T00:00:00Z'
+          due_at: '2021-01-01T00:00:00Z'
+          supplier_id: asdf-asdasd-asdas-adss
+          risk_type:
+            id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+            title: Risk 1
+            description: Risk 1 description
+            periodic_review: 1
+          approvers:
+          - user_id: 999
+            full_name: Mr Acme
+            email: info@acme.com
+    supplierAuditsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              audit_id:
+                type: string
+              supplier_id:
+                type: string
+              name:
+                type: string
+              status:
+                type: string
+                enum:
+                - PLANNED
+                - ONGOING
+                - DONE
+              audit_type:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  periodic_review:
+                    type: number
+                additionalProperties: false
+              notes:
+                type: string
+              start_date:
+                type: string
+              end_date:
+                type: string
+              created_by:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+              modified_at:
+                type: string
+                format: date-time
+              documents:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    file:
+                      type: object
+                      properties:
+                        file_name:
+                          type: string
+                        description:
+                          type: string
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                          - FILE
+                          - QUALIO_DOC
+                      required:
+                      - id
+                      - type
+                      additionalProperties: false
+                  required:
+                  - file
+                  additionalProperties: false
+            required:
+            - audit_id
+            - supplier_id
+            - name
+            - status
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+      description: An array of a supplier's audits
+      example:
+        items:
+        - audit_id: 1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed
+          supplier_id: asdf-asdasd-asdas-adss
+          name: 2024 On-site Audit
+          status: DONE
+          audit_type:
+            id: c9c2302f-bf0d-4e50-81f6-ccc78f0c5a58
+            title: On-site
+            description: On-site supplier audit
+            periodic_review: 12
+          notes: No major findings.
+          start_date: '2024-05-01T09:00:00Z'
+          end_date: '2024-05-02T17:00:00Z'
+          created_by: Jane Auditor
+          created_at: '2024-05-01T09:00:00Z'
+          modified_at: '2024-05-02T17:00:00Z'
+          documents:
+          - id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+            title: Audit report
+            description: Signed audit report
+            file:
+              file_name: audit-report.pdf
+              description: Signed audit report
+              id: a3f5c2d1-0e4b-4c8a-9f2d-6b7e8c9a0d1e
+              type: FILE
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

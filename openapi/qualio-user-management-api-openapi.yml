@@ -1,0 +1,1834 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer User Management API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: User Management
+paths:
+  /v1/user-management/invite:
+    post:
+      summary: Invite a user
+      description: Invites a user to your Qualio instance. This will generate an email for them to accept the invite, whereupon they will be asked to set their name and password, etc
+      operationId: inviteUser
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/invite'
+      responses:
+        '200':
+          description: Successful user invitation
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Invites a user to your Qualio instance. This will generate an email for them to accept the invite, whereupon they will be asked to set their name and password, etc
+      operationId: inviteUserOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/user-management/users:
+    get:
+      summary: List users
+      description: Retrieves all users in your Qualio instance, including each user's id, email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status (`pending`, `accepted`, `declined`, `canceled`). Use this to look up a user's id from their email, or to audit who has access.
+      operationId: listUsers
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful retrieval of list of users
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userList'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves all users in your Qualio instance, including each user's id, email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status (`pending`, `accepted`, `declined`, `canceled`). Use this to look up a user's id from their email, or to audit who has access.
+      operationId: listUsersOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/user-management/user/{userId}:
+    get:
+      summary: Retrieve a user
+      description: Retrieves a single user by id, including email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status.
+      operationId: getUser
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      responses:
+        '200':
+          description: Successful user fetch
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: User not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves a single user by id, including email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status.
+      operationId: getUserOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    delete:
+      summary: Remove a user
+      description: Removes a specific user from your Qualio instance. For this to complete successfully, the user must have no assignments remaining. The endpoint /v1/user-management/user/{userId}/assignments can be used to reassign all assignments to a new user. This requires admin permissions
+      operationId: deleteUser
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      responses:
+        '200':
+          description: Successful user removal
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteUserResp'
+        '400':
+          description: User has assignments remaining that must be reassigned before removal
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/userHasAssignmentsError'
+                - $ref: '#/components/schemas/genericBadRequestResponse'
+                example:
+                  message: User has assignments remaining that must be reassigned before removal
+                  slug: user_has_assignments
+                  assignments:
+                    document_owner:
+                    - 101
+                    - 102
+                    - 103
+                    document_reviewer:
+                    - 201
+                    - 202
+                    document_approver:
+                    - 301
+                    event_owner:
+                    - 401
+                    - 402
+                    task_owner:
+                    - 501
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: User not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/user-management/user/{userId}/assignments:
+    put:
+      summary: Reassign user's assignments
+      description: Reassigns all entities associated with a user to a new owner. Works for a variety of entities including documents, events, tasks, etc. Requires admin permissions
+      operationId: reassignUserAssignments
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reassignmentRequest'
+      responses:
+        '200':
+          description: Successful reassignment
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reassignmentResponse'
+        '400':
+          description: The request has malformed body or parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: User not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Reassigns all entities associated with a user to a new owner. Works for a variety of entities including documents, events, tasks, etc. Requires admin permissions
+      operationId: reassignUserAssignmentsOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    get:
+      summary: List user's assignments
+      description: Retrieves all entity assignments for a specific user. Returns document, event, task, and other entity IDs where the user is assigned as owner, reviewer, or approver. Requires admin permissions
+      operationId: listUserAssignments
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      responses:
+        '200':
+          description: Successful retrieval of user assignments
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAssignmentMapping'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: User not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/user-management/groups:
+    get:
+      summary: List groups
+      description: Lists the user groups defined in your Qualio instance, returning each group's id and name. Groups are named collections of users used to organise people (e.g. by team or function) and to assign or filter responsibilities such as document training in bulk. Use a group's id with the add/remove-user-to-group endpoints, or with the training query's group filter.
+      operationId: listGroups
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful retrieval of groups
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupList'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Lists the user groups defined in your Qualio instance, returning each group's id and name. Groups are named collections of users used to organise people (e.g. by team or function) and to assign or filter responsibilities such as document training in bulk. Use a group's id with the add/remove-user-to-group endpoints, or with the training query's group filter.
+      operationId: listGroupsOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/user-management/groups/{groupId}/user/{userId}:
+    put:
+      summary: Add user to group
+      description: Adds a user to a group within your Qualio instance. Requires admin permissions
+      operationId: addUserToGroup
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      - in: path
+        name: groupId
+        schema:
+          $ref: '#/components/schemas/groupId'
+        required: true
+        description: A unique identifier for a group in Qualio
+      responses:
+        '200':
+          description: User successfully added to group
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userGroupResp'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Group not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Adds a user to a group within your Qualio instance. Requires admin permissions
+      operationId: addUserToGroupOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      - in: path
+        name: groupId
+        schema:
+          $ref: '#/components/schemas/groupId'
+        required: true
+        description: A unique identifier for a group in Qualio
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+    delete:
+      summary: Remove user from group
+      description: Removes a user from a group within your Qualio instance. Requires admin permissions
+      operationId: removeUserFromGroup
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          $ref: '#/components/schemas/userId'
+        required: true
+        description: A unique identifier for a user in Qualio
+      - in: path
+        name: groupId
+        schema:
+          $ref: '#/components/schemas/groupId'
+        required: true
+        description: A unique identifier for a group in Qualio
+      responses:
+        '200':
+          description: User successfully removed from group
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userGroupRemoveResp'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Group not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+  /v1/user-management/user/me:
+    get:
+      summary: Retrieve the current user's id and name
+      description: Retrieves the currently logged in user's id and name.
+      operationId: getCurrentUser
+      tags:
+      - User Management
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: Successful user fetch
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/me'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves the currently logged in user's id and name.
+      operationId: getCurrentUserOptions
+      tags:
+      - User Management
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    me:
+      type: object
+      properties:
+        user_id:
+          type: number
+        full_name:
+          type: string
+      required:
+      - user_id
+      - full_name
+      additionalProperties: false
+      description: Retrieve the current user's id and name
+      example:
+        user_id: 1
+        full_name: John Doe
+    userHasAssignmentsError:
+      type: object
+      properties:
+        message:
+          type: string
+        slug:
+          type: string
+          const: user_has_assignments
+        assignments:
+          type: object
+          properties:
+            document_owner:
+              type: array
+              items:
+                type: number
+            document_reviewer:
+              type: array
+              items:
+                type: number
+            document_approver:
+              type: array
+              items:
+                type: number
+            event_owner:
+              type: array
+              items:
+                type: number
+            event_template_owner:
+              type: array
+              items:
+                type: number
+            event_template_default_owner:
+              type: array
+              items:
+                type: number
+            change_request_owner:
+              type: array
+              items:
+                type: number
+            task_owner:
+              type: array
+              items:
+                type: number
+            doc_template_owner:
+              type: array
+              items:
+                type: number
+          additionalProperties: false
+      required:
+      - message
+      - slug
+      - assignments
+      additionalProperties: false
+      description: A message indicating the user has assignments remaining that must be reassigned before removal
+      example:
+        message: User has assignments remaining that must be reassigned before removal
+        slug: user_has_assignments
+        assignments:
+          document_owner:
+          - 101
+          - 102
+          - 103
+          document_reviewer:
+          - 201
+          - 202
+          document_approver:
+          - 301
+          event_owner:
+          - 401
+          - 402
+          task_owner:
+          - 501
+    reassignmentResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A response confirming the reassignment was successful
+      example:
+        message: User reassignments updated
+    groupList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              group_id:
+                type: number
+              name:
+                type: string
+            required:
+            - group_id
+            - name
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: An array of groups within your Qualio instance
+      example:
+        items:
+        - group_id: 1
+          name: Quality Team
+        - group_id: 2
+          name: Engineering Team
+        total: 1
+    userAssignmentMapping:
+      type: object
+      properties:
+        document_owner:
+          type: array
+          items:
+            type: number
+        document_reviewer:
+          type: array
+          items:
+            type: number
+        document_approver:
+          type: array
+          items:
+            type: number
+        event_owner:
+          type: array
+          items:
+            type: number
+        event_template_owner:
+          type: array
+          items:
+            type: number
+        event_template_default_owner:
+          type: array
+          items:
+            type: number
+        change_request_owner:
+          type: array
+          items:
+            type: number
+        task_owner:
+          type: array
+          items:
+            type: number
+        doc_template_owner:
+          type: array
+          items:
+            type: number
+      additionalProperties: false
+      description: A response containing all entity assignments for a specific user
+      example:
+        document_owner:
+        - 101
+        - 102
+        - 103
+        document_reviewer:
+        - 201
+        - 202
+        document_approver:
+        - 301
+        event_owner:
+        - 401
+        - 402
+        task_owner:
+        - 501
+    userGroupRemoveResp:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A message confirming the user group removal was successful
+      example:
+        message: User removed from group
+    userGroupResp:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A message confirming the user group addition was successful
+      example:
+        message: User added to group
+    deleteUserResp:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A message indicating the user has been removed
+      example:
+        message: User removed successfully
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    userList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+              full_name:
+                type: string
+              invite_status:
+                type: string
+                enum:
+                - pending
+                - accepted
+                - declined
+                - canceled
+              role:
+                type: string
+                enum:
+                - quality
+                - normal
+                - basic
+              is_admin:
+                type: boolean
+            required:
+            - user_id
+            - email
+            - full_name
+            - invite_status
+            - role
+            - is_admin
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: An array of Qualio users
+      example:
+        items:
+        - user_id: 1
+          email: testuser1@example.com
+          full_name: John Doe
+          invite_status: pending
+          role: quality
+          is_admin: false
+        total: 1
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    groupId:
+      type: number
+      description: A unique identifier for a group in Qualio
+      example: 1
+    reassignmentRequest:
+      type: object
+      properties:
+        destination_user_id:
+          type: number
+        reassignments:
+          type: object
+          properties:
+            document_owner:
+              type: array
+              items:
+                type: number
+            document_reviewer:
+              type: array
+              items:
+                type: number
+            document_approver:
+              type: array
+              items:
+                type: number
+            event_owner:
+              type: array
+              items:
+                type: number
+            event_template_owner:
+              type: array
+              items:
+                type: number
+            event_template_default_owner:
+              type: array
+              items:
+                type: number
+            change_request_owner:
+              type: array
+              items:
+                type: number
+            task_owner:
+              type: array
+              items:
+                type: number
+            doc_template_owner:
+              type: array
+              items:
+                type: number
+      required:
+      - destination_user_id
+      - reassignments
+      description: A request to reassign all entities from one user to another
+      example:
+        destination_user_id: 67890
+        reassignments:
+          document_owner:
+          - 101
+          - 102
+          event_owner:
+          - 103
+    invite:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        can_access_billing:
+          type: boolean
+        is_admin:
+          type: boolean
+      required:
+      - email
+      - role
+      description: An invite for a user to join your Qualio instance
+      example:
+        email: testuser1@example.com
+        role: quality
+        is_admin: false
+        can_access_billing: false
+    user:
+      type: object
+      properties:
+        user_id:
+          type: number
+        email:
+          type: string
+        full_name:
+          type: string
+        invite_status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - declined
+          - canceled
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        is_admin:
+          type: boolean
+      required:
+      - user_id
+      - email
+      - full_name
+      - invite_status
+      - role
+      - is_admin
+      additionalProperties: false
+      description: A Qualio user
+      example:
+        user_id: 1
+        email: testuser1@example.com
+        full_name: John Doe
+        invite_status: pending
+        role: quality
+        is_admin: false
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    userId:
+      type: number
+      description: A unique identifier for a user in Qualio
+      example: 12345
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

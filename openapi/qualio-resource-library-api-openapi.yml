@@ -1,0 +1,1131 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Resource Library API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Resource Library
+paths:
+  /v1/resource-library/templates/list:
+    get:
+      summary: List resource templates
+      description: "Lists the resource templates configured for your instance â\x80\x94 these are shown as \"Resources\" in the Qualio application. The Resource Library holds structured registries (logs) such as equipment, suppliers, parts, root causes, or training records, and each template defines the type and field structure of one such registry. Use this to discover the available resource types and their identifiers before creating items against them. Supports filtering by status (effective, draft, archived, superseded), a free-text search query, ordering by name, and pagination."
+      operationId: listResourceTemplates
+      tags:
+      - Resource Library
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: order_by
+        schema:
+          $ref: '#/components/schemas/orderBy'
+        description: A property to order the results by
+      - in: query
+        name: search_query
+        schema:
+          $ref: '#/components/schemas/query'
+        description: A search query to filter the results by
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/status'
+        required: true
+        description: A status to filter the results by
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      responses:
+        '200':
+          description: Successful resource library template/resource query retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourceLibraryTemplateQueryResp'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Lists the resource templates configured for your instance â\x80\x94 these are shown as \"Resources\" in the Qualio application. The Resource Library holds structured registries (logs) such as equipment, suppliers, parts, root causes, or training records, and each template defines the type and field structure of one such registry. Use this to discover the available resource types and their identifiers before creating items against them. Supports filtering by status (effective, draft, archived, superseded), a free-text search query, ordering by name, and pagination."
+      operationId: listResourceTemplatesOptions
+      tags:
+      - Resource Library
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: order_by
+        schema:
+          $ref: '#/components/schemas/orderBy'
+        description: A property to order the results by
+      - in: query
+        name: search_query
+        schema:
+          $ref: '#/components/schemas/query'
+        description: A search query to filter the results by
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/status'
+        required: true
+        description: A status to filter the results by
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/resource-library/templates/{templateId}:
+    get:
+      summary: Retrieve a resource template
+      description: "Retrieves a single resource template (a \"Resource\" in the Qualio application) by its id, including its definition and field structure. A template describes the type of a Resource Library registry â\x80\x94 for example equipment, suppliers, or root causes â\x80\x94 that items are created against."
+      operationId: getResourceTemplate
+      tags:
+      - Resource Library
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Successful resource library template query retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourceLibrarySingleTemplateResp'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Resource library template not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: "Retrieves a single resource template (a \"Resource\" in the Qualio application) by its id, including its definition and field structure. A template describes the type of a Resource Library registry â\x80\x94 for example equipment, suppliers, or root causes â\x80\x94 that items are created against."
+      operationId: getResourceTemplateOptions
+      tags:
+      - Resource Library
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: templateId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/resource-library/items:
+    post:
+      summary: Create a resource item
+      description: Creates a new item (a record) in the Resource Library under the given resource template. The template determines which type of registry the item belongs to and its field structure. `display_id` is the human-readable identifier shown as 'ID' in the Qualio UI and must be unique.
+      operationId: createResourceItem
+      tags:
+      - Resource Library
+      security:
+      - api_key: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createResourceLibraryItem'
+      responses:
+        '200':
+          description: Successful resource library template query retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createResourceLibraryItemSuccessResp'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Creates a new item (a record) in the Resource Library under the given resource template. The template determines which type of registry the item belongs to and its field structure. `display_id` is the human-readable identifier shown as 'ID' in the Qualio UI and must be unique.
+      operationId: createResourceItemOptions
+      tags:
+      - Resource Library
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/resource-library/items/{itemId}:
+    get:
+      summary: Retrieve a resource item
+      description: Retrieves a single resource library item by its numeric id, including its fields, status, version, and any associated structured form data.
+      operationId: getResourceItem
+      tags:
+      - Resource Library
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: itemId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved the resource library item
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourceLibraryItemResp'
+        '400':
+          description: The request has malformed path parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400PathResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Resource library item not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Retrieves a single resource library item by its numeric id, including its fields, status, version, and any associated structured form data.
+      operationId: getResourceItemOptions
+      tags:
+      - Resource Library
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: itemId
+        schema:
+          type: number
+        required: true
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    query:
+      description: A search query to filter the results by
+      example: test
+      type: string
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    resourceLibrarySingleTemplateResp:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        qualio_managed:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - effective
+          - archived
+          - superseded
+          - draft
+        template_matrix_id:
+          type: string
+        major_version:
+          type: number
+        minor_version:
+          type: number
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        domain_form_template:
+          anyOf:
+          - type: object
+            properties:
+              id:
+                type: number
+              fields:
+                anyOf:
+                - type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                        mandatory:
+                          type: boolean
+                        order:
+                          type: number
+                        label:
+                          type: string
+                        helptext:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                        type:
+                          type: string
+                        multi:
+                          type: boolean
+                        default_content:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                        form_option_list:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: number
+                                value:
+                                  type: string
+                              required:
+                              - id
+                              - value
+                              additionalProperties: false
+                          - type: 'null'
+                      required:
+                      - id
+                      - mandatory
+                      - order
+                      - label
+                      - type
+                      - multi
+                      additionalProperties: false
+                    - type: 'null'
+                - type: 'null'
+            required:
+            - id
+            additionalProperties: false
+          - type: 'null'
+      required:
+      - id
+      - name
+      - qualio_managed
+      - status
+      - template_matrix_id
+      additionalProperties: false
+      description: A single resource library template
+      example:
+        id: 10
+        name: Test
+        qualio_managed: false
+        status: effective
+        template_matrix_id: aaaa-bbbb-cccc-dddd
+        major_version: 1
+        minor_version: 0
+        description: Test description
+        domain_form_template:
+          id: 10
+          fields:
+          - id: 10
+            mandatory: false
+            order: 0
+            label: Test
+            helptext: Test helptext
+            type: text
+            multi: false
+            default_content: Test default content
+            form_option_list:
+            - id: 10
+              value: Test value
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    status:
+      type: string
+      enum:
+      - effective
+      - archived
+      - superseded
+      - draft
+      description: A status to filter the results by
+      example: effective
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    resourceLibraryItemResp:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        display_id:
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - effective
+          - archived
+          - superseded
+          - draft
+        registry_item_matrix_id:
+          type: string
+        registry_category_id:
+          type: string
+        version:
+          anyOf:
+          - type: number
+          - type: 'null'
+        minor_version:
+          anyOf:
+          - type: number
+          - type: 'null'
+        created_time:
+          type: number
+        last_modified_time:
+          type: number
+        effective_date:
+          anyOf:
+          - type: number
+          - type: 'null'
+        qri:
+          anyOf:
+          - type: string
+          - type: 'null'
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+        domain_form_item:
+          anyOf:
+          - type: object
+            properties:
+              id:
+                type: number
+              fields:
+                anyOf:
+                - type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      mandatory:
+                        type: boolean
+                      order:
+                        type: number
+                      label:
+                        type: string
+                      helptext:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      type:
+                        type: string
+                      multi:
+                        type: boolean
+                      default_content:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      form_option_list:
+                        anyOf:
+                        - type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              value:
+                                type: string
+                            required:
+                            - id
+                            - value
+                            additionalProperties: false
+                        - type: 'null'
+                    required:
+                    - id
+                    - mandatory
+                    - order
+                    - label
+                    - type
+                    - multi
+                    additionalProperties: false
+                - type: 'null'
+            required:
+            - id
+            additionalProperties: false
+          - type: 'null'
+      required:
+      - id
+      - name
+      - display_id
+      - status
+      - registry_item_matrix_id
+      - registry_category_id
+      - created_time
+      - last_modified_time
+      additionalProperties: false
+      description: A single resource library item
+      example:
+        id: 532630
+        name: Primary Centrifuge
+        display_id: EQ-001
+        description: Main lab centrifuge
+        status: effective
+        registry_item_matrix_id: aaaa-bbbb-cccc-dddd
+        registry_category_id: eeee-ffff-gggg-hhhh
+        version: 1
+        minor_version: 0
+        created_time: 1700000000000
+        last_modified_time: 1700000000000
+        effective_date: 1700000000000
+        qri: null
+        source: DEV_API
+        domain_form_item: null
+    orderBy:
+      description: A property to order the results by
+      example: name
+      type: string
+      enum:
+      - name
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    createResourceLibraryItem:
+      type: object
+      properties:
+        template_matrix_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        display_id:
+          type: string
+      required:
+      - template_matrix_id
+      - name
+      - display_id
+      description: A resource library item. display_id is what will show as 'ID' in the UI and must be unique.
+      example:
+        template_matrix_id: aaaa-bbbb-cccc-dddd
+        name: My Resource Library Item
+        description: Test description
+        display_id: RES-10
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    resourceLibraryTemplateQueryResp:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              qualio_managed:
+                type: boolean
+              status:
+                type: string
+                enum:
+                - effective
+                - archived
+                - superseded
+                - draft
+              template_matrix_id:
+                type: string
+              major_version:
+                type: number
+              minor_version:
+                type: number
+              description:
+                anyOf:
+                - type: string
+                - type: 'null'
+            required:
+            - id
+            - name
+            - qualio_managed
+            - status
+            - template_matrix_id
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: Resource library templates for your instance
+      example:
+        items:
+        - id: 10
+          name: Test
+          qualio_managed: false
+          status: effective
+          template_matrix_id: aaaa-bbbb-cccc-dddd
+          major_version: 1
+          minor_version: 0
+          description: Test description
+        - id: 11
+          name: Test 2
+          qualio_managed: false
+          status: draft
+          template_matrix_id: eeee-ffff-gggg-hhhh
+          major_version: 2
+          minor_version: 1
+          description: null
+        total: 2
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    createResourceLibraryItemSuccessResp:
+      type: object
+      properties:
+        item_id:
+          type: number
+      required:
+      - item_id
+      additionalProperties: false
+      description: A successful resource library item creation
+      example:
+        item_id: 21
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header

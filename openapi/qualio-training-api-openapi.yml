@@ -1,0 +1,644 @@
+openapi: 3.1.0
+info:
+  title: Qualio Developer Training API
+  version: '0.1'
+  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+servers:
+- url: https://api.qualio.com
+security:
+- api_key: []
+tags:
+- name: Training
+paths:
+  /v1/training/user-training/query:
+    get:
+      summary: Query training assignments
+      description: Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completion or find outstanding/overdue training. Filter by document_ids (training on specific documents) and/or group_ids (training for users in specific groups).
+      operationId: queryUserTraining
+      tags:
+      - Training
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: document_ids
+        schema:
+          $ref: '#/components/schemas/documentIds'
+        description: A unique identifier for a document version, for which you want to query for user training sessions
+      - in: query
+        name: group_ids
+        schema:
+          $ref: '#/components/schemas/groupIds'
+        description: A unique identifier for a user group, for whom you want to retrieve training sessions
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/trainingStatus'
+        description: Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments.
+      - in: query
+        name: include_removed
+        schema:
+          $ref: '#/components/schemas/includeRemoved'
+        description: When true, includes training assignments that were completed and subsequently unassigned. Defaults to false.
+      - in: query
+        name: include_inactive_users
+        schema:
+          $ref: '#/components/schemas/includeInactiveUsers'
+        description: When true, includes training records for users who are no longer active in the company. Defaults to false.
+      responses:
+        '200':
+          description: Successful training query retrieval
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/trainingQueryResp'
+        '400':
+          description: The request has malformed query parameters
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequest400ParametersResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completion or find outstanding/overdue training. Filter by document_ids (training on specific documents) and/or group_ids (training for users in specific groups).
+      operationId: queryUserTrainingOptions
+      tags:
+      - Training
+      x-scalar-ignore: true
+      parameters:
+      - in: query
+        name: document_ids
+        schema:
+          $ref: '#/components/schemas/documentIds'
+        description: A unique identifier for a document version, for which you want to query for user training sessions
+      - in: query
+        name: group_ids
+        schema:
+          $ref: '#/components/schemas/groupIds'
+        description: A unique identifier for a user group, for whom you want to retrieve training sessions
+      - in: query
+        name: offset
+        schema:
+          $ref: '#/components/schemas/offsetParam'
+        description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      - in: query
+        name: limit
+        schema:
+          $ref: '#/components/schemas/limitParam'
+      - in: query
+        name: status
+        schema:
+          $ref: '#/components/schemas/trainingStatus'
+        description: Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments.
+      - in: query
+        name: include_removed
+        schema:
+          $ref: '#/components/schemas/includeRemoved'
+        description: When true, includes training assignments that were completed and subsequently unassigned. Defaults to false.
+      - in: query
+        name: include_inactive_users
+        schema:
+          $ref: '#/components/schemas/includeInactiveUsers'
+        description: When true, includes training records for users who are no longer active in the company. Defaults to false.
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+  /v1/training/document/{documentId}/remind:
+    put:
+      summary: Send training reminders
+      description: Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document.
+      operationId: sendTrainingReminders
+      tags:
+      - Training
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/trainingDocumentId'
+        required: true
+        description: A unique identifier for a document
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/trainingReminderRequest'
+      responses:
+        '200':
+          description: Reminders sent
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/trainingReminderResponse'
+        '400':
+          description: The request has malformed body
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericBadRequestResponse'
+        '403':
+          description: This API key is not allowed to perform this action, or the API key is incorrect
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericForbiddenResponse'
+        '404':
+          description: Document not found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/generic404'
+        '429':
+          description: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/throttledResponse'
+    options:
+      description: Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document.
+      operationId: sendTrainingRemindersOptions
+      tags:
+      - Training
+      x-scalar-ignore: true
+      parameters:
+      - in: path
+        name: documentId
+        schema:
+          $ref: '#/components/schemas/trainingDocumentId'
+        required: true
+        description: A unique identifier for a document
+      responses:
+        '200':
+          description: Options 200
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Content-Type:
+              schema:
+                type: string
+            Content-Disposition:
+              schema:
+                type: string
+components:
+  schemas:
+    includeRemoved:
+      description: When true, includes training assignments that were completed and subsequently unassigned. Defaults to false.
+      example: false
+      type: boolean
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    trainingQueryResp:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+              full_name:
+                type: string
+              document_id:
+                type: number
+              completed:
+                type: boolean
+              assigned_at:
+                type: string
+                format: date-time
+              due_at:
+                type: string
+                format: date-time
+              completed_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              status:
+                type: string
+                enum:
+                - due
+                - overdue
+                - completed
+              is_retraining:
+                type: boolean
+              is_overdue:
+                type: boolean
+              training_removed:
+                type: boolean
+            required:
+            - user_id
+            - email
+            - full_name
+            - document_id
+            - completed
+            - assigned_at
+            - due_at
+            - completed_at
+            - status
+            - is_retraining
+            - is_overdue
+            - training_removed
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A series of training assignments for your instance, based on the query
+      example:
+        items:
+        - user_id: 1
+          email: test@user.com
+          full_name: Test User
+          document_id: 12345
+          completed: false
+          assigned_at: '2020-01-01T00:00:00Z'
+          due_at: '2020-06-01T00:00:00Z'
+          status: completed
+          is_retraining: false
+          is_overdue: false
+          completed_at: null
+          training_removed: false
+        total: 1
+    trainingReminderResponse:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+            required:
+            - user_id
+            - email
+            additionalProperties: false
+        failure:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+            required:
+            - user_id
+            - email
+            additionalProperties: false
+      required:
+      - success
+      - failure
+      additionalProperties: false
+      description: Training reminder response
+      example:
+        success:
+        - user_id: 1224
+          email: user@example.com
+        failure: []
+    trainingReminderRequest:
+      type: object
+      properties:
+        to:
+          type: array
+          items:
+            anyOf:
+            - type: integer
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            - type: string
+      description: Training reminder request body
+      example:
+        to:
+        - 1224
+        - user@example.com
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    documentIds:
+      description: A unique identifier for a document version, for which you want to query for user training sessions
+      example:
+      - 1
+      - 2
+      - 3
+      type: array
+      items:
+        type: number
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    includeInactiveUsers:
+      description: When true, includes training records for users who are no longer active in the company. Defaults to false.
+      example: false
+      type: boolean
+    groupIds:
+      description: A unique identifier for a user group, for whom you want to retrieve training sessions
+      example:
+      - 1
+      - 2
+      - 3
+      type: array
+      items:
+        type: number
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    trainingDocumentId:
+      type: integer
+      exclusiveMinimum: 0
+      maximum: 9007199254740991
+      description: A unique identifier for a document
+      example: 12345
+    trainingStatus:
+      description: Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments.
+      example: overdue
+      type: string
+      enum:
+      - due
+      - overdue
+      - complete
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-Api-Key
+      in: header
