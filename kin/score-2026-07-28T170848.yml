@@ -1,0 +1,51 @@
+# Kin Score artifact — qualio — 2026-07-28T170848
+# The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
+---
+kin_score:
+  slug: qualio
+  schema_version: 0.6
+  scored_at: '2026-07-28'
+  run_ts: 2026-07-28T170848
+  composite: 48.1
+  band: developing
+  facets:
+    discoverability: 92.6
+    contract_quality: 51.4
+    governance: 20.8
+    operational_transparency: 15.8
+    developer_ergonomics: 56.0
+    commercial_clarity: 60.5
+  agent_readiness:
+    score: 41.7
+    band: agent-ready
+    dimensions:
+      spec_presence: true
+      agentic_access: derived
+      mcp_server: derived
+      auth_clarity: true
+      idempotency: false
+      error_semantics: verified
+      openapi_examples: partial
+      rate_limit_signal: false
+      asyncapi_events: false
+      agent_skills: derived
+      well_known_catalog: false
+      consent_identity: false
+      agent_card: false
+      dry_run_mode: false
+  regulatory:
+    applies: true
+    regime: Health
+    regime_id: health
+    score: 37.5
+    matched_via: tags
+  provenance:
+    mcp: derived
+    skills: derived
+    agentic_access: derived
+    conformance: first-party
+    contracts:
+      total: 12
+      derived: 0
+      coverage: 0.0
+      callable: 91.7
