@@ -1,0 +1,26 @@
+generated: '2026-07-20'
+method: searched
+note: Probed /.well-known/ discovery surfaces on qualio.com, app.qualio.com and api.qualio.com. app.qualio.com
+  returns its SPA (HTTP 200) for unknown paths rather than real documents; no genuine well-known documents
+  are published.
+hosts:
+- host: https://api.qualio.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+- host: https://app.qualio.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: SPA fallback HTML, not a real security.txt
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: SPA fallback HTML, not real OIDC discovery
+- host: https://qualio.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 307

@@ -1,0 +1,22 @@
+generated: '2026-07-20'
+method: searched
+source:
+- https://developer-portal.qualio.com/
+- https://status.qualio.com
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://developer-portal.qualio.com/
+  notes: A prior GraphQL API (api.app.qualio.com/pa) is deprecated in favour of the RESTful v1 Developer
+    API.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: GraphQL API publicly marked deprecated; no formal machine-readable Sunset/Deprecation header
+    policy published.
+status_page: https://status.qualio.com
+status_platform: Atlassian Statuspage
+status_feeds:
+  rss: https://status.qualio.com/history.rss
+  atom: https://status.qualio.com/history.atom
+deprecated_operations: []

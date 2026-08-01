@@ -1,0 +1,34 @@
+generated: '2026-07-20'
+method: searched
+source:
+- openapi/qualio-openapi.json
+- https://www.qualio.com/quality-policy
+standards:
+- id: oauth2
+  conforms: false
+  evidence: OpenAPI declares only an apiKey (X-Api-Key) security scheme.
+- id: apikey-auth
+  conforms: true
+  evidence: 'securitySchemes: api_key type apiKey in header X-Api-Key'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Error responses use application/json, not application/problem+json.
+- id: offset-pagination
+  conforms: true
+  evidence: List operations use offset/limit query parameters.
+- id: openapi-3.1
+  conforms: true
+  evidence: Published OpenAPI 3.1.0 document (Redoc developer portal).
+- id: iso-9001
+  conforms: true
+  evidence: Qualio states ISO 9001 certification (quality-policy page).
+- id: iso-27001
+  conforms: true
+  evidence: Qualio states ISO 27001 certification (quality-policy page).
+- id: iso-27701
+  conforms: true
+  evidence: Qualio states ISO 27701 certification (quality-policy page).
+compliance_programs:
+- ISO 9001
+- ISO 27001
+- ISO 27701

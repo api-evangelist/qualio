@@ -1,0 +1,32 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/qualio-openapi.json
+format: json
+note: Qualio returns JSON error envelopes (not RFC 9457 problem+json). Statuses derived from OpenAPI 4xx/5xx
+  responses across 132 operations.
+envelope:
+  content_type: application/json
+  fields:
+  - message
+problems:
+- status: 400
+  title: Bad Request
+  meaning: The request has malformed query parameters
+  remediation: Validate the request body/params against the schema before retrying.
+- status: 403
+  title: Forbidden
+  meaning: This API key is not allowed to perform this action, or the API key is incorrect
+  remediation: Ensure the API key belongs to an admin and has permission for this resource.
+- status: 429
+  title: Too Many Requests
+  meaning: This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted.
+    This request has not been processed
+  remediation: You have exceeded the fair-usage rate limit; back off and retry after a delay.
+- status: 404
+  title: Not Found
+  meaning: Framework not found.
+  remediation: Verify the resource id/code exists in your Qualio tenant.
+- status: 409
+  title: Conflict
+  meaning: A test case with the provided id already exists in this product.
+  remediation: Resolve the conflicting state (e.g. dependent assignments) before retrying.

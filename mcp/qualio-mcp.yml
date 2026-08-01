@@ -1,0 +1,240 @@
+generated: '2026-07-20'
+method: derived
+status: candidate
+source: openapi/qualio-openapi.json
+note: Candidate MCP tool surface derived one-per-operation from the Qualio Developer API OpenAPI. Qualio
+  references "an open protocol for AI-to-system communication coming soon" but ships no hosted MCP server
+  yet.
+server:
+  name: qualio
+  transport: http
+tool_count: 76
+tools:
+- name: queryAuditTrail
+  description: Query the audit trail
+  source_operation: openapi/qualio-openapi.json#queryAuditTrail
+- name: listChangeControls
+  description: List change controls
+  source_operation: openapi/qualio-openapi.json#listChangeControls
+- name: createChangeControl
+  description: Create a change control
+  source_operation: openapi/qualio-openapi.json#createChangeControl
+- name: listChangeRequests
+  description: List change requests
+  source_operation: openapi/qualio-openapi.json#listChangeRequests
+- name: listComplianceFrameworks
+  description: List frameworks
+  source_operation: openapi/qualio-openapi.json#listComplianceFrameworks
+- name: createComplianceFramework
+  description: Create a framework
+  source_operation: openapi/qualio-openapi.json#createComplianceFramework
+- name: updateComplianceFramework
+  description: Update a framework
+  source_operation: openapi/qualio-openapi.json#updateComplianceFramework
+- name: getComplianceFramework
+  description: Get a framework
+  source_operation: openapi/qualio-openapi.json#getComplianceFramework
+- name: deleteComplianceFramework
+  description: Delete a framework
+  source_operation: openapi/qualio-openapi.json#deleteComplianceFramework
+- name: updateComplianceFrameworkStatus
+  description: Update a framework status
+  source_operation: openapi/qualio-openapi.json#updateComplianceFrameworkStatus
+- name: listComplianceRequirements
+  description: List requirements
+  source_operation: openapi/qualio-openapi.json#listComplianceRequirements
+- name: createComplianceRequirement
+  description: Create a requirement
+  source_operation: openapi/qualio-openapi.json#createComplianceRequirement
+- name: updateComplianceRequirement
+  description: Update a requirement
+  source_operation: openapi/qualio-openapi.json#updateComplianceRequirement
+- name: deleteComplianceRequirement
+  description: Delete a requirement
+  source_operation: openapi/qualio-openapi.json#deleteComplianceRequirement
+- name: updateComplianceRequirementStatus
+  description: Update a requirement status
+  source_operation: openapi/qualio-openapi.json#updateComplianceRequirementStatus
+- name: listComplianceControls
+  description: List controls
+  source_operation: openapi/qualio-openapi.json#listComplianceControls
+- name: createComplianceControl
+  description: Create a control
+  source_operation: openapi/qualio-openapi.json#createComplianceControl
+- name: getComplianceControl
+  description: Get a control
+  source_operation: openapi/qualio-openapi.json#getComplianceControl
+- name: updateComplianceControl
+  description: Update a control
+  source_operation: openapi/qualio-openapi.json#updateComplianceControl
+- name: listComplianceEvidence
+  description: List evidence
+  source_operation: openapi/qualio-openapi.json#listComplianceEvidence
+- name: listComplianceGaps
+  description: List gaps
+  source_operation: openapi/qualio-openapi.json#listComplianceGaps
+- name: createComplianceGap
+  description: Create a gap
+  source_operation: openapi/qualio-openapi.json#createComplianceGap
+- name: getComplianceGap
+  description: Get a gap
+  source_operation: openapi/qualio-openapi.json#getComplianceGap
+- name: updateComplianceGap
+  description: Update a gap
+  source_operation: openapi/qualio-openapi.json#updateComplianceGap
+- name: listDesignControlProducts
+  description: List products
+  source_operation: openapi/qualio-openapi.json#listDesignControlProducts
+- name: listProductTestCases
+  description: List test cases
+  source_operation: openapi/qualio-openapi.json#listProductTestCases
+- name: createProductTestCase
+  description: Create a test case
+  source_operation: openapi/qualio-openapi.json#createProductTestCase
+- name: listProductRequirements
+  description: List requirements
+  source_operation: openapi/qualio-openapi.json#listProductRequirements
+- name: createProductRequirement
+  description: Create a requirement
+  source_operation: openapi/qualio-openapi.json#createProductRequirement
+- name: createProductTestResult
+  description: Record a test result
+  source_operation: openapi/qualio-openapi.json#createProductTestResult
+- name: updateProductTestCase
+  description: Update a test case
+  source_operation: openapi/qualio-openapi.json#updateProductTestCase
+- name: updateProductRequirement
+  description: Update a requirement
+  source_operation: openapi/qualio-openapi.json#updateProductRequirement
+- name: createProductRisk
+  description: Create a risk
+  source_operation: openapi/qualio-openapi.json#createProductRisk
+- name: updateProductRisk
+  description: Update a risk
+  source_operation: openapi/qualio-openapi.json#updateProductRisk
+- name: getDocument
+  description: Retrieve a document
+  source_operation: openapi/qualio-openapi.json#getDocument
+- name: updateDocument
+  description: Update document people and tags
+  source_operation: openapi/qualio-openapi.json#updateDocument
+- name: getDocumentContent
+  description: Retrieve document content
+  source_operation: openapi/qualio-openapi.json#getDocumentContent
+- name: updateDocumentContent
+  description: Update document content
+  source_operation: openapi/qualio-openapi.json#updateDocumentContent
+- name: changeDocumentStatus
+  description: Change document status
+  source_operation: openapi/qualio-openapi.json#changeDocumentStatus
+- name: listDocumentVersions
+  description: List document versions by ID
+  source_operation: openapi/qualio-openapi.json#listDocumentVersions
+- name: listDocumentComments
+  description: List comments on a document
+  source_operation: openapi/qualio-openapi.json#listDocumentComments
+- name: listDocumentVersionsByCode
+  description: List document versions by code
+  source_operation: openapi/qualio-openapi.json#listDocumentVersionsByCode
+- name: queryDocuments
+  description: Query documents
+  source_operation: openapi/qualio-openapi.json#queryDocuments
+- name: listDocumentTemplates
+  description: List document templates
+  source_operation: openapi/qualio-openapi.json#listDocumentTemplates
+- name: getDocumentTemplate
+  description: Retrieve a document template
+  source_operation: openapi/qualio-openapi.json#getDocumentTemplate
+- name: getDocumentTemplateContent
+  description: Retrieve template content
+  source_operation: openapi/qualio-openapi.json#getDocumentTemplateContent
+- name: getAttachment
+  description: Retrieve an attachment
+  source_operation: openapi/qualio-openapi.json#getAttachment
+- name: createDocument
+  description: Create a draft document
+  source_operation: openapi/qualio-openapi.json#createDocument
+- name: getEvent
+  description: Retrieve an event
+  source_operation: openapi/qualio-openapi.json#getEvent
+- name: queryEvents
+  description: Query events
+  source_operation: openapi/qualio-openapi.json#queryEvents
+- name: createEvent
+  description: Create an event
+  source_operation: openapi/qualio-openapi.json#createEvent
+- name: listEventTemplates
+  description: List event templates
+  source_operation: openapi/qualio-openapi.json#listEventTemplates
+- name: getEventTemplate
+  description: Retrieve an event template
+  source_operation: openapi/qualio-openapi.json#getEventTemplate
+- name: listResourceTemplates
+  description: List resource templates
+  source_operation: openapi/qualio-openapi.json#listResourceTemplates
+- name: getResourceTemplate
+  description: Retrieve a resource template
+  source_operation: openapi/qualio-openapi.json#getResourceTemplate
+- name: createResourceItem
+  description: Create a resource item
+  source_operation: openapi/qualio-openapi.json#createResourceItem
+- name: getResourceItem
+  description: Retrieve a resource item
+  source_operation: openapi/qualio-openapi.json#getResourceItem
+- name: listSuppliers
+  description: List suppliers
+  source_operation: openapi/qualio-openapi.json#listSuppliers
+- name: createSupplier
+  description: Create a supplier
+  source_operation: openapi/qualio-openapi.json#createSupplier
+- name: getSupplier
+  description: Retrieve a supplier
+  source_operation: openapi/qualio-openapi.json#getSupplier
+- name: updateSupplier
+  description: Update a supplier
+  source_operation: openapi/qualio-openapi.json#updateSupplier
+- name: listSupplierRisks
+  description: List risk levels
+  source_operation: openapi/qualio-openapi.json#listSupplierRisks
+- name: listSupplierAudits
+  description: List supplier audits
+  source_operation: openapi/qualio-openapi.json#listSupplierAudits
+- name: listTags
+  description: List tags
+  source_operation: openapi/qualio-openapi.json#listTags
+- name: queryUserTraining
+  description: Query training assignments
+  source_operation: openapi/qualio-openapi.json#queryUserTraining
+- name: sendTrainingReminders
+  description: Send training reminders
+  source_operation: openapi/qualio-openapi.json#sendTrainingReminders
+- name: inviteUser
+  description: Invite a user
+  source_operation: openapi/qualio-openapi.json#inviteUser
+- name: listUsers
+  description: List users
+  source_operation: openapi/qualio-openapi.json#listUsers
+- name: getUser
+  description: Retrieve a user
+  source_operation: openapi/qualio-openapi.json#getUser
+- name: deleteUser
+  description: Remove a user
+  source_operation: openapi/qualio-openapi.json#deleteUser
+- name: reassignUserAssignments
+  description: Reassign user's assignments
+  source_operation: openapi/qualio-openapi.json#reassignUserAssignments
+- name: listUserAssignments
+  description: List user's assignments
+  source_operation: openapi/qualio-openapi.json#listUserAssignments
+- name: listGroups
+  description: List groups
+  source_operation: openapi/qualio-openapi.json#listGroups
+- name: addUserToGroup
+  description: Add user to group
+  source_operation: openapi/qualio-openapi.json#addUserToGroup
+- name: removeUserFromGroup
+  description: Remove user from group
+  source_operation: openapi/qualio-openapi.json#removeUserFromGroup
+- name: getCurrentUser
+  description: Retrieve the current user's id and name
+  source_operation: openapi/qualio-openapi.json#getCurrentUser

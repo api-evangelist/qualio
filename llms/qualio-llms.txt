@@ -1,0 +1,30 @@
+# Qualio
+
+> Qualio is an AI-powered quality management system (QMS) and compliance platform for life sciences companies (medical devices, pharma, biotech, SaMD, CROs). Its Developer API provides secure, programmatic access to documents, quality events, training, users, suppliers, design controls, change management and compliance intelligence.
+
+Authentication: API key via the `X-Api-Key` header. Generate a Developer API token in the Qualio admin panel (Admin Settings > Developer API tokens); admin privileges required. Base URL: https://api.qualio.com (RESTful v1). A prior GraphQL API at api.app.qualio.com/pa is deprecated.
+
+## APIs
+- [Qualio Developer API](https://developer-portal.qualio.com/): OpenAPI 3.1.0, 56 paths / 132 operations across 11 domains.
+
+## Specs
+- [OpenAPI 3.1.0](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/openapi/qualio-openapi.json)
+
+## Docs
+- [Developer Portal](https://developer-portal.qualio.com/)
+- [Qualio Developer API guide](https://docs.qualio.com/en/articles/12604878-qualio-developer-api)
+- [API & Integrations knowledge base](https://docs.qualio.com/en/collections/1484426-api-integrations)
+
+## Artifacts
+- [Authentication](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/authentication/qualio-authentication.yml)
+- [Conventions](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/conventions/qualio-conventions.yml)
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/errors/qualio-problem-types.yml)
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/lifecycle/qualio-lifecycle.yml)
+- [Data model](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/data-model/qualio-data-model.yml)
+- [MCP (candidate)](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/mcp/qualio-mcp.yml)
+- [Agent Skills](https://raw.githubusercontent.com/api-evangelist/qualio/refs/heads/main/skills/_index.yml)
+
+## Operational
+- Status: https://status.qualio.com (Atlassian Statuspage)
+- Compliance: ISO 9001, ISO 27001, ISO 27701 (https://www.qualio.com/quality-policy)
+- Pricing: https://www.qualio.com/pricing

@@ -1,0 +1,26 @@
+{
+  "provider": "qualio",
+  "sources": [
+    "qualio-openapi.json"
+  ],
+  "outputs": [
+    "qualio-audit-trail-api-openapi.yml",
+    "qualio-change-management-api-openapi.yml",
+    "qualio-compliance-intelligence-api-openapi.yml",
+    "qualio-design-controls-api-openapi.yml",
+    "qualio-documents-api-openapi.yml",
+    "qualio-events-api-openapi.yml",
+    "qualio-resource-library-api-openapi.yml",
+    "qualio-suppliers-api-openapi.yml",
+    "qualio-tags-api-openapi.yml",
+    "qualio-training-api-openapi.yml",
+    "qualio-user-management-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/qualio-openapi.json"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

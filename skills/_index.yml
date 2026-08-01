@@ -1,0 +1,16 @@
+generated: '2026-07-20'
+method: generated
+source: openapi/qualio-openapi.json
+skills:
+- file: qualio-document-control.md
+  name: Qualio document control
+  api: openapi/qualio-openapi.json
+  operations: [createDocument, queryDocuments, getDocument, updateDocumentContent, changeDocumentStatus, listDocumentVersions]
+- file: qualio-quality-events.md
+  name: Qualio quality events
+  api: openapi/qualio-openapi.json
+  operations: [listEventTemplates, createEvent, queryEvents, getEvent]
+- file: qualio-supplier-management.md
+  name: Qualio supplier management
+  api: openapi/qualio-openapi.json
+  operations: [listSuppliers, createSupplier, getSupplier, updateSupplier, listSupplierRisks, listSupplierAudits]

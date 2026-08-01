@@ -1,0 +1,41 @@
+generated: '2026-07-20'
+method: derived
+source:
+- openapi/qualio-openapi.json
+- https://developer-portal.qualio.com/
+authentication:
+  style: api-key
+  header: X-Api-Key
+  notes: Admin-generated Developer API token, passed on every request. See authentication/qualio-authentication.yml.
+base_url: https://api.qualio.com
+versioning:
+  scheme: uri-path
+  current: v1
+  example: https://api.qualio.com/v1/documents/document
+pagination:
+  style: offset
+  params:
+  - offset
+  - limit
+  notes: List endpoints accept offset and limit query parameters.
+idempotency:
+  supported: false
+  notes: No idempotency-key mechanism is documented or present in the OpenAPI.
+rate_limiting:
+  documented: true
+  signal: HTTP 429
+  policy: Fair-usage rate limits (no published numeric quotas).
+  source: https://developer-portal.qualio.com/
+errors:
+  format: json
+  envelope_field: message
+  ref: errors/qualio-problem-types.yml
+ordering:
+  params:
+  - orderBy
+  - order_by
+  notes: Some list endpoints support sort ordering.
+cross_links:
+  authentication: authentication/qualio-authentication.yml
+  errors: errors/qualio-problem-types.yml
+  lifecycle: lifecycle/qualio-lifecycle.yml

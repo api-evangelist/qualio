@@ -1,0 +1,121 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/qualio-openapi.json
+note: Entity graph derived from OpenAPI component schemas and their $ref links. 102 schemas total; core
+  quality-management entities surfaced.
+entity_count: 102
+domains:
+- Documents
+- Events
+- Training
+- Users
+- Suppliers
+- Design Controls
+- Change Management
+- Compliance Intelligence
+- Resource Library
+- Audit Trail
+- Tags
+entities:
+- name: attachment
+  relationships: []
+- name: attachmentId
+  relationships: []
+- name: auditTrailResp
+  relationships: []
+- name: changeControlResp
+  relationships: []
+- name: changeDocumentStatusPayload
+  relationships: []
+- name: createDocumentPayload
+  relationships: []
+- name: createDocumentResponse
+  relationships: []
+- name: createEventContentStep
+  relationships: []
+- name: createEventFormStep
+  relationships: []
+- name: createEventPayload
+  relationships:
+  - to: createEventContentStep
+    type: references
+  - to: createEventFormStep
+    type: references
+  - to: createEventTaskStep
+    type: references
+- name: createEventTaskStep
+  relationships: []
+- name: createSupplier
+  relationships: []
+- name: dcProductId
+  relationships: []
+- name: deleteUserResp
+  relationships: []
+- name: documentCode
+  relationships: []
+- name: documentCommentsResponse
+  relationships: []
+- name: documentContentResponse
+  relationships: []
+- name: documentDetailed
+  relationships: []
+- name: documentId
+  relationships: []
+- name: documentIds
+  relationships: []
+- name: documentStatus
+  relationships: []
+- name: documentStatusChangeResponse
+  relationships: []
+- name: documentSummaryResponse
+  relationships: []
+- name: documentTemplateContentResponse
+  relationships: []
+- name: documentTemplateResponse
+  relationships: []
+- name: documentTemplatesQueryResponse
+  relationships: []
+- name: documentVersionsResponse
+  relationships: []
+- name: event
+  relationships: []
+- name: eventCode
+  relationships: []
+- name: eventDetailed
+  relationships:
+  - to: eventStepContent
+    type: references
+  - to: eventStepForm
+    type: references
+  - to: eventStepTasks
+    type: references
+- name: eventQueryResponse
+  relationships: []
+- name: eventStatus
+  relationships: []
+- name: eventStepContent
+  relationships: []
+- name: eventStepForm
+  relationships: []
+- name: eventStepTasks
+  relationships: []
+- name: eventTemplateContentStep
+  relationships: []
+- name: eventTemplateDetailedResp
+  relationships:
+  - to: eventTemplateContentStep
+    type: references
+  - to: eventTemplateFormStep
+    type: references
+  - to: eventTemplateTaskStep
+    type: references
+- name: eventTemplateFormField
+  relationships: []
+- name: eventTemplateFormFieldMultiOption
+  relationships: []
+- name: eventTemplateFormStep
+  relationships:
+  - to: eventTemplateFormField
+    type: references
+  - to: eventTemplateFormFieldMultiOption
+    type: references
