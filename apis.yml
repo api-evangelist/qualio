@@ -216,7 +216,7 @@ common:
 - type: Authentication
   url: authentication/qualio-authentication.yml
 - type: OpenAPI
-  url: openapi/qualio-openapi.json
+  url: openapi/_original/qualio-openapi.json
 - type: Conventions
   url: conventions/qualio-conventions.yml
 - type: ErrorCatalog
