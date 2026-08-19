@@ -1,0 +1,1441 @@
+{
+  "item": [
+    {
+      "id": "1c62c09e-b784-4f6b-b8a2-f93d2b267e0f",
+      "name": "Training",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "76391586-e3af-43d6-829a-6d4dfdeb8018",
+          "name": "Query training assignments",
+          "request": {
+            "name": "Query training assignments",
+            "description": {
+              "content": "Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completion or find outstanding/overdue training. Filter by document_ids (training on specific documents) and/or group_ids (training for users in specific groups).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "training",
+                "user-training",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "group_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "group_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<number>",
+                  "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments."
+                },
+                {
+                  "disabled": false,
+                  "key": "include_removed",
+                  "value": "<boolean>",
+                  "description": "When true, includes training assignments that were completed and subsequently unassigned. Defaults to false."
+                },
+                {
+                  "disabled": false,
+                  "key": "include_inactive_users",
+                  "value": "<boolean>",
+                  "description": "When true, includes training records for users who are no longer active in the company. Defaults to false."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-Api-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "65b5ed2f-040b-4705-a29e-2fe7f96a2af3",
+              "name": "Successful training query retrieval",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "user-training",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "document_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "30"
+                    },
+                    {
+                      "key": "status",
+                      "value": "overdue"
+                    },
+                    {
+                      "key": "include_removed",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_inactive_users",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"user_id\": 8233.616736102054,\n      \"email\": \"string\",\n      \"full_name\": \"string\",\n      \"document_id\": 6436.28311486343,\n      \"completed\": false,\n      \"assigned_at\": \"1996-02-01T00:59:07.345Z\",\n      \"due_at\": \"1980-02-19T17:05:06.553Z\",\n      \"completed_at\": \"1966-08-10T16:54:58.375Z\",\n      \"status\": \"overdue\",\n      \"is_retraining\": false,\n      \"is_overdue\": false,\n      \"training_removed\": true\n    },\n    {\n      \"user_id\": 5967.128104772849,\n      \"email\": \"string\",\n      \"full_name\": \"string\",\n      \"document_id\": 9027.649148148748,\n      \"completed\": false,\n      \"assigned_at\": \"2013-12-14T16:28:25.579Z\",\n      \"due_at\": \"2009-08-07T20:57:28.314Z\",\n      \"completed_at\": \"1963-12-13T19:04:33.965Z\",\n      \"status\": \"completed\",\n      \"is_retraining\": false,\n      \"is_overdue\": true,\n      \"training_removed\": false\n    }\n  ],\n  \"total\": 4833.92600511939\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "db8b6956-7ac2-4a91-ab38-4692a9cee474",
+              "name": "The request has malformed query parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "user-training",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "document_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "30"
+                    },
+                    {
+                      "key": "status",
+                      "value": "overdue"
+                    },
+                    {
+                      "key": "include_removed",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_inactive_users",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"errors\": [\n    {\n      \"location\": \"query\",\n      \"name\": \"document_id\",\n      \"description\": \"document_id is not an integer\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6f1b87c8-672c-4427-9a66-0c308a1b0b3b",
+              "name": "This API key is not allowed to perform this action, or the API key is incorrect",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "user-training",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "document_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "30"
+                    },
+                    {
+                      "key": "status",
+                      "value": "overdue"
+                    },
+                    {
+                      "key": "include_removed",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_inactive_users",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"User is not authorized to access this resource with an explicit deny\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "81cceed4-b523-42d6-872b-1aa71fa3c945",
+              "name": "This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "user-training",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "document_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "30"
+                    },
+                    {
+                      "key": "status",
+                      "value": "overdue"
+                    },
+                    {
+                      "key": "include_removed",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_inactive_users",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"You have exceeded what is allowed in the fair use policy for this API\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "005718dc-5cac-4535-9923-6c6b6021b209",
+          "name": "query User Training Options",
+          "request": {
+            "name": "query User Training Options",
+            "description": {
+              "content": "Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completion or find outstanding/overdue training. Filter by document_ids (training on specific documents) and/or group_ids (training for users in specific groups).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "training",
+                "user-training",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "group_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "group_ids",
+                  "value": "<number>",
+                  "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<number>",
+                  "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments."
+                },
+                {
+                  "disabled": false,
+                  "key": "include_removed",
+                  "value": "<boolean>",
+                  "description": "When true, includes training assignments that were completed and subsequently unassigned. Defaults to false."
+                },
+                {
+                  "disabled": false,
+                  "key": "include_inactive_users",
+                  "value": "<boolean>",
+                  "description": "When true, includes training records for users who are no longer active in the company. Defaults to false."
+                }
+              ],
+              "variable": []
+            },
+            "method": "OPTIONS",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fb6dceb6-e410-453e-829c-0fd7f7684113",
+              "name": "Options 200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "user-training",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "document_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "1"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "2"
+                    },
+                    {
+                      "key": "group_ids",
+                      "value": "3"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "30"
+                    },
+                    {
+                      "key": "status",
+                      "value": "overdue"
+                    },
+                    {
+                      "key": "include_removed",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_inactive_users",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "OPTIONS",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb4c421f-c433-4781-882a-3296088db18f",
+          "name": "Send training reminders",
+          "request": {
+            "name": "Send training reminders",
+            "description": {
+              "content": "Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "training",
+                "document",
+                ":documentId",
+                "remind"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "documentId",
+                  "description": "(Required) A unique identifier for a document"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-Api-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "85332486-9e01-4114-90ed-fda23836e8b8",
+              "name": "Reminders sent",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": [\n    {\n      \"user_id\": 1224,\n      \"email\": \"user@example.com\"\n    }\n  ],\n  \"failure\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a95e21c3-7056-451d-b955-5508e2546f40",
+              "name": "The request has malformed body",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"errors\": [\n    {\n      \"location\": \"body\",\n      \"name\": \"email\",\n      \"description\": \"Email missing from payload\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a217a8a-d4b3-4be3-9e75-e95e9b5ed638",
+              "name": "This API key is not allowed to perform this action, or the API key is incorrect",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"User is not authorized to access this resource with an explicit deny\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0024b845-680a-491f-af96-02702be33d33",
+              "name": "Document not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "488de7de-1559-4fcb-9378-490032d472a8",
+              "name": "This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"You have exceeded what is allowed in the fair use policy for this API\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "90aea918-4eff-4b75-ae58-947e3cd76d56",
+          "name": "send Training Reminders Options",
+          "request": {
+            "name": "send Training Reminders Options",
+            "description": {
+              "content": "Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "training",
+                "document",
+                ":documentId",
+                "remind"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "documentId",
+                  "description": "(Required) A unique identifier for a document"
+                }
+              ]
+            },
+            "method": "OPTIONS",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "72f7d8c7-f1c9-4443-8cd5-660e718e346a",
+              "name": "Options 200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "training",
+                    "document",
+                    ":documentId",
+                    "remind"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "documentId",
+                      "description": "(Required) A unique identifier for a document"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "OPTIONS",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.qualio.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "53035d2d-0818-4fbd-ae7c-2bf8a351d491",
+    "name": "Qualio Developer Training API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n",
+      "type": "text/plain"
+    }
+  }
+}

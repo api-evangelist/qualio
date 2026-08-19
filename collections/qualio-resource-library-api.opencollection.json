@@ -1,0 +1,232 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Resource Library API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Resource Library",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List resource templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/resource-library/templates/list",
+            "params": [
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "A property to order the results by"
+              },
+              {
+                "name": "search_query",
+                "value": "",
+                "type": "query",
+                "description": "A search query to filter the results by"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "A status to filter the results by"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the resource templates configured for your instance â these are shown as \"Resources\" in the Qualio application. The Resource Library holds structured registries (logs) such as equipment, suppliers, parts, root causes, or training records, and each template defines the type and field structure of one such registry. Use this to discover the available resource types and their identifiers before creating items against them. Supports filtering by status (effective, draft, archived, superseded"
+        },
+        {
+          "info": {
+            "name": "listResourceTemplatesOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/resource-library/templates/list",
+            "params": [
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "A property to order the results by"
+              },
+              {
+                "name": "search_query",
+                "value": "",
+                "type": "query",
+                "description": "A search query to filter the results by"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "A status to filter the results by"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists the resource templates configured for your instance â these are shown as \"Resources\" in the Qualio application. The Resource Library holds structured registries (logs) such as equipment, suppliers, parts, root causes, or training records, and each template defines the type and field structure of one such registry. Use this to discover the available resource types and their identifiers before creating items against them. Supports filtering by status (effective, draft, archived, superseded"
+        },
+        {
+          "info": {
+            "name": "Retrieve a resource template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/resource-library/templates/:templateId",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single resource template (a \"Resource\" in the Qualio application) by its id, including its definition and field structure. A template describes the type of a Resource Library registry â for example equipment, suppliers, or root causes â that items are created against."
+        },
+        {
+          "info": {
+            "name": "getResourceTemplateOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/resource-library/templates/:templateId",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single resource template (a \"Resource\" in the Qualio application) by its id, including its definition and field structure. A template describes the type of a Resource Library registry â for example equipment, suppliers, or root causes â that items are created against."
+        },
+        {
+          "info": {
+            "name": "Create a resource item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/resource-library/items",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new item (a record) in the Resource Library under the given resource template. The template determines which type of registry the item belongs to and its field structure. `display_id` is the human-readable identifier shown as 'ID' in the Qualio UI and must be unique."
+        },
+        {
+          "info": {
+            "name": "createResourceItemOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/resource-library/items"
+          },
+          "docs": "Creates a new item (a record) in the Resource Library under the given resource template. The template determines which type of registry the item belongs to and its field structure. `display_id` is the human-readable identifier shown as 'ID' in the Qualio UI and must be unique."
+        },
+        {
+          "info": {
+            "name": "Retrieve a resource item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/resource-library/items/:itemId",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single resource library item by its numeric id, including its fields, status, version, and any associated structured form data."
+        },
+        {
+          "info": {
+            "name": "getResourceItemOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/resource-library/items/:itemId",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single resource library item by its numeric id, including its fields, status, version, and any associated structured form data."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

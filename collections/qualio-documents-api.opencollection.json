@@ -1,0 +1,618 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Documents API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single document version by its numeric id, with full details including title, status, version, owner, reviewers/approvers, and tags. In Qualio, each version of a document has its own numeric id, while the document code (e.g. SOP-1) is shared across all versions â this endpoint returns the specific version identified by `documentId`. Use the versions endpoints to list the other versions of the same document."
+        },
+        {
+          "info": {
+            "name": "Update document people and tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the approvers, reviewers, and/or tags of a document that is in **draft** status (for approvers and reviewers) or any status (for tags).\n\nThis is a **partial update**: only the fields included in the request body are modified. Omitted fields are left unchanged. Each supplied list fully replaces the current set for that role â to add a single reviewer, include all existing reviewer IDs plus the new one.\n\n**Quality approvers vs other approvers**: Qualio distinguishes between quality appro"
+        },
+        {
+          "info": {
+            "name": "getDocumentOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ]
+          },
+          "docs": "Retrieves a single document version by its numeric id, with full details including title, status, version, owner, reviewers/approvers, and tags. In Qualio, each version of a document has its own numeric id, while the document code (e.g. SOP-1) is shared across all versions â this endpoint returns the specific version identified by `documentId`. Use the versions endpoints to list the other versions of the same document."
+        },
+        {
+          "info": {
+            "name": "Retrieve document content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/content",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the section content of a specific document version, identified by its numeric id. Content is returned per section (each with a title and HTML body). Use `GET /v1/documents/document/{documentId}` for the document's metadata, or the templates endpoints for the section structure of a document type."
+        },
+        {
+          "info": {
+            "name": "Update document content",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/content",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the HTML section content of a document that is in **draft** status.\n\nThis is a **partial update**: only the sections listed in the request body are modified. Sections not included retain their existing content unchanged. To replace all content, include every section position defined by the document template.\n\n**Sections are identified by their `position` number** (1-indexed, matching the order defined by the document template). Use `GET /v1/documents/templates/{templateId}/content` to di"
+        },
+        {
+          "info": {
+            "name": "getDocumentContentOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/content",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ]
+          },
+          "docs": "Retrieves the section content of a specific document version, identified by its numeric id. Content is returned per section (each with a title and HTML body). Use `GET /v1/documents/document/{documentId}` for the document's metadata, or the templates endpoints for the section structure of a document type."
+        },
+        {
+          "info": {
+            "name": "Change document status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/status",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Advances or reverts the lifecycle status of a document.\n\n**The document must be accessible to the API key's user.** The transition must be valid for the document's current status. Invalid transitions are rejected with a 400 and the document is left unchanged.\n\n**Valid status transitions:**\n\n| From | To | Notes |\n|------|----|-------|\n| `draft` | `for_review` | Document must have at least one reviewer assigned |\n| `draft` | `for_approval` | Document must have at least one approver (including a qu"
+        },
+        {
+          "info": {
+            "name": "changeDocumentStatusOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/status",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ]
+          },
+          "docs": "Advances or reverts the lifecycle status of a document.\n\n**The document must be accessible to the API key's user.** The transition must be valid for the document's current status. Invalid transitions are rejected with a 400 and the document is left unchanged.\n\n**Valid status transitions:**\n\n| From | To | Notes |\n|------|----|-------|\n| `draft` | `for_review` | Document must have at least one reviewer assigned |\n| `draft` | `for_approval` | Document must have at least one approver (including a qu"
+        },
+        {
+          "info": {
+            "name": "List document versions by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/versions",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists every version of a document, identified by the numeric id of any one of its versions, sorted newest version first. All versions of a document share the same code (e.g. SOP-1) but each has its own id and version number (e.g. 1.0, 2.0). Returns a summary of each version, letting you trace a document's revision history."
+        },
+        {
+          "info": {
+            "name": "listDocumentVersionsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/versions",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ]
+          },
+          "docs": "Lists every version of a document, identified by the numeric id of any one of its versions, sorted newest version first. All versions of a document share the same code (e.g. SOP-1) but each has its own id and version number (e.g. 1.0, 2.0). Returns a summary of each version, letting you trace a document's revision history."
+        },
+        {
+          "info": {
+            "name": "List comments on a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/comments",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the comment and suggestion threads on a document version, identified by its numeric id. Each thread includes its status (Open, Resolved, Removed, Accepted, or Rejected), the commented-on content (if available), and any replies. Returns an empty list if the document has no comments."
+        },
+        {
+          "info": {
+            "name": "listDocumentCommentsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/:documentId/comments",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document version"
+              }
+            ]
+          },
+          "docs": "Lists the comment and suggestion threads on a document version, identified by its numeric id. Each thread includes its status (Open, Resolved, Removed, Accepted, or Rejected), the commented-on content (if available), and any replies. Returns an empty list if the document has no comments."
+        },
+        {
+          "info": {
+            "name": "List document versions by code",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/document/code/:code/versions",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "A unique code identifier for a document (e.g. SOP-1, POL-42)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists every version of a document, identified by its document code (e.g. SOP-1, POL-42), sorted newest version first. The code is shared across all versions of a document; each version has its own id and version number. Returns a summary of each version. Use this when you know the human-readable code rather than a numeric version id."
+        },
+        {
+          "info": {
+            "name": "listDocumentVersionsByCodeOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document/code/:code/versions",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "A unique code identifier for a document (e.g. SOP-1, POL-42)"
+              }
+            ]
+          },
+          "docs": "Lists every version of a document, identified by its document code (e.g. SOP-1, POL-42), sorted newest version first. The code is shared across all versions of a document; each version has its own id and version number. Returns a summary of each version. Use this when you know the human-readable code rather than a numeric version id."
+        },
+        {
+          "info": {
+            "name": "Query documents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/query",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The different states of a document in Qualio"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Queries documents across your Qualio instance, returning a light summary of each (code, title, status, version, owner, etc.). Filter by document status (`draft`, `for_review`, `for_approval`, `approved`, `effective`, `superseded`, `retired`, and others) and paginate with offset/limit. Use this to find documents â for example all effective SOPs, or documents currently awaiting approval â then fetch full details or content with the per-document endpoints."
+        },
+        {
+          "info": {
+            "name": "queryDocumentsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/query",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The different states of a document in Qualio"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Queries documents across your Qualio instance, returning a light summary of each (code, title, status, version, owner, etc.). Filter by document status (`draft`, `for_review`, `for_approval`, `approved`, `effective`, `superseded`, `retired`, and others) and paginate with offset/limit. Use this to find documents â for example all effective SOPs, or documents currently awaiting approval â then fetch full details or content with the per-document endpoints."
+        },
+        {
+          "info": {
+            "name": "List document templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/templates",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists all active document templates for your instance. A document template defines a document type â its section structure and the code prefix used to generate document codes (e.g. an 'SOP' template produces SOP-1, SOP-2â¦). Each template includes its `template_matrix_id`, which is required when creating a new document."
+        },
+        {
+          "info": {
+            "name": "listDocumentTemplatesOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/templates"
+          },
+          "docs": "Lists all active document templates for your instance. A document template defines a document type â its section structure and the code prefix used to generate document codes (e.g. an 'SOP' template produces SOP-1, SOP-2â¦). Each template includes its `template_matrix_id`, which is required when creating a new document."
+        },
+        {
+          "info": {
+            "name": "Retrieve a document template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/templates/:templateId",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single document template by id. A document template defines a document type, its section structure, and the code prefix used for documents created from it."
+        },
+        {
+          "info": {
+            "name": "getDocumentTemplateOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/templates/:templateId",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single document template by id. A document template defines a document type, its section structure, and the code prefix used for documents created from it."
+        },
+        {
+          "info": {
+            "name": "Retrieve template content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/templates/:templateId/content",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the section structure and default content of a document template, including each section's title and position. Use these positions when supplying section content to create or update a document from this template."
+        },
+        {
+          "info": {
+            "name": "getDocumentTemplateContentOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/templates/:templateId/content",
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves the section structure and default content of a document template, including each section's title and position. Use these positions when supplying section content to create or update a document from this template."
+        },
+        {
+          "info": {
+            "name": "Retrieve an attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/documents/attachments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for an attachment"
+              },
+              {
+                "name": "download",
+                "value": "",
+                "type": "query",
+                "description": "Set to true to download the file instead of returning JSON metadata"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves metadata for a single attachment by its numeric id. Pass `download=true` as a query parameter to trigger a file download instead of returning JSON metadata. When downloading, also send `Accept: application/octet-stream` so the file is returned as raw binary; without it, the file body is returned as a base64-encoded string instead. Downloads are limited to files up to 10MB. Only send `Accept: application/octet-stream` together with `download=true` â sending it without `download=true` "
+        },
+        {
+          "info": {
+            "name": "getAttachmentOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/attachments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for an attachment"
+              },
+              {
+                "name": "download",
+                "value": "",
+                "type": "query",
+                "description": "Set to true to download the file instead of returning JSON metadata"
+              }
+            ]
+          },
+          "docs": "Retrieves metadata for a single attachment by its numeric id. Pass `download=true` as a query parameter to trigger a file download instead of returning JSON metadata. When downloading, also send `Accept: application/octet-stream` so the file is returned as raw binary; without it, the file body is returned as a base64-encoded string instead. Downloads are limited to files up to 10MB. Only send `Accept: application/octet-stream` together with `download=true` â sending it without `download=true` "
+        },
+        {
+          "info": {
+            "name": "Create a draft document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/documents/document",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new draft document. The template (via its `template_matrix_id`) determines the document type and its section structure. The document is created in `draft` status; use the change-status endpoint to advance it through review and approval."
+        },
+        {
+          "info": {
+            "name": "createDocumentOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/documents/document"
+          },
+          "docs": "Creates a new draft document. The template (via its `template_matrix_id`) determines the document type and its section structure. The document is created in `draft` status; use the change-status endpoint to advance it through review and approval."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Tags API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/tags/tags",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists all tags defined for your Qualio instance. Tags are company-wide labels used to categorise and filter entities such as documents and quality events, and can also gate access to private documents. Each tag has an id and a name; the returned ids are the same tag ids that appear on documents and events, so use this endpoint to resolve a tag name to its id (or vice versa)."
+        },
+        {
+          "info": {
+            "name": "listTagsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/tags/tags"
+          },
+          "docs": "Lists all tags defined for your Qualio instance. Tags are company-wide labels used to categorise and filter entities such as documents and quality events, and can also gate access to private documents. Each tag has an id and a name; the returned ids are the same tag ids that appear on documents and events, so use this endpoint to resolve a tag name to its id (or vice versa)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

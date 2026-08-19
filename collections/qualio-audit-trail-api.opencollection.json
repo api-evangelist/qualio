@@ -1,0 +1,118 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Audit Trail API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audit Trail",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the audit trail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/audit-trail/audits",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to return. This is typically used with offset to paginate results."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter results from this date onwards (ISO 8601 format)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter results up to this date (ISO 8601 format)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the company's audit trail: a chronological, immutable log of significant user and system activity across the quality management system (also referred to as the activity log or history). Each entry captures the action performed, the user who performed it (or none, for automated system actions), the date, and a link to the affected object. Tracked activity includes document approvals, reviews and status changes; user and group management (invitations, account changes, group membership); ta"
+        },
+        {
+          "info": {
+            "name": "queryAuditTrailOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/audit-trail/audits",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to return. This is typically used with offset to paginate results."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter results from this date onwards (ISO 8601 format)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter results up to this date (ISO 8601 format)"
+              }
+            ]
+          },
+          "docs": "Returns the company's audit trail: a chronological, immutable log of significant user and system activity across the quality management system (also referred to as the activity log or history). Each entry captures the action performed, the user who performed it (or none, for automated system actions), the date, and a link to the affected object. Tracked activity includes document approvals, reviews and status changes; user and group management (invitations, account changes, group membership); ta"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,405 @@
+{
+  "item": [
+    {
+      "id": "d60e065c-6418-4b44-b2e9-5a7731694bf3",
+      "name": "Tags",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "68654701-714b-4058-ac3f-3f0c66c70af3",
+          "name": "List tags",
+          "request": {
+            "name": "List tags",
+            "description": {
+              "content": "Lists all tags defined for your Qualio instance. Tags are company-wide labels used to categorise and filter entities such as documents and quality events, and can also gate access to private documents. Each tag has an id and a name; the returned ids are the same tag ids that appear on documents and events, so use this endpoint to resolve a tag name to its id (or vice versa).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tags",
+                "tags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-Api-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "862c2596-0e0c-4b26-9933-d8a4bf0f479b",
+              "name": "Successful retrieval of all tags",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tags",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"tag_id\": 99,\n      \"name\": \"Engineering\"\n    }\n  ],\n  \"total\": 1\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88c8a17a-9d3a-4963-aca6-bdc7aca04820",
+              "name": "This API key is not allowed to perform this action, or the API key is incorrect",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tags",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"User is not authorized to access this resource with an explicit deny\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3335c711-a897-4032-88ee-d81925da2117",
+              "name": "This API key has exceeded the fair usage policy in Qualio, and has it its requests restricted. This request has not been processed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tags",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"You have exceeded what is allowed in the fair use policy for this API\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ffb86b5c-8744-4031-ab13-8aca5da8c340",
+          "name": "list Tags Options",
+          "request": {
+            "name": "list Tags Options",
+            "description": {
+              "content": "Lists all tags defined for your Qualio instance. Tags are company-wide labels used to categorise and filter entities such as documents and quality events, and can also gate access to private documents. Each tag has an id and a name; the returned ids are the same tag ids that appear on documents and events, so use this endpoint to resolve a tag name to its id (or vice versa).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tags",
+                "tags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "OPTIONS",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d9013f6e-0d4d-447c-a791-7db1e7565461",
+              "name": "Options 200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tags",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "OPTIONS",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Content-Disposition",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.qualio.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "888b7a73-eac2-47ca-aba1-40eb4284c5ed",
+    "name": "Qualio Developer Tags API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n",
+      "type": "text/plain"
+    }
+  }
+}

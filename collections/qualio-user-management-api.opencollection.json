@@ -1,0 +1,371 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer User Management API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "User Management",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Invite a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/user-management/invite",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Invites a user to your Qualio instance. This will generate an email for them to accept the invite, whereupon they will be asked to set their name and password, etc"
+        },
+        {
+          "info": {
+            "name": "inviteUserOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/invite"
+          },
+          "docs": "Invites a user to your Qualio instance. This will generate an email for them to accept the invite, whereupon they will be asked to set their name and password, etc"
+        },
+        {
+          "info": {
+            "name": "List users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/user-management/users",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all users in your Qualio instance, including each user's id, email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status (`pending`, `accepted`, `declined`, `canceled`). Use this to look up a user's id from their email, or to audit who has access."
+        },
+        {
+          "info": {
+            "name": "listUsersOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/users"
+          },
+          "docs": "Retrieves all users in your Qualio instance, including each user's id, email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status (`pending`, `accepted`, `declined`, `canceled`). Use this to look up a user's id from their email, or to audit who has access."
+        },
+        {
+          "info": {
+            "name": "Retrieve a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single user by id, including email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status."
+        },
+        {
+          "info": {
+            "name": "Remove a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes a specific user from your Qualio instance. For this to complete successfully, the user must have no assignments remaining. The endpoint /v1/user-management/user/{userId}/assignments can be used to reassign all assignments to a new user. This requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "getUserOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ]
+          },
+          "docs": "Retrieves a single user by id, including email, full name, role (`quality`, `normal`, or `basic`), admin flag, and invite status."
+        },
+        {
+          "info": {
+            "name": "List user's assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId/assignments",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all entity assignments for a specific user. Returns document, event, task, and other entity IDs where the user is assigned as owner, reviewer, or approver. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "Reassign user's assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId/assignments",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reassigns all entities associated with a user to a new owner. Works for a variety of entities including documents, events, tasks, etc. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "reassignUserAssignmentsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/user/:userId/assignments",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              }
+            ]
+          },
+          "docs": "Reassigns all entities associated with a user to a new owner. Works for a variety of entities including documents, events, tasks, etc. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "List groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/user-management/groups",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the user groups defined in your Qualio instance, returning each group's id and name. Groups are named collections of users used to organise people (e.g. by team or function) and to assign or filter responsibilities such as document training in bulk. Use a group's id with the add/remove-user-to-group endpoints, or with the training query's group filter."
+        },
+        {
+          "info": {
+            "name": "listGroupsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/groups"
+          },
+          "docs": "Lists the user groups defined in your Qualio instance, returning each group's id and name. Groups are named collections of users used to organise people (e.g. by team or function) and to assign or filter responsibilities such as document training in bulk. Use a group's id with the add/remove-user-to-group endpoints, or with the training query's group filter."
+        },
+        {
+          "info": {
+            "name": "Add user to group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/user-management/groups/:groupId/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a group in Qualio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Adds a user to a group within your Qualio instance. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "Remove user from group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.qualio.com/v1/user-management/groups/:groupId/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a group in Qualio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes a user from a group within your Qualio instance. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "addUserToGroupOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/groups/:groupId/user/:userId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a group in Qualio"
+              }
+            ]
+          },
+          "docs": "Adds a user to a group within your Qualio instance. Requires admin permissions"
+        },
+        {
+          "info": {
+            "name": "Retrieve the current user's id and name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/user-management/user/me",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the currently logged in user's id and name."
+        },
+        {
+          "info": {
+            "name": "getCurrentUserOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/user-management/user/me"
+          },
+          "docs": "Retrieves the currently logged in user's id and name."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

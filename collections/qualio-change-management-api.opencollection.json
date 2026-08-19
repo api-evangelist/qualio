@@ -1,0 +1,203 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Change Management API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Change Management",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List change controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/change-management/change-controls",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a domain object"
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "The field to order the results by"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists change controls for your Qualio instance. A change control (CC) is a formal, auditable record that documents and routes a change for review and approval â typically a change to one or more controlled documents, which appear as the change control's linked items. Each entry includes its id (e.g. CC-123), title, owner, status (`open` or `closed`), timestamps, and content sections. Supports filtering by status, ordering, and pagination."
+        },
+        {
+          "info": {
+            "name": "Create a change control",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/change-management/change-controls",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a change control for a draft document. A change control is the formal workflow record that documents and routes the proposed change for review and approval. Provide the document and the content `sections`; the section positions must match those defined by the change control template and start at position 1."
+        },
+        {
+          "info": {
+            "name": "listChangeControlsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/change-management/change-controls",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a domain object"
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "The field to order the results by"
+              }
+            ]
+          },
+          "docs": "Lists change controls for your Qualio instance. A change control (CC) is a formal, auditable record that documents and routes a change for review and approval â typically a change to one or more controlled documents, which appear as the change control's linked items. Each entry includes its id (e.g. CC-123), title, owner, status (`open` or `closed`), timestamps, and content sections. Supports filtering by status, ordering, and pagination."
+        },
+        {
+          "info": {
+            "name": "List change requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/change-management/change-requests",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a domain object"
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "The field to order the results by"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists change requests for your Qualio instance. A change request (CR) is a formal record used to propose, track, and approve changes to controlled documents. Each entry includes its code (e.g. DCR-1), title, owner, status, timestamps, and linked change items. Supports filtering by status, text search, ordering, and pagination."
+        },
+        {
+          "info": {
+            "name": "listChangeRequestsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/change-management/change-requests",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a domain object"
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "The field to order the results by"
+              }
+            ]
+          },
+          "docs": "Lists change requests for your Qualio instance. A change request (CR) is a formal record used to propose, track, and approve changes to controlled documents. Each entry includes its code (e.g. DCR-1), title, owner, status, timestamps, and linked change items. Supports filtering by status, text search, ordering, and pagination."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

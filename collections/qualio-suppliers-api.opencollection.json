@@ -1,0 +1,234 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Suppliers API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Suppliers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List suppliers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists suppliers in your Qualio instance filtered by status. Supplier Quality Management (SQM) maintains your approved vendor list and supplier qualification records â the external vendors and contractors your company assesses, approves, and monitors. Filter by status: `APPROVED`, `REVIEW_PENDING`, `REJECTED`, `DRAFT`, or `ARCHIVED`. Returns each supplier's id, name, status, assigned risk level, intended use, and contact details."
+        },
+        {
+          "info": {
+            "name": "Create a supplier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new supplier (vendor) record in Supplier Quality Management. Provide the name and, optionally, the intended use, sponsor, risk level (risk_id, from the risk-levels endpoint), and contact details. The supplier is created in a draft state and progresses through review and approval before becoming an approved vendor."
+        },
+        {
+          "info": {
+            "name": "listSuppliersOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists suppliers in your Qualio instance filtered by status. Supplier Quality Management (SQM) maintains your approved vendor list and supplier qualification records â the external vendors and contractors your company assesses, approves, and monitors. Filter by status: `APPROVED`, `REVIEW_PENDING`, `REJECTED`, `DRAFT`, or `ARCHIVED`. Returns each supplier's id, name, status, assigned risk level, intended use, and contact details."
+        },
+        {
+          "info": {
+            "name": "Retrieve a supplier",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers/:supplierId",
+            "params": [
+              {
+                "name": "supplierId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a supplier"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single supplier by its id, including name, status, assigned risk level, intended use, sponsor, approval date, and contact information."
+        },
+        {
+          "info": {
+            "name": "Update a supplier",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers/:supplierId",
+            "params": [
+              {
+                "name": "supplierId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a supplier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing supplier, identified by its id. Replaces the supplier's editable details â name, intended use, sponsor, risk level (risk_id), and contact information."
+        },
+        {
+          "info": {
+            "name": "getSupplierOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers/:supplierId",
+            "params": [
+              {
+                "name": "supplierId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a supplier"
+              }
+            ]
+          },
+          "docs": "Retrieves a single supplier by its id, including name, status, assigned risk level, intended use, sponsor, approval date, and contact information."
+        },
+        {
+          "info": {
+            "name": "List risk levels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/suppliers/risks",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the supplier risk levels configured for your company. Risk levels (e.g. High, Medium, Low) are company-defined ratings assigned to suppliers to reflect the risk they pose; each carries an id, title, description, and a periodic-review interval that drives how often the supplier should be re-audited. Use a risk level's id as the `risk_id` when creating or updating a supplier."
+        },
+        {
+          "info": {
+            "name": "listSupplierRisksOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/suppliers/risks"
+          },
+          "docs": "Lists the supplier risk levels configured for your company. Risk levels (e.g. High, Medium, Low) are company-defined ratings assigned to suppliers to reflect the risk they pose; each carries an id, title, description, and a periodic-review interval that drives how often the supplier should be re-audited. Use a risk level's id as the `risk_id` when creating or updating a supplier."
+        },
+        {
+          "info": {
+            "name": "List supplier audits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers/:supplierId/audits",
+            "params": [
+              {
+                "name": "supplierId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a supplier"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the audits recorded against a supplier, identified by the supplier's id. Supplier audits capture your assessments of a vendor: each returns its id, name, type, status, planned/actual dates, owner, notes, and any attached documents. Deleted (archived) audits are not returned."
+        },
+        {
+          "info": {
+            "name": "listSupplierAuditsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/suppliers/suppliers/:supplierId/audits",
+            "params": [
+              {
+                "name": "supplierId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a supplier"
+              }
+            ]
+          },
+          "docs": "Lists the audits recorded against a supplier, identified by the supplier's id. Supplier audits capture your assessments of a vendor: each returns its id, name, type, status, planned/actual dates, owner, notes, and any attached documents. Deleted (archived) audits are not returned."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

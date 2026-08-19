@@ -1,0 +1,899 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Compliance Intelligence API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Compliance Intelligence",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List frameworks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/frameworks",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the compliance frameworks in your Qualio instance. A framework is a compliance standard (for example ISO 13485, ISO 9001, or GDPR) that groups the requirements your organisation has committed to meet. Each framework has a status: disabled (not currently in use), implementing (controls are being set up), or monitoring (actively tracking compliance against the standard). Results are ordered by framework id. Use the offset and limit parameters to page through large sets; the total field in th"
+        },
+        {
+          "info": {
+            "name": "Create a framework",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/compliance/frameworks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new compliance framework in your Qualio instance. Provide a name and an optional description. The framework is created with a disabled status and must be activated in the Qualio application before requirements can be tracked against it. The id returned in the response can be used to retrieve or update the framework via the other Compliance Intelligence endpoints."
+        },
+        {
+          "info": {
+            "name": "listComplianceFrameworksOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/frameworks",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only frameworks with this status. Accepted values: disabled, implementing, monitoring. Omit to return frameworks in any state."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ]
+          },
+          "docs": "Lists the compliance frameworks in your Qualio instance. A framework is a compliance standard (for example ISO 13485, ISO 9001, or GDPR) that groups the requirements your organisation has committed to meet. Each framework has a status: disabled (not currently in use), implementing (controls are being set up), or monitoring (actively tracking compliance against the standard). Results are ordered by framework id. Use the offset and limit parameters to page through large sets; the total field in th"
+        },
+        {
+          "info": {
+            "name": "Get a framework",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the details of a single compliance framework identified by its numeric id. The stats field is populated when the framework status is implementing or monitoring, and is null when the framework is disabled. Stats break down the framework requirements by assessment outcome: passed counts requirements with a met assessment, failed counts requirements flagged as attention required, and not_assessed counts requirements that are not_started or in_progress. The sum of passed, failed, and not_ass"
+        },
+        {
+          "info": {
+            "name": "Update a framework",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates a compliance framework identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it. To change the framework lifecycle status, use PATCH /v1/compliance/frameworks/{frameworkId}/status."
+        },
+        {
+          "info": {
+            "name": "Delete a framework",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a custom compliance framework identified by its numeric id. Only frameworks created by your organisation can be deleted. Qualio-managed frameworks (built-in standards such as ISO 13485 or GDPR) cannot be deleted and will return a 403 if you attempt to do so. Deletion removes the framework and its associated requirements from your instance. This action cannot be undone. A successful deletion returns no content."
+        },
+        {
+          "info": {
+            "name": "updateComplianceFrameworkOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ]
+          },
+          "docs": "Updates a compliance framework identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it. To change the framework lifecycle status, use PATCH /v1/compliance/frameworks/{frameworkId}/status."
+        },
+        {
+          "info": {
+            "name": "Update a framework status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId/status",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the lifecycle status of a compliance framework for your Qualio instance. The status controls whether the framework is actively tracked: disabled (not currently in use), implementing (controls are being set up), or monitoring (activated for active compliance tracking)."
+        },
+        {
+          "info": {
+            "name": "updateComplianceFrameworkStatusOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/frameworks/:frameworkId/status",
+            "params": [
+              {
+                "name": "frameworkId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance framework."
+              }
+            ]
+          },
+          "docs": "Updates the lifecycle status of a compliance framework for your Qualio instance. The status controls whether the framework is actively tracked: disabled (not currently in use), implementing (controls are being set up), or monitoring (activated for active compliance tracking)."
+        },
+        {
+          "info": {
+            "name": "List requirements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/requirements",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the compliance requirements in your Qualio instance. A requirement is an individual clause or control obligation from a compliance framework that your organisation has committed to meet. Each requirement belongs to exactly one framework and carries a requirement_number (for example a clause reference such as 7.1), a short name, and optional full normative text. Use the framework_id parameter to return requirements for a specific framework only. Omit it to return requirements across all fra"
+        },
+        {
+          "info": {
+            "name": "Create a requirement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/compliance/requirements",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new compliance requirement and associates it with an existing framework. Provide the framework_id of the framework the requirement belongs to, a unique requirement_number within that framework (for example a clause reference such as 7.1), and a short name. The description and requirement_text fields are optional: omit them or pass null when not available. The id returned in the response can be used to retrieve the requirement via the List requirements endpoint."
+        },
+        {
+          "info": {
+            "name": "listComplianceRequirementsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/requirements",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to requirements belonging to this framework id. Omit to return requirements across all frameworks."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ]
+          },
+          "docs": "Lists the compliance requirements in your Qualio instance. A requirement is an individual clause or control obligation from a compliance framework that your organisation has committed to meet. Each requirement belongs to exactly one framework and carries a requirement_number (for example a clause reference such as 7.1), a short name, and optional full normative text. Use the framework_id parameter to return requirements for a specific framework only. Omit it to return requirements across all fra"
+        },
+        {
+          "info": {
+            "name": "Update a requirement",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/compliance/requirements/:requirementId",
+            "params": [
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance requirement."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates a compliance requirement identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it."
+        },
+        {
+          "info": {
+            "name": "Delete a requirement",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.qualio.com/v1/compliance/requirements/:requirementId",
+            "params": [
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance requirement."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a custom compliance requirement identified by its numeric id. Only requirements created by your organisation can be deleted. Qualio-managed requirements (built-in clauses from standards such as ISO 13485 or GDPR) cannot be deleted and will return a 403 if you attempt to do so. Deletion removes the requirement and cleans up any open compliance gaps that were exclusively linked to it. This action cannot be undone. A successful deletion returns no content."
+        },
+        {
+          "info": {
+            "name": "updateComplianceRequirementOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/requirements/:requirementId",
+            "params": [
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance requirement."
+              }
+            ]
+          },
+          "docs": "Updates a compliance requirement identified by its numeric id. This is a partial update: include only the fields you want to change. Omitting a field leaves its current value unchanged. Pass null for description to clear it."
+        },
+        {
+          "info": {
+            "name": "Update a requirement status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.qualio.com/v1/compliance/requirements/:requirementId/status",
+            "params": [
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance requirement."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the assessment status of a compliance requirement for your Qualio instance. The status reflects the current compliance posture for the requirement: not_started (assessment has not begun), in_progress (assessment is underway), met (the requirement is satisfied), attention_required (the requirement needs attention), or not_applicable (the requirement does not apply â a justification is required). A justification must be provided when setting the status to not_applicable."
+        },
+        {
+          "info": {
+            "name": "updateComplianceRequirementStatusOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/requirements/:requirementId/status",
+            "params": [
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance requirement."
+              }
+            ]
+          },
+          "docs": "Updates the assessment status of a compliance requirement for your Qualio instance. The status reflects the current compliance posture for the requirement: not_started (assessment has not begun), in_progress (assessment is underway), met (the requirement is satisfied), attention_required (the requirement needs attention), or not_applicable (the requirement does not apply â a justification is required). A justification must be provided when setting the status to not_applicable."
+        },
+        {
+          "info": {
+            "name": "List controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/controls",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the compliance controls in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Controls are either Qualio-managed (built-in, with a QMC- code prefix) or created by your organisation (with a C- code prefix). Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun). Use the framework_id pa"
+        },
+        {
+          "info": {
+            "name": "Create a control",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/compliance/controls",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new compliance control in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Provide a name and, optionally, a description and category. The control is created with a generated C- code and starts in the not_started status; use the other Compliance Intelligence endpoints to link it to requirements and track its implementation."
+        },
+        {
+          "info": {
+            "name": "listComplianceControlsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/controls",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to controls linked to requirements of this framework id. Omit to return controls across all frameworks."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only controls with this status. Accepted values: ready, not_ready, not_applicable, not_started. Omit to return controls in any state."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ]
+          },
+          "docs": "Lists the compliance controls in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Controls are either Qualio-managed (built-in, with a QMC- code prefix) or created by your organisation (with a C- code prefix). Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does not apply to your instance), or not_started (work has not begun). Use the framework_id pa"
+        },
+        {
+          "info": {
+            "name": "Get a control",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/controls/:controlId",
+            "params": [
+              {
+                "name": "controlId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance control."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single compliance control in your Qualio instance, including the evidence and definitions linked to it. A control is a measure your organisation implements to satisfy one or more compliance requirements. The definitions array holds evidence documenting how the control is designed; the evidence array holds evidence demonstrating that the control is operating. Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does"
+        },
+        {
+          "info": {
+            "name": "Update a control",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/compliance/controls/:controlId",
+            "params": [
+              {
+                "name": "controlId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance control."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates a compliance control in your Qualio instance. This is a partial update: include only the fields you want to change, and omit the rest. Pass null for description or category to clear them. Use the status field to update the control's implementation status (a justification is required when setting it to not_applicable). Use requirement_ids to replace the set of requirements the control is mapped to; pass an empty array to clear the mappings, or omit it to leave them as they are."
+        },
+        {
+          "info": {
+            "name": "getComplianceControlOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/controls/:controlId",
+            "params": [
+              {
+                "name": "controlId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance control."
+              }
+            ]
+          },
+          "docs": "Retrieves a single compliance control in your Qualio instance, including the evidence and definitions linked to it. A control is a measure your organisation implements to satisfy one or more compliance requirements. The definitions array holds evidence documenting how the control is designed; the evidence array holds evidence demonstrating that the control is operating. Each control carries an implementation status: ready (implemented and effective), not_ready (in progress), not_applicable (does"
+        },
+        {
+          "info": {
+            "name": "List evidence",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/evidence",
+            "params": [
+              {
+                "name": "control_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to evidence linked to this control id. Omit to return evidence across all controls."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the compliance evidence in your Qualio instance. Evidence is the documentation and records that demonstrate a control is defined and operating â for example linked Qualio documents, externally uploaded files, or free-text notes. Use the control_id parameter to return only the evidence linked to a specific control; omit it to return evidence across all controls. Results are ordered by evidence id. Use offset and limit to page through large sets; the total field in the response reports the"
+        },
+        {
+          "info": {
+            "name": "listComplianceEvidenceOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/evidence",
+            "params": [
+              {
+                "name": "control_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to evidence linked to this control id. Omit to return evidence across all controls."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ]
+          },
+          "docs": "Lists the compliance evidence in your Qualio instance. Evidence is the documentation and records that demonstrate a control is defined and operating â for example linked Qualio documents, externally uploaded files, or free-text notes. Use the control_id parameter to return only the evidence linked to a specific control; omit it to return evidence across all controls. Results are ordered by evidence id. Use offset and limit to page through large sets; the total field in the response reports the"
+        },
+        {
+          "info": {
+            "name": "List gaps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/gaps",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state."
+              },
+              {
+                "name": "severity",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the compliance gaps in your Qualio instance. A gap is a shortfall identified against a control â for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. Use the framework_id parameter to return only gaps on controls linked to a specific framework, the status parameter to return only gaps in a particular state (open, resolved, dismissed), and the severity parameter to return only gaps of a given severity (high, medium, low). Omit a par"
+        },
+        {
+          "info": {
+            "name": "Create a gap",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/compliance/gaps",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new compliance gap in your Qualio instance. A gap records a shortfall against a control â for example missing objective evidence or evidence that does not satisfy the control's requirements. Provide the control, a summary, description, recommendation, severity, and gap type. Optionally link the gap to one or more requirements by including the requirements array. The gap is created in the open status."
+        },
+        {
+          "info": {
+            "name": "listComplianceGapsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/gaps",
+            "params": [
+              {
+                "name": "framework_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to gaps on controls linked to this framework id. Omit to return gaps across all frameworks."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only gaps with this status. Accepted values: open, resolved, dismissed. Omit to return gaps in any state."
+              },
+              {
+                "name": "severity",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to only gaps with this severity. Accepted values: high, medium, low. Omit to return gaps of any severity."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to skip before collecting results. Use with limit to page through results. Defaults to 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return in a single response. Minimum 1, maximum 100. Defaults to 25."
+              }
+            ]
+          },
+          "docs": "Lists the compliance gaps in your Qualio instance. A gap is a shortfall identified against a control â for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. Use the framework_id parameter to return only gaps on controls linked to a specific framework, the status parameter to return only gaps in a particular state (open, resolved, dismissed), and the severity parameter to return only gaps of a given severity (high, medium, low). Omit a par"
+        },
+        {
+          "info": {
+            "name": "Get a gap",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/compliance/gaps/:gapId",
+            "params": [
+              {
+                "name": "gapId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance gap."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single compliance gap in your Qualio instance. A gap is a shortfall identified against a control â for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. The status field reports whether the gap is open, resolved or dismissed, and severity reports its level (high, medium, low)."
+        },
+        {
+          "info": {
+            "name": "Update a gap",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/compliance/gaps/:gapId",
+            "params": [
+              {
+                "name": "gapId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance gap."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the status of a compliance gap in your Qualio instance. Accepted status values are open, resolved, and dismissed. A reason is required and will be recorded in the gap's audit trail."
+        },
+        {
+          "info": {
+            "name": "getComplianceGapOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/compliance/gaps/:gapId",
+            "params": [
+              {
+                "name": "gapId",
+                "value": "",
+                "type": "path",
+                "description": "The numeric id of the compliance gap."
+              }
+            ]
+          },
+          "docs": "Retrieves a single compliance gap in your Qualio instance. A gap is a shortfall identified against a control â for example a control that is missing objective evidence or whose evidence does not satisfy its requirements. The status field reports whether the gap is open, resolved or dismissed, and severity reports its level (high, medium, low)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

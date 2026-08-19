@@ -238,3 +238,9 @@ tools:
 - name: getCurrentUser
   description: Retrieve the current user's id and name
   source_operation: openapi/qualio-openapi.json#getCurrentUser
+deployment:
+  mode: none
+  verified: derived
+  tools: 76
+  checked: '2026-08-12'
+  source: catalog MCP census

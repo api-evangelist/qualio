@@ -1,0 +1,188 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Training API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Training",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query training assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/training/user-training/query",
+            "params": [
+              {
+                "name": "document_ids",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+              },
+              {
+                "name": "group_ids",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments."
+              },
+              {
+                "name": "include_removed",
+                "value": "",
+                "type": "query",
+                "description": "When true, includes training assignments that were completed and subsequently unassigned. Defaults to false."
+              },
+              {
+                "name": "include_inactive_users",
+                "value": "",
+                "type": "query",
+                "description": "When true, includes training records for users who are no longer active in the company. Defaults to false."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completi"
+        },
+        {
+          "info": {
+            "name": "queryUserTrainingOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/training/user-training/query",
+            "params": [
+              {
+                "name": "document_ids",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a document version, for which you want to query for user training sessions"
+              },
+              {
+                "name": "group_ids",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user group, for whom you want to retrieve training sessions"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments."
+              },
+              {
+                "name": "include_removed",
+                "value": "",
+                "type": "query",
+                "description": "When true, includes training assignments that were completed and subsequently unassigned. Defaults to false."
+              },
+              {
+                "name": "include_inactive_users",
+                "value": "",
+                "type": "query",
+                "description": "When true, includes training records for users who are no longer active in the company. Defaults to false."
+              }
+            ]
+          },
+          "docs": "Queries user training assignments (also called training records, or the training matrix) across your Qualio instance. When a document that requires training becomes effective, Qualio assigns the relevant users the requirement to read and acknowledge it; this endpoint reports the state of those assignments. Each result links a user to a document and reports a computed status of `complete`, `due`, or `overdue`, along with the assigned, due, and completion dates. Use this to check training completi"
+        },
+        {
+          "info": {
+            "name": "Send training reminders",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/training/document/:documentId/remind",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document."
+        },
+        {
+          "info": {
+            "name": "sendTrainingRemindersOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/training/document/:documentId/remind",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a document"
+              }
+            ]
+          },
+          "docs": "Send training reminders for a document to one or more users. Recipients can be specified by numeric user ID or email address. If no recipients are provided, reminders are sent to all users with incomplete training on the document."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

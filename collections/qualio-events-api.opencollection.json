@@ -1,0 +1,251 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Events API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/events/events/:code",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for an Event, that includes a prefix that corresponds to its type"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single quality event in full detail by its code (e.g. CAPA-1, NCR-12), as shown in Qualio. A quality event is a structured record of a quality-related incident or action â such as a CAPA (corrective/preventive action), non-conformance/non-compliance, complaint, deviation, or audit finding; the code's prefix indicates its type. The detailed view includes the event's status, owner, dates, risk, tags, escalation links, and the contents of each workflow step."
+        },
+        {
+          "info": {
+            "name": "getEventOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/events/events/:code",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for an Event, that includes a prefix that corresponds to its type"
+              }
+            ]
+          },
+          "docs": "Retrieves a single quality event in full detail by its code (e.g. CAPA-1, NCR-12), as shown in Qualio. A quality event is a structured record of a quality-related incident or action â such as a CAPA (corrective/preventive action), non-conformance/non-compliance, complaint, deviation, or audit finding; the code's prefix indicates its type. The detailed view includes the event's status, owner, dates, risk, tags, escalation links, and the contents of each workflow step."
+        },
+        {
+          "info": {
+            "name": "Query events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/events/events",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a given event"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "owner_user_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "event_template_matrix_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for an event template in Qualio, use this to filter the results by event type"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Queries quality events across your Qualio instance, returning a summary of each. Quality events are structured records of quality-related incidents and actions â CAPAs, non-conformances, complaints, deviations, audit findings, and other custom types. Filter by status (`open`, `closed`, `imported`, `rejected`, `cancelled`), by owner (owner_user_id), and by event type (event_template_matrix_id, from the templates endpoint), and paginate with offset/limit. Use this to find events â for example "
+        },
+        {
+          "info": {
+            "name": "Create an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/events/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "A request to create an event based on an event template. The event_template_matrix_id should correspond to the type of event you wish to create, which can be found on the response from querying templates. If you wish to populate values within the steps, use template_step_matrix_id from the desired step in the template, Then use field_matrix_id from the template to select what field to populate (form steps), or section_id from the template to select what section to populate (content steps).You do"
+        },
+        {
+          "info": {
+            "name": "queryEventsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/events/events",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a given event"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "owner_user_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for a user in Qualio"
+              },
+              {
+                "name": "event_template_matrix_id",
+                "value": "",
+                "type": "query",
+                "description": "A unique identifier for an event template in Qualio, use this to filter the results by event type"
+              }
+            ]
+          },
+          "docs": "Queries quality events across your Qualio instance, returning a summary of each. Quality events are structured records of quality-related incidents and actions â CAPAs, non-conformances, complaints, deviations, audit findings, and other custom types. Filter by status (`open`, `closed`, `imported`, `rejected`, `cancelled`), by owner (owner_user_id), and by event type (event_template_matrix_id, from the templates endpoint), and paginate with offset/limit. Use this to find events â for example "
+        },
+        {
+          "info": {
+            "name": "List event templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/events/templates",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists all effective event templates in your Qualio instance. An event template defines a type of quality event (e.g. CAPA, NCR, complaint) â its code prefix and the workflow steps that events of that type follow. Each template includes its `event_template_matrix_id`, which is used to filter events by type and to create a new event of that type."
+        },
+        {
+          "info": {
+            "name": "listEventTemplatesOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/events/templates"
+          },
+          "docs": "Lists all effective event templates in your Qualio instance. An event template defines a type of quality event (e.g. CAPA, NCR, complaint) â its code prefix and the workflow steps that events of that type follow. Each template includes its `event_template_matrix_id`, which is used to filter events by type and to create a new event of that type."
+        },
+        {
+          "info": {
+            "name": "Retrieve an event template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/events/templates/:eventTemplateMatrixId",
+            "params": [
+              {
+                "name": "eventTemplateMatrixId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single event template in full detail by its `event_template_matrix_id`, including its ordered workflow steps. Steps may be form steps (with fields to complete), content steps (with sections), or task steps. Use the step, field, and section identifiers returned here to populate values when creating an event of this type."
+        },
+        {
+          "info": {
+            "name": "getEventTemplateOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/events/templates/:eventTemplateMatrixId",
+            "params": [
+              {
+                "name": "eventTemplateMatrixId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single event template in full detail by its `event_template_matrix_id`, including its ordered workflow steps. Steps may be form steps (with fields to complete), content steps (with sections), or task steps. Use the step, field, and section identifiers returned here to populate values when creating an event of this type."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

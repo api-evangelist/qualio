@@ -1,0 +1,476 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Qualio Developer Design Controls API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Design Controls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/design-controls/products",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the design control products in your Qualio instance. Design Controls (also called Product Development) is Qualio's module for medical-device design control and traceability: each product groups the requirements, test cases, and risks that demonstrate it is properly designed, verified, and risk-managed (per FDA / ISO 14971). A product is identified by a UUID; use that id with the requirements, test-case, risk, and test-result endpoints. Returns each product's id, name, and tag ids."
+        },
+        {
+          "info": {
+            "name": "listDesignControlProductsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products"
+          },
+          "docs": "Lists the design control products in your Qualio instance. Design Controls (also called Product Development) is Qualio's module for medical-device design control and traceability: each product groups the requirements, test cases, and risks that demonstrate it is properly designed, verified, and risk-managed (per FDA / ISO 14971). A product is identified by a UUID; use that id with the requirements, test-case, risk, and test-result endpoints. Returns each product's id, name, and tag ids."
+        },
+        {
+          "info": {
+            "name": "List test cases",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-cases",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the test cases for a design control product, identified by its UUID. A test case documents a verification procedure that proves one or more requirements are satisfied. Each item includes its id, auto-generated code (e.g. TC-1), title, type, change-control status, source, the traceability issues flagged by design-control policy (e.g. a failing or outdated test result), and its latest recorded test result."
+        },
+        {
+          "info": {
+            "name": "Create a test case",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-cases",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create a test case in a design control product. A test case documents a verification procedure used to confirm that one or more product requirements are satisfied. The type field identifies which test case template slot to use: testCase1, testCase2, and testCase3 map to the first, second, and third configured templates respectively. A code is generated automatically when none is supplied. Use the links or requirements fields to add traceability connections to existing quality items by providing "
+        },
+        {
+          "info": {
+            "name": "listProductTestCasesOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-cases",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ]
+          },
+          "docs": "Lists the test cases for a design control product, identified by its UUID. A test case documents a verification procedure that proves one or more requirements are satisfied. Each item includes its id, auto-generated code (e.g. TC-1), title, type, change-control status, source, the traceability issues flagged by design-control policy (e.g. a failing or outdated test result), and its latest recorded test result."
+        },
+        {
+          "info": {
+            "name": "List requirements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/requirements",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists the requirements for a design control product, identified by its UUID. A requirement describes a condition or capability the product must satisfy, organised into levels (req1âreq4). Each item includes its id, auto-generated code (e.g. REQ-1), title, type, change-control status, source, and the traceability issues flagged by design-control policy (e.g. a requirement with no test case, or a child requirement missing its parent)."
+        },
+        {
+          "info": {
+            "name": "Create a requirement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/requirements",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create a requirement in a design control product. A requirement describes a condition or capability the product must satisfy. The type field identifies which requirement template slot to use: req1, req2, req3, and req4 map to the first, second, third, and fourth configured templates respectively. A code is generated automatically when none is supplied. Use the links, requirements, or test_cases fields to add traceability connections to existing quality items by providing their codes or UUIDs. Ty"
+        },
+        {
+          "info": {
+            "name": "listProductRequirementsOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/requirements",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ]
+          },
+          "docs": "Lists the requirements for a design control product, identified by its UUID. A requirement describes a condition or capability the product must satisfy, organised into levels (req1âreq4). Each item includes its id, auto-generated code (e.g. REQ-1), title, type, change-control status, source, and the traceability issues flagged by design-control policy (e.g. a requirement with no test case, or a child requirement missing its parent)."
+        },
+        {
+          "info": {
+            "name": "Record a test result",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-results",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Records a test result against a test case in a design control product. A test result captures the outcome of executing a test case â `passed`, `failed`, or `blocked` â along with the execution date, who ran it, optional notes, a link to external evidence, and attachments. The latest result is reflected on the test case and feeds the product's verification/traceability status. Identify the target test case by its id or code in the request body."
+        },
+        {
+          "info": {
+            "name": "createProductTestResultOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-results",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ]
+          },
+          "docs": "Records a test result against a test case in a design control product. A test result captures the outcome of executing a test case â `passed`, `failed`, or `blocked` â along with the execution date, who ran it, optional notes, a link to external evidence, and attachments. The latest result is reflected on the test case and feeds the product's verification/traceability status. Identify the target test case by its id or code in the request body."
+        },
+        {
+          "info": {
+            "name": "Update a test case",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-cases/:testCaseId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "testCaseId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the test case to update. This is the id returned when the test case was created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update an existing test case in a design control product. The request body replaces the mutable fields of the test case: title, type, and description. The type field must match the existing type of the test case; changing the type across categories is not supported and returns 400. The links and requirements fields define the complete set of desired trace links and replace all existing trace links on the test case. Omit both links and requirements to leave existing trace links unchanged. The id,"
+        },
+        {
+          "info": {
+            "name": "updateProductTestCaseOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/test-cases/:testCaseId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "testCaseId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the test case to update. This is the id returned when the test case was created."
+              }
+            ]
+          },
+          "docs": "Update an existing test case in a design control product. The request body replaces the mutable fields of the test case: title, type, and description. The type field must match the existing type of the test case; changing the type across categories is not supported and returns 400. The links and requirements fields define the complete set of desired trace links and replace all existing trace links on the test case. Omit both links and requirements to leave existing trace links unchanged. The id,"
+        },
+        {
+          "info": {
+            "name": "Update a requirement",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/requirements/:requirementId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the requirement to update. This is the id returned when the requirement was created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update an existing requirement in a design control product. The request body replaces the mutable fields of the requirement: title, type, and description. The type field must match the existing type of the requirement; changing the type across categories is not supported and returns 400. The links, requirements, and test_cases fields define the complete desired set of trace links and replace all existing trace links on the requirement. Omit all three to leave existing trace links unchanged. Type"
+        },
+        {
+          "info": {
+            "name": "updateProductRequirementOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/requirements/:requirementId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "requirementId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the requirement to update. This is the id returned when the requirement was created."
+              }
+            ]
+          },
+          "docs": "Update an existing requirement in a design control product. The request body replaces the mutable fields of the requirement: title, type, and description. The type field must match the existing type of the requirement; changing the type across categories is not supported and returns 400. The links, requirements, and test_cases fields define the complete desired set of trace links and replace all existing trace links on the requirement. Omit all three to leave existing trace links unchanged. Type"
+        },
+        {
+          "info": {
+            "name": "Create a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/risks",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create a risk in a design control product. Set subType to iso for ISO 14971 qualitative risk analysis or fmea for Failure Mode and Effects Analysis. An optional id may be provided for idempotency; when omitted the server generates one automatically. A short code is always auto-generated by the server. ISO risks accept hazard, foreseeableUseMisuse, hazardSituation, and harm fields, with string-based preMitigation and postMitigation assessments. FMEA risks accept failureMode, failureModeEffects, f"
+        },
+        {
+          "info": {
+            "name": "createProductRiskOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/risks",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              }
+            ]
+          },
+          "docs": "Create a risk in a design control product. Set subType to iso for ISO 14971 qualitative risk analysis or fmea for Failure Mode and Effects Analysis. An optional id may be provided for idempotency; when omitted the server generates one automatically. A short code is always auto-generated by the server. ISO risks accept hazard, foreseeableUseMisuse, hazardSituation, and harm fields, with string-based preMitigation and postMitigation assessments. FMEA risks accept failureMode, failureModeEffects, f"
+        },
+        {
+          "info": {
+            "name": "Update a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/risks/:riskId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "riskId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the risk to update. This is the id returned when the risk was created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update an existing risk in a design control product. The subType field must match the existing subType of the risk; changing the subType is not supported and returns 400. The request body replaces the mutable fields of the risk: title, subType, description, and all sub-type-specific assessment and narrative fields. The sources and mitigations fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting both leaves existing trace links unchang"
+        },
+        {
+          "info": {
+            "name": "updateProductRiskOptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://api.qualio.com/v1/design-controls/products/:productId/risks/:riskId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "A design control product id"
+              },
+              {
+                "name": "riskId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the risk to update. This is the id returned when the risk was created."
+              }
+            ]
+          },
+          "docs": "Update an existing risk in a design control product. The subType field must match the existing subType of the risk; changing the subType is not supported and returns 400. The request body replaces the mutable fields of the risk: title, subType, description, and all sub-type-specific assessment and narrative fields. The sources and mitigations fields define the complete desired set of trace links and replace all existing trace links when provided. Omitting both leaves existing trace links unchang"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
