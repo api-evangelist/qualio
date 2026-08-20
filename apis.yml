@@ -121,6 +121,8 @@ apis:
   humanURL: https://developer-portal.qualio.com/
   baseURL: https://api.qualio.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
