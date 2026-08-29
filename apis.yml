@@ -219,6 +219,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/qualio-capability-edges.yml
+  name: Qualio Business Capability Map
 - type: DeveloperPortal
   url: https://developer-portal.qualio.com/
 - type: Documentation

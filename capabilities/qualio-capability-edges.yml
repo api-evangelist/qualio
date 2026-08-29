@@ -1,0 +1,80 @@
+slug: qualio
+provider: Qualio
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Healthcare Providers
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: Suppliers
+  spec_file: qualio-suppliers-api-openapi.yml
+  capability_id: BC-510
+  capability_id_l1: BC-510
+  capability_name: Supplier Management
+  confidence: 0.85
+  evidence: '"listSuppliers  List suppliers", "listSupplierRisks  List risk levels", "listSupplierAudits  List
+    supplier audits"'
+  reason: Operations maintain a supplier master with risk levels and supplier audit history — squarely
+    Supplier Management. Left at L1 because the surface spans qualification, risk and audit rather than
+    one sub-capability.
+- tag: Compliance Intelligence
+  spec_file: qualio-compliance-intelligence-api-openapi.yml
+  capability_id: BC-130.10
+  capability_id_l1: BC-130
+  capability_name: Regulatory Compliance Management
+  confidence: 0.8
+  evidence: listComplianceFrameworks  List frameworks; listComplianceRequirements  List requirements;
+    listComplianceControls  List controls
+  reason: CRUD over regulatory frameworks, requirements and controls with status transitions is regulatory
+    compliance management for a regulated (life-sciences) organisation.
+- tag: Training
+  spec_file: qualio-training-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.75
+  evidence: '"queryUserTraining  Query training assignments", "sendTrainingReminders  Send training reminders",
+    schema trainingStatus'
+  reason: Endpoints track per-user training assignments and status and nudge completion — training/certification
+    records administration, i.e. Learning & Development Management. Slight ambiguity as it is document-read
+    training inside a QMS compliance context.
+- tag: Design Controls
+  spec_file: qualio-design-controls-api-openapi.yml
+  capability_id: BC-820
+  capability_id_l1: BC-820
+  capability_name: Product Lifecycle Management
+  confidence: 0.7
+  evidence: listProductRequirements  List requirements; createProductTestCase  Create a test case; createProductTestResult  Record
+    a test result; createProductRisk  Create a risk
+  reason: Design controls manage product requirements, verification test cases/results and product risks
+    across the device design lifecycle — Product Lifecycle Management. Evidence spans design, specification
+    and verification so no single L2 is named cleanly.
+- tag: Events
+  spec_file: qualio-events-api-openapi.yml
+  capability_id: BC-720.40
+  capability_id_l1: BC-720
+  capability_name: Non-Conformance Management
+  confidence: 0.7
+  evidence: 'vendor: "quality events (CAPAs, deviations, non-conformances)"; operations "createEvent  Create
+    an event", "listEventTemplates"'
+  reason: Qualio's Events surface is its quality-event object (CAPA/deviation/non-conformance) with templated
+    workflow steps, which realises Non-Conformance / CAPA management within Quality Management. L2 chosen
+    because the vendor explicitly names CAPAs, deviations and non-conformances as the quality events;
+    some residual chance the generic 'event' record spans other QMS event types, hence 0.7.
+- tag: User Management
+  spec_file: qualio-user-management-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: '"inviteUser  Invite a user", "deleteUser  Remove a user", "addUserToGroup  Add user to group"'
+  reason: Joiner/mover/leaver style account provisioning and group membership administration for the application,
+    which maps to Identity & Access Management. Application-level user admin rather than enterprise IAM,
+    hence moderate confidence.
