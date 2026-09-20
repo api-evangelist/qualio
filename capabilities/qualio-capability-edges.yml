@@ -11,8 +11,19 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 6
+edge_count: 8
 edges:
+- tag: Change Management
+  spec_file: qualio-change-management-api-openapi.yml
+  capability_id: BC-1560.50
+  capability_id_l1: BC-1560
+  capability_name: GxP Change Control Management
+  confidence: 0.85
+  evidence: POST /v1/change-management/change-controls createChangeControl Create a change control; GET
+    /v1/change-management/change-requests listChangeRequests
+  reason: Change controls and change requests inside a life-sciences QMS ('quality events (CAPAs, deviations,
+    non-conformances) ... risk and change management') are GxP change control, not IT change management.
+  recovered_from: vertical-pharmaceuticals-life-sciences-edges.json
 - tag: Suppliers
   spec_file: qualio-suppliers-api-openapi.yml
   capability_id: BC-510
@@ -45,6 +56,19 @@ edges:
   reason: Endpoints track per-user training assignments and status and nudge completion — training/certification
     records administration, i.e. Learning & Development Management. Slight ambiguity as it is document-read
     training inside a QMS compliance context.
+- tag: Documents
+  spec_file: qualio-documents-api-openapi.yml
+  capability_id: BC-1560
+  capability_id_l1: BC-1560
+  capability_name: Pharmaceutical Quality Management
+  confidence: 0.72
+  evidence: '"Change document status", "List document versions by ID", "List document templates" — vendor:
+    "streamlining document control" in a life-sciences QMS'
+  reason: Controlled-document lifecycle (versioning, status/approval, templates, comments) inside a GxP
+    quality management system for pharma/medical-device companies. This is quality-system documentation
+    control, so the pharma quality L1 fits, but no listed L2 names document control specifically, so L1
+    only.
+  recovered_from: vertical-pharmaceuticals-life-sciences-edges.json
 - tag: Design Controls
   spec_file: qualio-design-controls-api-openapi.yml
   capability_id: BC-820
