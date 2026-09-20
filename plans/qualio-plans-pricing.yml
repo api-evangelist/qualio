@@ -1,0 +1,33 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://www.qualio.com/pricing
+sources:
+- https://www.qualio.com/pricing
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T120546
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: negotiated
+published: false
+note: No numeric price is published on the pricing page; Page shows plan tiers and feature comparison
+  but no numeric prices; quote-based with implementation fee. Numbers shown are seat/framework/integration
+  counts, not prices.
+plan_count: 3
+plans:
+- name: Foundation
+  price_text: Request Pricing
+  period: none
+  included_quota: 5 included Edit Users, Unlimited Basic Users, 3 compliance frameworks, 2 integrations
+  overage: Additional fee for extra edit users, frameworks, multiple instances
+- name: Growth
+  price_text: Request Pricing
+  period: none
+  included_quota: 10 included Edit Users, Unlimited Basic Users, 5 compliance frameworks, up to 3 integrations,
+    Developer API
+  overage: Additional fee for extra edit users, frameworks, multiple instances
+- name: Scale
+  price_text: Custom pricing. Custom implementation.
+  period: none
+  included_quota: Enterprise complexity, multi-site, dedicated success and support
