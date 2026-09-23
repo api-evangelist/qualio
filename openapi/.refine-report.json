@@ -1,7 +1,7 @@
 {
   "provider": "qualio",
   "sources": [
-    "qualio-openapi.json"
+    "_original/qualio-openapi.json"
   ],
   "outputs": [
     "qualio-audit-trail-api-openapi.yml",
@@ -16,11 +16,25 @@
     "qualio-training-api-openapi.yml",
     "qualio-user-management-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/qualio-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "qualio-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "qualio-audit-trail-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-change-management-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-compliance-intelligence-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-design-controls-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-resource-library-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-suppliers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-training-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qualio-user-management-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

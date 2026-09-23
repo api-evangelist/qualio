@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Qualio Developer Design Controls API
   version: '0.1'
-  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+  description: Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions.
 servers:
 - url: https://api.qualio.com
 security:
@@ -147,6 +147,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List design control products options
+      x-summary-source: derived
   /v1/design-controls/products/{productId}/test-cases:
     get:
       summary: List test cases
@@ -441,6 +443,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List product test cases options
+      x-summary-source: derived
     post:
       summary: Create a test case
       description: 'Create a test case in a design control product. A test case documents a verification procedure used to confirm that one or more product requirements are satisfied. The type field identifies which test case template slot to use: testCase1, testCase2, and testCase3 map to the first, second, and third configured templates respectively. A code is generated automatically when none is supplied. Use the links or requirements fields to add traceability connections to existing quality items by providing their codes or UUIDs. Type-matching is enforced: testCase1 can only link to req1 requirements, testCase2 to req2, and testCase3 to req3. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. Providing an id that already exists in the product returns 409 Conflict.'
@@ -959,6 +963,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List product requirements options
+      x-summary-source: derived
     post:
       summary: Create a requirement
       description: 'Create a requirement in a design control product. A requirement describes a condition or capability the product must satisfy. The type field identifies which requirement template slot to use: req1, req2, req3, and req4 map to the first, second, third, and fourth configured templates respectively. A code is generated automatically when none is supplied. Use the links, requirements, or test_cases fields to add traceability connections to existing quality items by providing their codes or UUIDs. Type-matching is enforced: req1 can only link to testCase1 items, req2 to testCase2, and req3 to testCase3. req4 requirements cannot link to any test case type. Mismatched types return 400. Codes or UUIDs not found in the product are stored as unresolved links and resolved automatically when the target item is created. Providing an id that already exists in the product returns 409 Conflict.'
@@ -1452,6 +1458,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Create product test result options
+      x-summary-source: derived
   /v1/design-controls/products/{productId}/test-cases/{testCaseId}:
     put:
       summary: Update a test case
@@ -1732,6 +1740,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update product test case options
+      x-summary-source: derived
   /v1/design-controls/products/{productId}/requirements/{requirementId}:
     put:
       summary: Update a requirement
@@ -2019,6 +2029,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update product requirement options
+      x-summary-source: derived
   /v1/design-controls/products/{productId}/risks:
     post:
       summary: Create a risk
@@ -2513,6 +2525,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Create product risk options
+      x-summary-source: derived
   /v1/design-controls/products/{productId}/risks/{riskId}:
     put:
       summary: Update a risk
@@ -2995,6 +3009,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update product risk options
+      x-summary-source: derived
 components:
   schemas:
     riskConflictResponse:
@@ -3020,59 +3036,6 @@ components:
         errors:
         - field: id
           message: A risk with this id already exists
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
-    dcProductId:
-      type: string
-      format: uuid
-      description: A design control product id
-      example: 123e4567-e89b-12d3-a456-426614174000
     riskId:
       type: string
       format: uuid
@@ -3108,7 +3071,43 @@ components:
         - location: query
           name: document_id
           description: document_id is not an integer
-    throttledResponse:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    dcProductId:
+      type: string
+      format: uuid
+      description: A design control product id
+      example: 123e4567-e89b-12d3-a456-426614174000
+    requirementConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A requirement with this id already exists
+    genericForbiddenResponse:
       type: object
       properties:
         message:
@@ -3117,17 +3116,7 @@ components:
       - message
       additionalProperties: false
       example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    requirementId:
-      type: string
-      format: uuid
-      description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
-      example: 223e4567-e89b-12d3-a456-426614174002
-    testCaseId:
-      type: string
-      format: uuid
-      description: The unique identifier of the test case to update. This is the id returned when the test case was created.
-      example: 123e4567-e89b-12d3-a456-426614174001
+        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -3158,6 +3147,16 @@ components:
         - location: body
           name: email
           description: Email missing from payload
+    requirementId:
+      type: string
+      format: uuid
+      description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
+      example: 223e4567-e89b-12d3-a456-426614174002
+    testCaseId:
+      type: string
+      format: uuid
+      description: The unique identifier of the test case to update. This is the id returned when the test case was created.
+      example: 123e4567-e89b-12d3-a456-426614174001
     testCaseConflictResponse:
       type: object
       properties:
@@ -3181,7 +3180,17 @@ components:
         errors:
         - field: id
           message: A test case with this id already exists
-    requirementConflictResponse:
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    genericBadRequest400PathResponse:
       type: object
       properties:
         errors:
@@ -3189,21 +3198,28 @@ components:
           items:
             type: object
             properties:
-              field:
+              description:
                 type: string
-              message:
+              location:
+                type: string
+              name:
                 type: string
             required:
-            - message
+            - description
             additionalProperties: false
-          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+        status:
+          type: string
+          const: error
       required:
       - errors
+      - status
       additionalProperties: false
       example:
+        status: error
         errors:
-        - field: id
-          message: A requirement with this id already exists
+        - location: path
+          name: user_id
+          description: user_id is not an integer
   securitySchemes:
     api_key:
       type: apiKey

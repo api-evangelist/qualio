@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Qualio Developer Compliance Intelligence API
   version: '0.1'
-  description: "Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions. Getting started is easy: generate an API key, authenticate your requests, explore example code, and start building. Follow the steps below to integrate with Qualio quickly and efficiently.\n\n  This portal includes everything you need to build with confidence:\n- Secure, token-based authentication\n- Full reference documentation for each endpoint\n- Example code in multiple programming languages\n- \"Try it out\" functionality to test requests live\n- Fair usage rate limits to ensure system stability\n \n\n #### Generate Your API Key \n To access the API, you’ll need an API key:\n\n- Log in to the [Qualio admin panel](https://app.qualio.com/user-management/admin).\n\n- Navigate to Admin Settings > [Developer API tokens](https://app.qualio.com/user-management/admin/dev-api).\n\n- Click Create token and save the key securely.\n\n- Only users with administrative privileges can generate API keys. \n\n\n\nIf you don’t have admin access, please ask your Qualio administrator to create a key for you.\n \n\n #### Authenticate Your Requests\n\nQualio uses API key authentication using the X-Api-Key header. Add your API key in the authentication panel to the right to see examples of how to use it in a language of your choice.\n \n\n #### Make Your First API Call\n\nHere is an easy place to get started: [fetching all your effective documents](#tag/documents/GET/v1/documents/query)\n \n\n #### Respect Rate Limits\n\nTo ensure fair use and maintain performance, API requests are subject to rate limits:\n\n- Each API key has a request threshold of maximum 200 requests per minute\n- If you exceed this limit, you'll receive an HTTP 429 (Too Many Requests) response.\n- We recommend implementing retry logic in your client applications, if this is a concern for you.\n\n \n\n #### Explore and Build\nUse the navigation panel to browse available API endpoints, such as:\n- Documents — Create, query, and manage your controlled documents\n- User Management — Invite users, update roles, or sync user data\n- Audit Trail — Retrieve historical changes for compliance reporting\n- You’ll find example code in Python, JavaScript, C#, Ruby, PHP, Go, and Shell for each endpoint. Click “Try it out” to test requests directly from the browser.\n \n\n #### How is this API versioned? \n We prefix each URL with the major version of the API. Within this major version, we promise to not make any breaking changes, which are:\n - Changes to the datatype of request or response payload attribute. \n - Removal of an attribute or parameter. \n - Changes to a URL. \n\n We do not consider the following to be breaking changes: \n - Additional attributes on return payloads  \n - Additional optional attributes on request payloads \n\n \n#### Where can I get an OpenApi spec for this? \n You can [find it here](/download-openapi), but bear in mind that this API is updated regularly, so be sure to fetch it afresh for the latest features\n"
+  description: Whether you're streamlining document control, automating quality event management, integrating training records, or syncing supplier data across systems, the Qualio API provides secure and scalable solutions.
 servers:
 - url: https://api.qualio.com
 security:
@@ -248,6 +248,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List compliance frameworks options
+      x-summary-source: derived
     post:
       summary: Create a framework
       description: Creates a new compliance framework in your Qualio instance. Provide a name and an optional description. The framework is created with a disabled status and must be activated in the Qualio application before requirements can be tracked against it. The id returned in the response can be used to retrieve or update the framework via the other Compliance Intelligence endpoints.
@@ -708,6 +710,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update compliance framework options
+      x-summary-source: derived
     get:
       summary: Get a framework
       description: 'Returns the details of a single compliance framework identified by its numeric id. The stats field is populated when the framework status is implementing or monitoring, and is null when the framework is disabled. Stats break down the framework requirements by assessment outcome: passed counts requirements with a met assessment, failed counts requirements flagged as attention required, and not_assessed counts requirements that are not_started or in_progress. The sum of passed, failed, and not_assessed equals total_requirements.'
@@ -1263,6 +1267,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update compliance framework status options
+      x-summary-source: derived
   /v1/compliance/requirements:
     get:
       summary: List requirements
@@ -1502,6 +1508,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List compliance requirements options
+      x-summary-source: derived
     post:
       summary: Create a requirement
       description: 'Creates a new compliance requirement and associates it with an existing framework. Provide the framework_id of the framework the requirement belongs to, a unique requirement_number within that framework (for example a clause reference such as 7.1), and a short name. The description and requirement_text fields are optional: omit them or pass null when not available. The id returned in the response can be used to retrieve the requirement via the List requirements endpoint.'
@@ -1939,6 +1947,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update compliance requirement options
+      x-summary-source: derived
     delete:
       summary: Delete a requirement
       description: Permanently deletes a custom compliance requirement identified by its numeric id. Only requirements created by your organisation can be deleted. Qualio-managed requirements (built-in clauses from standards such as ISO 13485 or GDPR) cannot be deleted and will return a 403 if you attempt to do so. Deletion removes the requirement and cleans up any open compliance gaps that were exclusively linked to it. This action cannot be undone. A successful deletion returns no content.
@@ -2300,6 +2310,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Update compliance requirement status options
+      x-summary-source: derived
   /v1/compliance/controls:
     get:
       summary: List controls
@@ -2579,6 +2591,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List compliance controls options
+      x-summary-source: derived
     post:
       summary: Create a control
       description: Creates a new compliance control in your Qualio instance. A control is a measure your organisation implements to satisfy one or more compliance requirements. Provide a name and, optionally, a description and category. The control is created with a generated C- code and starts in the not_started status; use the other Compliance Intelligence endpoints to link it to requirements and track its implementation.
@@ -3154,6 +3168,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Get compliance control options
+      x-summary-source: derived
     put:
       summary: Update a control
       description: 'Updates a compliance control in your Qualio instance. This is a partial update: include only the fields you want to change, and omit the rest. Pass null for description or category to clear them. Use the status field to update the control''s implementation status (a justification is required when setting it to not_applicable). Use requirement_ids to replace the set of requirements the control is mapped to; pass an empty array to clear the mappings, or omit it to leave them as they are.'
@@ -3672,6 +3688,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List compliance evidence options
+      x-summary-source: derived
   /v1/compliance/gaps:
     get:
       summary: List gaps
@@ -3986,6 +4004,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: List compliance gaps options
+      x-summary-source: derived
     post:
       summary: Create a gap
       description: "Creates a new compliance gap in your Qualio instance. A gap records a shortfall against a control â\x80\x94 for example missing objective evidence or evidence that does not satisfy the control's requirements. Provide the control, a summary, description, recommendation, severity, and gap type. Optionally link the gap to one or more requirements by including the requirements array. The gap is created in the open status."
@@ -4496,6 +4516,8 @@ paths:
             Content-Disposition:
               schema:
                 type: string
+      summary: Get compliance gap options
+      x-summary-source: derived
     put:
       summary: Update a gap
       description: Updates the status of a compliance gap in your Qualio instance. Accepted status values are open, resolved, and dismissed. A reason is required and will be recorded in the gap's audit trail.
@@ -4733,54 +4755,6 @@ paths:
                 $ref: '#/components/schemas/throttledResponse'
 components:
   schemas:
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
     genericBadRequest400ParametersResponse:
       type: object
       properties:
@@ -4811,7 +4785,15 @@ components:
         - location: query
           name: document_id
           description: document_id is not an integer
-    throttledResponse:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    genericForbiddenResponse:
       type: object
       properties:
         message:
@@ -4820,7 +4802,7 @@ components:
       - message
       additionalProperties: false
       example:
-        message: You have exceeded what is allowed in the fair use policy for this API
+        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -4851,6 +4833,46 @@ components:
         - location: body
           name: email
           description: Email missing from payload
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
   securitySchemes:
     api_key:
       type: apiKey
