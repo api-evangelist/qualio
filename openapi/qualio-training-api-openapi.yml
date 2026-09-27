@@ -373,187 +373,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    trainingReminderResponse:
-      type: object
-      properties:
-        success:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              email:
-                type: string
-            required:
-            - user_id
-            - email
-            additionalProperties: false
-        failure:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              email:
-                type: string
-            required:
-            - user_id
-            - email
-            additionalProperties: false
-      required:
-      - success
-      - failure
-      additionalProperties: false
-      description: Training reminder response
-      example:
-        success:
-        - user_id: 1224
-          email: user@example.com
-        failure: []
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
-    includeRemoved:
-      description: When true, includes training assignments that were completed and subsequently unassigned. Defaults to false.
-      example: false
-      type: boolean
-    groupIds:
-      description: A unique identifier for a user group, for whom you want to retrieve training sessions
-      example:
-      - 1
-      - 2
-      - 3
-      type: array
-      items:
-        type: number
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    includeInactiveUsers:
-      description: When true, includes training records for users who are no longer active in the company. Defaults to false.
-      example: false
-      type: boolean
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    trainingStatus:
-      description: Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments.
-      example: overdue
-      type: string
-      enum:
-      - due
-      - overdue
-      - complete
-    genericBadRequestResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
-    trainingDocumentId:
-      type: integer
-      exclusiveMinimum: 0
-      maximum: 9007199254740991
-      description: A unique identifier for a document
-      example: 12345
-    documentIds:
-      description: A unique identifier for a document version, for which you want to query for user training sessions
-      example:
-      - 1
-      - 2
-      - 3
-      type: array
-      items:
-        type: number
-    trainingReminderRequest:
-      type: object
-      properties:
-        to:
-          type: array
-          items:
-            anyOf:
-            - type: integer
-              exclusiveMinimum: 0
-              maximum: 9007199254740991
-            - type: string
-      description: Training reminder request body
-      example:
-        to:
-        - 1224
-        - user@example.com
     trainingQueryResp:
       type: object
       properties:
@@ -631,6 +450,45 @@ components:
           completed_at: null
           training_removed: false
         total: 1
+    groupIds:
+      description: A unique identifier for a user group, for whom you want to retrieve training sessions
+      example:
+      - 1
+      - 2
+      - 3
+      type: array
+      items:
+        type: number
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
     throttledResponse:
       type: object
       properties:
@@ -641,6 +499,148 @@ components:
       additionalProperties: false
       example:
         message: You have exceeded what is allowed in the fair use policy for this API
+    includeInactiveUsers:
+      description: When true, includes training records for users who are no longer active in the company. Defaults to false.
+      example: false
+      type: boolean
+    trainingReminderRequest:
+      type: object
+      properties:
+        to:
+          type: array
+          items:
+            anyOf:
+            - type: integer
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            - type: string
+      description: Training reminder request body
+      example:
+        to:
+        - 1224
+        - user@example.com
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    trainingStatus:
+      description: Filter by training status. 'overdue' returns assignments past their due date that are not yet complete. 'due' returns incomplete assignments that are not yet overdue. 'complete' returns completed assignments. Omit to return all assignments.
+      example: overdue
+      type: string
+      enum:
+      - due
+      - overdue
+      - complete
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    includeRemoved:
+      description: When true, includes training assignments that were completed and subsequently unassigned. Defaults to false.
+      example: false
+      type: boolean
+    trainingReminderResponse:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+            required:
+            - user_id
+            - email
+            additionalProperties: false
+        failure:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              email:
+                type: string
+            required:
+            - user_id
+            - email
+            additionalProperties: false
+      required:
+      - success
+      - failure
+      additionalProperties: false
+      description: Training reminder response
+      example:
+        success:
+        - user_id: 1224
+          email: user@example.com
+        failure: []
+    trainingDocumentId:
+      type: integer
+      exclusiveMinimum: 0
+      maximum: 9007199254740991
+      description: A unique identifier for a document
+      example: 12345
+    documentIds:
+      description: A unique identifier for a document version, for which you want to query for user training sessions
+      example:
+      - 1
+      - 2
+      - 3
+      type: array
+      items:
+        type: number
   securitySchemes:
     api_key:
       type: apiKey

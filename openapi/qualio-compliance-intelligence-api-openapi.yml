@@ -4785,6 +4785,16 @@ components:
         - location: query
           name: document_id
           description: document_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
     generic404:
       anyOf:
       - type: object
@@ -4803,46 +4813,6 @@ components:
       additionalProperties: false
       example:
         message: User is not authorized to access this resource with an explicit deny
-    genericBadRequestResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
     genericBadRequest400PathResponse:
       type: object
       properties:
@@ -4873,6 +4843,36 @@ components:
         - location: path
           name: user_id
           description: user_id is not an integer
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
   securitySchemes:
     api_key:
       type: apiKey

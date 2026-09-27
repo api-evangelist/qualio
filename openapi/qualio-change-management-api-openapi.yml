@@ -472,10 +472,6 @@ components:
           position: 1
         - content: There is no impact to our other documented processes, and employees will be trained on this document before it becomes effective
           position: 2
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
     genericBadRequest400ParametersResponse:
       type: object
       properties:
@@ -506,6 +502,16 @@ components:
         - location: query
           name: document_id
           description: document_id is not an integer
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
     createdCC:
       type: object
       properties:
@@ -570,127 +576,6 @@ components:
           code: POL-1
           version: '1.0'
           type: document
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    genericBadRequestResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
-    changeRequestResp:
-      type: object
-      properties:
-        total:
-          type: number
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              status:
-                type: string
-              owner:
-                type: string
-              created_time:
-                type: string
-                format: date-time
-              closed_time:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              change_items:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    title:
-                      type: string
-                    code:
-                      type: string
-                    version:
-                      type: string
-                    type:
-                      type: string
-                      enum:
-                      - document
-                      - supplier
-                      - event
-                  required:
-                  - title
-                  - code
-                  - version
-                  - type
-                  additionalProperties: false
-            required:
-            - code
-            - title
-            - status
-            - owner
-            - created_time
-            - closed_time
-            - change_items
-            additionalProperties: false
-      required:
-      - total
-      - items
-      additionalProperties: false
-      description: A paginated list of change requests
-      example:
-        total: 1
-        items:
-        - code: DCR-1
-          title: Update Privacy Policy
-          status: in_progress
-          owner: John Smith
-          created_time: '2024-07-30T18:00:00.000Z'
-          closed_time: null
-          change_items:
-          - title: Privacy Policy
-            code: POL-1
-            version: '2.0'
-            type: document
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
     changeControlResp:
       type: object
       properties:
@@ -768,11 +653,7 @@ components:
             code: POL-1
             version: '1.0'
             type: document
-    statusParam:
-      description: The status of a domain object
-      example: Closed
-      type: string
-    throttledResponse:
+    genericForbiddenResponse:
       type: object
       properties:
         message:
@@ -781,11 +662,130 @@ components:
       - message
       additionalProperties: false
       example:
-        message: You have exceeded what is allowed in the fair use policy for this API
+        message: User is not authorized to access this resource with an explicit deny
+    statusParam:
+      description: The status of a domain object
+      example: Closed
+      type: string
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
     orderByParam:
       description: The field to order the results by
       example: created_date
       type: string
+    changeRequestResp:
+      type: object
+      properties:
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+              owner:
+                type: string
+              created_time:
+                type: string
+                format: date-time
+              closed_time:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              change_items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    code:
+                      type: string
+                    version:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                      - document
+                      - supplier
+                      - event
+                  required:
+                  - title
+                  - code
+                  - version
+                  - type
+                  additionalProperties: false
+            required:
+            - code
+            - title
+            - status
+            - owner
+            - created_time
+            - closed_time
+            - change_items
+            additionalProperties: false
+      required:
+      - total
+      - items
+      additionalProperties: false
+      description: A paginated list of change requests
+      example:
+        total: 1
+        items:
+        - code: DCR-1
+          title: Update Privacy Policy
+          status: in_progress
+          owner: John Smith
+          created_time: '2024-07-30T18:00:00.000Z'
+          closed_time: null
+          change_items:
+          - title: Privacy Policy
+            code: POL-1
+            version: '2.0'
+            type: document
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
   securitySchemes:
     api_key:
       type: apiKey

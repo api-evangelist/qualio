@@ -716,131 +716,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
-    eventTemplateResp:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              prefix:
-                type: string
-              title:
-                type: string
-              status:
-                type: string
-                enum:
-                - draft
-                - for_approval
-                - approval_declined
-                - effective
-                - superseded
-                - archived
-              event_template_matrix_id:
-                type: string
-                format: uuid
-              url:
-                type: string
-            required:
-            - prefix
-            - title
-            - status
-            - event_template_matrix_id
-            - url
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: A list of event templates for your Qualio instance
-      example:
-        items:
-        - title: Non Compliance
-          status: effective
-          url: https://app.qualio.com/quality-events/templates/123456
-          prefix: NCR
-          event_template_matrix_id: c3e000df-4e7e-4916-b5dc-b236a83b3fe5
-        total: 1
-    eventStepTasks:
-      type: object
-      properties:
-        label:
-          type: string
-        type:
-          type: string
-          const: tasks
-        order:
-          type: number
-        tasks:
-          type: array
-          items:
-            type: object
-            properties:
-              title:
-                type: string
-              owner_user_id:
-                type: number
-              status:
-                type: string
-                enum:
-                - open
-                - closed_fail
-                - closed_success
-              description:
-                type: string
-              code:
-                type: string
-              due_at:
-                type: string
-                format: date-time
-              updated_at:
-                type: string
-                format: date-time
-              closed_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-            required:
-            - title
-            - owner_user_id
-            - status
-            - description
-            - code
-            - due_at
-            - updated_at
-            - closed_at
-            additionalProperties: false
-      required:
-      - label
-      - type
-      - order
-      - tasks
-      additionalProperties: false
-      description: A tasks step in an event
-    eventCode:
-      type: string
-      description: A unique identifier for an Event, that includes a prefix that corresponds to its type
-      example: CAPA-1
     eventStatus:
       type: string
       enum:
@@ -851,10 +726,275 @@ components:
       - cancelled
       description: The status of a given event
       example: open
-    userIdParam:
-      description: A unique identifier for a user in Qualio
-      example: 12345
-      type: number
+    createEventTaskStep:
+      type: object
+      properties:
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              owner_user_id:
+                type: number
+              time_limit_days:
+                type: number
+                minimum: 1
+                maximum: 999999999
+            required:
+            - title
+            - description
+            - owner_user_id
+            - time_limit_days
+      required:
+      - template_step_matrix_id
+      - tasks
+      description: A object containing tasks to create on the step
+    eventCode:
+      type: string
+      description: A unique identifier for an Event, that includes a prefix that corresponds to its type
+      example: CAPA-1
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    eventStepForm:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: form
+        order:
+          type: number
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              type:
+                type: string
+                enum:
+                - text
+                - rich_text
+                - date
+                - dropdown
+                - boolean
+                - numeric
+                - attachment
+                - document
+                - event
+                - supplier
+                - user
+                - radio
+                - checkbox
+                - section
+                - change_request
+                - product
+                - root_cause
+                - registry
+                - design_controls
+                - training_plan
+                - document_template
+                - event_template
+                - task
+              order:
+                type: number
+              helptext:
+                anyOf:
+                - type: string
+                - type: 'null'
+              mandatory:
+                type: boolean
+              default_content:
+                anyOf:
+                - type: string
+                - type: 'null'
+              multi:
+                type: boolean
+              values:
+                type: array
+                items:
+                  anyOf:
+                  - type: string
+                  - type: object
+                    properties:
+                      link:
+                        type: string
+                      name:
+                        type: string
+                      label:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      status:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      code:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                    required:
+                    - link
+                    - name
+                    additionalProperties: false
+            required:
+            - label
+            - type
+            - mandatory
+            - multi
+            - values
+            additionalProperties: false
+        form_status:
+          anyOf:
+          - type: string
+            enum:
+            - draft
+            - for_review
+            - for_approval
+            - approved
+            - approval_declined
+            - superseded
+            - cancelled
+          - type: 'null'
+        owner_user_id:
+          anyOf:
+          - type: number
+          - type: 'null'
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - fields
+      - form_status
+      - owner_user_id
+      - created_at
+      - modified_at
+      - approvers
+      - reviewers
+      additionalProperties: false
+      description: A form step in an event
+    event:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - closed
+          - open
+          - imported
+          - rejected
+          - cancelled
+        url:
+          type: string
+        owner_user_id:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        due_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+        closed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+      required:
+      - code
+      - title
+      - description
+      - status
+      - url
+      - owner_user_id
+      - created_at
+      - due_at
+      - modified_at
+      - closed_at
+      additionalProperties: false
+      description: An event in Qualio, e.g. a corrective action, a complaint, a non-compliance, etc
+      example:
+        code: NCR-12
+        title: 'Non Compliance: procedure was not followed'
+        description: An incidence of a non compliance with a work instuction, procedure or policy
+        status: open
+        url: https://app.qualio.com/quality-events/events/123456
+        owner_user_id: 1
+        created_at: '2020-01-01T00:00:00Z'
+        due_at: '2020-01-02T00:00:00Z'
+        modified_at: '2020-01-01T00:00:00Z'
+        closed_at: null
     eventTemplateDetailedResp:
       type: object
       properties:
@@ -1023,16 +1163,19 @@ components:
           type: tasks
           template_step_matrix_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
           order: 2
-    eventStepContent:
+    eventTemplateContentStep:
       type: object
       properties:
         label:
           type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
         type:
           type: string
           const: content
-        order:
-          type: number
         sections:
           type: array
           items:
@@ -1042,351 +1185,132 @@ components:
                 type: string
               order:
                 type: number
-              section_id:
+              template_section_id:
                 type: number
               content:
                 type: string
             required:
             - label
-            - section_id
+            - template_section_id
             - content
             additionalProperties: false
-        content_status:
-          anyOf:
-          - type: string
-            enum:
-            - approval_declined
-            - approved
-            - deleted
-            - draft
-            - effective
-            - for_approval
-            - for_review
-            - for_retirement
-            - retired
-            - superseded
-          - type: 'null'
-        owner_user_id:
-          anyOf:
-          - type: number
-          - type: 'null'
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        modified_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        approvers:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              action_done:
-                type: boolean
-            required:
-            - user_id
-            - action_done
-            additionalProperties: false
-        reviewers:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              action_done:
-                type: boolean
-            required:
-            - user_id
-            - action_done
-            additionalProperties: false
       required:
       - label
+      - template_step_matrix_id
       - type
-      - order
       - sections
-      - content_status
-      - owner_user_id
-      - created_at
-      - modified_at
-      - approvers
-      - reviewers
       additionalProperties: false
-      description: A content step in an event
-    eventTemplateFormFieldMultiOption:
+      description: A content step in an event template
+    eventQueryResponse:
       type: object
       properties:
-        label:
-          type: string
-        type:
-          type: string
-          enum:
-          - text
-          - rich_text
-          - date
-          - dropdown
-          - boolean
-          - numeric
-          - attachment
-          - document
-          - event
-          - supplier
-          - user
-          - radio
-          - checkbox
-          - section
-          - change_request
-          - product
-          - root_cause
-          - registry
-          - design_controls
-          - training_plan
-          - document_template
-          - event_template
-          - task
-        order:
-          type: number
-        field_matrix_id:
-          type: string
-          format: uuid
-        helptext:
-          anyOf:
-          - type: string
-          - type: 'null'
-        mandatory:
-          type: boolean
-        default_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-        multi:
-          type: boolean
-        options:
-          type: array
-          items:
-            type: string
-      required:
-      - label
-      - type
-      - field_matrix_id
-      - mandatory
-      - multi
-      - options
-      additionalProperties: false
-      description: A multi-option form field in an event template
-    eventStepForm:
-      type: object
-      properties:
-        label:
-          type: string
-        type:
-          type: string
-          const: form
-        order:
-          type: number
-        fields:
+        items:
           type: array
           items:
             type: object
             properties:
-              label:
+              code:
                 type: string
-              type:
+              title:
+                type: string
+              description:
+                type: string
+              status:
                 type: string
                 enum:
-                - text
-                - rich_text
-                - date
-                - dropdown
-                - boolean
-                - numeric
-                - attachment
-                - document
-                - event
-                - supplier
-                - user
-                - radio
-                - checkbox
-                - section
-                - change_request
-                - product
-                - root_cause
-                - registry
-                - design_controls
-                - training_plan
-                - document_template
-                - event_template
-                - task
-              order:
-                type: number
-              helptext:
-                anyOf:
-                - type: string
-                - type: 'null'
-              mandatory:
-                type: boolean
-              default_content:
-                anyOf:
-                - type: string
-                - type: 'null'
-              multi:
-                type: boolean
-              values:
-                type: array
-                items:
-                  anyOf:
-                  - type: string
-                  - type: object
-                    properties:
-                      link:
-                        type: string
-                      name:
-                        type: string
-                      label:
-                        anyOf:
-                        - type: string
-                        - type: 'null'
-                      status:
-                        anyOf:
-                        - type: string
-                        - type: 'null'
-                      code:
-                        anyOf:
-                        - type: string
-                        - type: 'null'
-                    required:
-                    - link
-                    - name
-                    additionalProperties: false
-            required:
-            - label
-            - type
-            - mandatory
-            - multi
-            - values
-            additionalProperties: false
-        form_status:
-          anyOf:
-          - type: string
-            enum:
-            - draft
-            - for_review
-            - for_approval
-            - approved
-            - approval_declined
-            - superseded
-            - cancelled
-          - type: 'null'
-        owner_user_id:
-          anyOf:
-          - type: number
-          - type: 'null'
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        modified_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        approvers:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              action_done:
-                type: boolean
-            required:
-            - user_id
-            - action_done
-            additionalProperties: false
-        reviewers:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              action_done:
-                type: boolean
-            required:
-            - user_id
-            - action_done
-            additionalProperties: false
-      required:
-      - label
-      - type
-      - order
-      - fields
-      - form_status
-      - owner_user_id
-      - created_at
-      - modified_at
-      - approvers
-      - reviewers
-      additionalProperties: false
-      description: A form step in an event
-    createEventFormStep:
-      type: object
-      properties:
-        template_step_matrix_id:
-          type: string
-          format: uuid
-        fields:
-          type: array
-          items:
-            type: object
-            properties:
-              field_matrix_id:
+                - closed
+                - open
+                - imported
+                - rejected
+                - cancelled
+              url:
                 type: string
-                format: uuid
-              values:
-                type: array
-                items:
-                  type: string
+              owner_user_id:
+                type: number
+              created_at:
+                type: string
+                format: date-time
+              due_at:
+                type: string
+                format: date-time
+              modified_at:
+                type: string
+                format: date-time
+              closed_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
             required:
-            - field_matrix_id
-            - values
+            - code
+            - title
+            - description
+            - status
+            - url
+            - owner_user_id
+            - created_at
+            - due_at
+            - modified_at
+            - closed_at
+            additionalProperties: false
+        total:
+          type: number
       required:
-      - template_step_matrix_id
-      - fields
-      description: A object containing form fields to populate
-    eventTemplateFormStep:
+      - items
+      - total
+      additionalProperties: false
+      description: An series of Events, based on the results of your query
+      example:
+        items:
+        - code: NCR-12
+          title: 'Non Compliance: procedure was not followed'
+          description: An incidence of a non compliance with a work instuction, procedure or policy
+          status: open
+          url: https://app.qualio.com/quality-events/events/123456
+          owner_user_id: 1
+          created_at: '2020-01-01T00:00:00Z'
+          due_at: '2020-01-02T00:00:00Z'
+          modified_at: '2020-01-01T00:00:00Z'
+          closed_at: null
+        total: 1
+    genericBadRequest400ParametersResponse:
       type: object
       properties:
-        label:
-          type: string
-        order:
-          type: number
-        template_step_matrix_id:
-          type: string
-          format: uuid
-        type:
-          type: string
-          const: form
-        fields:
+        errors:
           type: array
           items:
-            anyOf:
-            - $ref: '#/components/schemas/eventTemplateFormFieldMultiOption'
-            - $ref: '#/components/schemas/eventTemplateFormField'
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
       required:
-      - label
-      - template_step_matrix_id
-      - type
-      - fields
+      - errors
+      - status
       additionalProperties: false
-      description: A form step in an event template
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
     eventDetailed:
       type: object
       properties:
@@ -1564,241 +1488,15 @@ components:
             due_at: '2020-01-10T00:00:00Z'
             updated_at: '2020-01-01T00:00:00Z'
             closed_at: null
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    eventTemplateFormField:
-      type: object
-      properties:
-        label:
-          type: string
-        type:
-          type: string
-          enum:
-          - text
-          - rich_text
-          - date
-          - dropdown
-          - boolean
-          - numeric
-          - attachment
-          - document
-          - event
-          - supplier
-          - user
-          - radio
-          - checkbox
-          - section
-          - change_request
-          - product
-          - root_cause
-          - registry
-          - design_controls
-          - training_plan
-          - document_template
-          - event_template
-          - task
-        order:
-          type: number
-        field_matrix_id:
-          type: string
-          format: uuid
-        helptext:
-          anyOf:
-          - type: string
-          - type: 'null'
-        mandatory:
-          type: boolean
-        default_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-        multi:
-          type: boolean
-      required:
-      - label
-      - type
-      - field_matrix_id
-      - mandatory
-      - multi
-      additionalProperties: false
-      description: A form field in an event template
-    eventTemplateContentStep:
-      type: object
-      properties:
-        label:
-          type: string
-        order:
-          type: number
-        template_step_matrix_id:
-          type: string
-          format: uuid
-        type:
-          type: string
-          const: content
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              label:
-                type: string
-              order:
-                type: number
-              template_section_id:
-                type: number
-              content:
-                type: string
-            required:
-            - label
-            - template_section_id
-            - content
-            additionalProperties: false
-      required:
-      - label
-      - template_step_matrix_id
-      - type
-      - sections
-      additionalProperties: false
-      description: A content step in an event template
-    eventTemplateTaskStep:
-      type: object
-      properties:
-        label:
-          type: string
-        order:
-          type: number
-        template_step_matrix_id:
-          type: string
-          format: uuid
-        type:
-          type: string
-          const: tasks
-      required:
-      - label
-      - template_step_matrix_id
-      - type
-      additionalProperties: false
-      description: A tasks step in an event template
-    eventQueryResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              description:
-                type: string
-              status:
-                type: string
-                enum:
-                - closed
-                - open
-                - imported
-                - rejected
-                - cancelled
-              url:
-                type: string
-              owner_user_id:
-                type: number
-              created_at:
-                type: string
-                format: date-time
-              due_at:
-                type: string
-                format: date-time
-              modified_at:
-                type: string
-                format: date-time
-              closed_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-            required:
-            - code
-            - title
-            - description
-            - status
-            - url
-            - owner_user_id
-            - created_at
-            - due_at
-            - modified_at
-            - closed_at
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: An series of Events, based on the results of your query
-      example:
-        items:
-        - code: NCR-12
-          title: 'Non Compliance: procedure was not followed'
-          description: An incidence of a non compliance with a work instuction, procedure or policy
-          status: open
-          url: https://app.qualio.com/quality-events/events/123456
-          owner_user_id: 1
-          created_at: '2020-01-01T00:00:00Z'
-          due_at: '2020-01-02T00:00:00Z'
-          modified_at: '2020-01-01T00:00:00Z'
-          closed_at: null
-        total: 1
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
+    userIdParam:
+      description: A unique identifier for a user in Qualio
+      example: 12345
+      type: number
+    eventTemplateMatrixIdParam:
+      description: A unique identifier for an event template in Qualio, use this to filter the results by event type
+      example: b2c3d4e5-f6a7-8901-bcde-f12345678901
+      type: string
+      format: uuid
     createEventContentStep:
       type: object
       properties:
@@ -1821,41 +1519,6 @@ components:
       - template_step_matrix_id
       - sections
       description: A object containing content sections to populate
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
-    eventTemplateMatrixIdParam:
-      description: A unique identifier for an event template in Qualio, use this to filter the results by event type
-      example: b2c3d4e5-f6a7-8901-bcde-f12345678901
-      type: string
-      format: uuid
     createEventPayload:
       type: object
       properties:
@@ -1930,6 +1593,343 @@ components:
             description: Determine the underlying cause of the non-compliance.
             owner_user_id: 2
             time_limit_days: 10
+    eventTemplateFormFieldMultiOption:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+          - text
+          - rich_text
+          - date
+          - dropdown
+          - boolean
+          - numeric
+          - attachment
+          - document
+          - event
+          - supplier
+          - user
+          - radio
+          - checkbox
+          - section
+          - change_request
+          - product
+          - root_cause
+          - registry
+          - design_controls
+          - training_plan
+          - document_template
+          - event_template
+          - task
+        order:
+          type: number
+        field_matrix_id:
+          type: string
+          format: uuid
+        helptext:
+          anyOf:
+          - type: string
+          - type: 'null'
+        mandatory:
+          type: boolean
+        default_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+        multi:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+      required:
+      - label
+      - type
+      - field_matrix_id
+      - mandatory
+      - multi
+      - options
+      additionalProperties: false
+      description: A multi-option form field in an event template
+    eventTemplateFormField:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+          - text
+          - rich_text
+          - date
+          - dropdown
+          - boolean
+          - numeric
+          - attachment
+          - document
+          - event
+          - supplier
+          - user
+          - radio
+          - checkbox
+          - section
+          - change_request
+          - product
+          - root_cause
+          - registry
+          - design_controls
+          - training_plan
+          - document_template
+          - event_template
+          - task
+        order:
+          type: number
+        field_matrix_id:
+          type: string
+          format: uuid
+        helptext:
+          anyOf:
+          - type: string
+          - type: 'null'
+        mandatory:
+          type: boolean
+        default_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+        multi:
+          type: boolean
+      required:
+      - label
+      - type
+      - field_matrix_id
+      - mandatory
+      - multi
+      additionalProperties: false
+      description: A form field in an event template
+    eventStepTasks:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: tasks
+        order:
+          type: number
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              owner_user_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - open
+                - closed_fail
+                - closed_success
+              description:
+                type: string
+              code:
+                type: string
+              due_at:
+                type: string
+                format: date-time
+              updated_at:
+                type: string
+                format: date-time
+              closed_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+            required:
+            - title
+            - owner_user_id
+            - status
+            - description
+            - code
+            - due_at
+            - updated_at
+            - closed_at
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - tasks
+      additionalProperties: false
+      description: A tasks step in an event
+    eventTemplateResp:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              prefix:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+                enum:
+                - draft
+                - for_approval
+                - approval_declined
+                - effective
+                - superseded
+                - archived
+              event_template_matrix_id:
+                type: string
+                format: uuid
+              url:
+                type: string
+            required:
+            - prefix
+            - title
+            - status
+            - event_template_matrix_id
+            - url
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A list of event templates for your Qualio instance
+      example:
+        items:
+        - title: Non Compliance
+          status: effective
+          url: https://app.qualio.com/quality-events/templates/123456
+          prefix: NCR
+          event_template_matrix_id: c3e000df-4e7e-4916-b5dc-b236a83b3fe5
+        total: 1
+    eventTemplateTaskStep:
+      type: object
+      properties:
+        label:
+          type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          const: tasks
+      required:
+      - label
+      - template_step_matrix_id
+      - type
+      additionalProperties: false
+      description: A tasks step in an event template
+    eventStepContent:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          const: content
+        order:
+          type: number
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              order:
+                type: number
+              section_id:
+                type: number
+              content:
+                type: string
+            required:
+            - label
+            - section_id
+            - content
+            additionalProperties: false
+        content_status:
+          anyOf:
+          - type: string
+            enum:
+            - approval_declined
+            - approved
+            - deleted
+            - draft
+            - effective
+            - for_approval
+            - for_review
+            - for_retirement
+            - retired
+            - superseded
+          - type: 'null'
+        owner_user_id:
+          anyOf:
+          - type: number
+          - type: 'null'
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              action_done:
+                type: boolean
+            required:
+            - user_id
+            - action_done
+            additionalProperties: false
+      required:
+      - label
+      - type
+      - order
+      - sections
+      - content_status
+      - owner_user_id
+      - created_at
+      - modified_at
+      - approvers
+      - reviewers
+      additionalProperties: false
+      description: A content step in an event
     genericBadRequestResponse:
       type: object
       properties:
@@ -1960,95 +1960,95 @@ components:
         - location: body
           name: email
           description: Email missing from payload
-    createEventTaskStep:
+    eventTemplateFormStep:
+      type: object
+      properties:
+        label:
+          type: string
+        order:
+          type: number
+        template_step_matrix_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          const: form
+        fields:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/eventTemplateFormFieldMultiOption'
+            - $ref: '#/components/schemas/eventTemplateFormField'
+      required:
+      - label
+      - template_step_matrix_id
+      - type
+      - fields
+      additionalProperties: false
+      description: A form step in an event template
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    createEventFormStep:
       type: object
       properties:
         template_step_matrix_id:
           type: string
           format: uuid
-        tasks:
+        fields:
           type: array
           items:
             type: object
             properties:
-              title:
+              field_matrix_id:
                 type: string
-              description:
-                type: string
-              owner_user_id:
-                type: number
-              time_limit_days:
-                type: number
-                minimum: 1
-                maximum: 999999999
+                format: uuid
+              values:
+                type: array
+                items:
+                  type: string
             required:
-            - title
-            - description
-            - owner_user_id
-            - time_limit_days
+            - field_matrix_id
+            - values
       required:
       - template_step_matrix_id
-      - tasks
-      description: A object containing tasks to create on the step
-    event:
-      type: object
-      properties:
-        code:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - closed
-          - open
-          - imported
-          - rejected
-          - cancelled
-        url:
-          type: string
-        owner_user_id:
-          type: number
-        created_at:
-          type: string
-          format: date-time
-        due_at:
-          type: string
-          format: date-time
-        modified_at:
-          type: string
-          format: date-time
-        closed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-      required:
-      - code
-      - title
-      - description
-      - status
-      - url
-      - owner_user_id
-      - created_at
-      - due_at
-      - modified_at
-      - closed_at
-      additionalProperties: false
-      description: An event in Qualio, e.g. a corrective action, a complaint, a non-compliance, etc
-      example:
-        code: NCR-12
-        title: 'Non Compliance: procedure was not followed'
-        description: An incidence of a non compliance with a work instuction, procedure or policy
-        status: open
-        url: https://app.qualio.com/quality-events/events/123456
-        owner_user_id: 1
-        created_at: '2020-01-01T00:00:00Z'
-        due_at: '2020-01-02T00:00:00Z'
-        modified_at: '2020-01-01T00:00:00Z'
-        closed_at: null
+      - fields
+      description: A object containing form fields to populate
   securitySchemes:
     api_key:
       type: apiKey
