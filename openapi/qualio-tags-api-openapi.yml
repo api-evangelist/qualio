@@ -115,16 +115,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
     throttledResponse:
       type: object
       properties:
@@ -163,6 +153,16 @@ components:
         - tag_id: 99
           name: Engineering
         total: 1
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
   securitySchemes:
     api_key:
       type: apiKey

@@ -731,65 +731,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    risksResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                anyOf:
-                - type: string
-                  const: Risk
-                - type: string
-                  const: Type
-                - type: string
-                  const: Document
-                - type: string
-                  const: Audit
-              options:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      format: uuid
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    periodic_review:
-                      type: number
-                  additionalProperties: false
-            required:
-            - type
-            - options
-            additionalProperties: false
-      required:
-      - items
-      additionalProperties: false
-      description: An array of risks configured for your company
-      example:
-        items:
-        - type: Risk
-          options:
-          - id: 458bf34c-8ee1-475f-8c4c-ae735518991a
-            title: Risk 1
-            description: Risk 1 description
-            periodic_review: 1
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
     supplierAuditsResponse:
       type: object
       properties:
@@ -905,6 +846,247 @@ components:
               description: Signed audit report
               id: a3f5c2d1-0e4b-4c8a-9f2d-6b7e8c9a0d1e
               type: FILE
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    createSupplier:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_information:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+            website:
+              type: string
+            notes:
+              type: string
+        intended_use:
+          type: string
+        sponsor_user_id:
+          type: number
+        risk_id:
+          type: string
+          format: uuid
+      required:
+      - name
+      description: A request to create a new supplier, or update an existing one
+      example:
+        name: Acme
+        intended_use: Chemical reagents only
+        contact_information:
+          name: Mr Acme
+          email: info@acme.com
+          address: 1 Acme st, Acme, NY
+          notes: Call in emergency only
+          phone: 555-1234-345
+        sponsor_user_id: 999
+        risk_id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    supplier:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_information:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+            website:
+              type: string
+            notes:
+              type: string
+          additionalProperties: false
+        intended_use:
+          type: string
+        sponsor_user_id:
+          type: number
+        supplier_id:
+          type: string
+        archived:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - REVIEW_PENDING
+          - APPROVED
+          - REJECTED
+          - DRAFT
+          - ARCHIVED
+        created_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+        approved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        risk_type:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            title:
+              type: string
+            description:
+              type: string
+            periodic_review:
+              type: number
+          additionalProperties: false
+        approvers:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              full_name:
+                type: string
+              email:
+                type: string
+            required:
+            - user_id
+            - full_name
+            - email
+            additionalProperties: false
+      required:
+      - name
+      - supplier_id
+      - archived
+      - status
+      - created_at
+      - modified_at
+      - approved_at
+      - due_at
+      - approvers
+      additionalProperties: false
+      description: A supplier
+      example:
+        name: Acme
+        contact_information:
+          name: Mr Acme
+          email: info@acme.com
+          address: 1 Acme st, Acme, NY
+          notes: Call in emergency only
+          phone: 555-1234-345
+        intended_use: Chemical reagents only
+        sponsor_user_id: 999
+        archived: false
+        status: APPROVED
+        created_at: '2020-01-01T00:00:00Z'
+        modified_at: '2020-01-01T00:00:00Z'
+        approved_at: '2020-03-01T00:00:00Z'
+        due_at: '2021-01-01T00:00:00Z'
+        supplier_id: asdf-asdasd-asdas-adss
+        risk_type:
+          id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+          title: Risk 1
+          description: Risk 1 description
+          periodic_review: 1
+        approvers:
+        - user_id: 999
+          full_name: Mr Acme
+          email: info@acme.com
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
     supplierResponse:
       type: object
       properties:
@@ -1034,241 +1216,59 @@ components:
           - user_id: 999
             full_name: Mr Acme
             email: info@acme.com
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    createSupplier:
-      type: object
-      properties:
-        name:
-          type: string
-        contact_information:
-          type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-            phone:
-              type: string
-            address:
-              type: string
-            website:
-              type: string
-            notes:
-              type: string
-        intended_use:
-          type: string
-        sponsor_user_id:
-          type: number
-        risk_id:
-          type: string
-          format: uuid
-      required:
-      - name
-      description: A request to create a new supplier, or update an existing one
-      example:
-        name: Acme
-        intended_use: Chemical reagents only
-        contact_information:
-          name: Mr Acme
-          email: info@acme.com
-          address: 1 Acme st, Acme, NY
-          notes: Call in emergency only
-          phone: 555-1234-345
-        sponsor_user_id: 999
-        risk_id: 458bf34c-8ee1-475f-8c4c-ae735518991a
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
-    supplier:
-      type: object
-      properties:
-        name:
-          type: string
-        contact_information:
-          type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-            phone:
-              type: string
-            address:
-              type: string
-            website:
-              type: string
-            notes:
-              type: string
-          additionalProperties: false
-        intended_use:
-          type: string
-        sponsor_user_id:
-          type: number
-        supplier_id:
-          type: string
-        archived:
-          type: boolean
-        status:
-          type: string
-          enum:
-          - REVIEW_PENDING
-          - APPROVED
-          - REJECTED
-          - DRAFT
-          - ARCHIVED
-        created_at:
-          type: string
-          format: date-time
-        modified_at:
-          type: string
-          format: date-time
-        approved_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        due_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        risk_type:
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-            title:
-              type: string
-            description:
-              type: string
-            periodic_review:
-              type: number
-          additionalProperties: false
-        approvers:
-          type: array
-          items:
-            type: object
-            properties:
-              user_id:
-                type: number
-              full_name:
-                type: string
-              email:
-                type: string
-            required:
-            - user_id
-            - full_name
-            - email
-            additionalProperties: false
-      required:
-      - name
-      - supplier_id
-      - archived
-      - status
-      - created_at
-      - modified_at
-      - approved_at
-      - due_at
-      - approvers
-      additionalProperties: false
-      description: A supplier
-      example:
-        name: Acme
-        contact_information:
-          name: Mr Acme
-          email: info@acme.com
-          address: 1 Acme st, Acme, NY
-          notes: Call in emergency only
-          phone: 555-1234-345
-        intended_use: Chemical reagents only
-        sponsor_user_id: 999
-        archived: false
-        status: APPROVED
-        created_at: '2020-01-01T00:00:00Z'
-        modified_at: '2020-01-01T00:00:00Z'
-        approved_at: '2020-03-01T00:00:00Z'
-        due_at: '2021-01-01T00:00:00Z'
-        supplier_id: asdf-asdasd-asdas-adss
-        risk_type:
-          id: 458bf34c-8ee1-475f-8c4c-ae735518991a
-          title: Risk 1
-          description: Risk 1 description
-          periodic_review: 1
-        approvers:
-        - user_id: 999
-          full_name: Mr Acme
-          email: info@acme.com
-    genericBadRequestResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
     supplierId:
       type: string
       description: A unique identifier for a supplier
       example: qwerty-qwerty-qwerty-qwerty
+    risksResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                anyOf:
+                - type: string
+                  const: Risk
+                - type: string
+                  const: Type
+                - type: string
+                  const: Document
+                - type: string
+                  const: Audit
+              options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    periodic_review:
+                      type: number
+                  additionalProperties: false
+            required:
+            - type
+            - options
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+      description: An array of risks configured for your company
+      example:
+        items:
+        - type: Risk
+          options:
+          - id: 458bf34c-8ee1-475f-8c4c-ae735518991a
+            title: Risk 1
+            description: Risk 1 description
+            periodic_review: 1
   securitySchemes:
     api_key:
       type: apiKey

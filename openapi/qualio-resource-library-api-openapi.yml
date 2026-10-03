@@ -637,40 +637,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    query:
-      description: A search query to filter the results by
-      example: test
-      type: string
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
     status:
       type: string
       enum:
@@ -680,179 +646,6 @@ components:
       - draft
       description: A status to filter the results by
       example: effective
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    createResourceLibraryItem:
-      type: object
-      properties:
-        template_matrix_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        display_id:
-          type: string
-      required:
-      - template_matrix_id
-      - name
-      - display_id
-      description: A resource library item. display_id is what will show as 'ID' in the UI and must be unique.
-      example:
-        template_matrix_id: aaaa-bbbb-cccc-dddd
-        name: My Resource Library Item
-        description: Test description
-        display_id: RES-10
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    resourceLibrarySingleTemplateResp:
-      type: object
-      properties:
-        id:
-          type: number
-        name:
-          type: string
-        qualio_managed:
-          type: boolean
-        status:
-          type: string
-          enum:
-          - effective
-          - archived
-          - superseded
-          - draft
-        template_matrix_id:
-          type: string
-        major_version:
-          type: number
-        minor_version:
-          type: number
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-        domain_form_template:
-          anyOf:
-          - type: object
-            properties:
-              id:
-                type: number
-              fields:
-                anyOf:
-                - type: array
-                  items:
-                    anyOf:
-                    - type: object
-                      properties:
-                        id:
-                          type: number
-                        mandatory:
-                          type: boolean
-                        order:
-                          type: number
-                        label:
-                          type: string
-                        helptext:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                        type:
-                          type: string
-                        multi:
-                          type: boolean
-                        default_content:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                        form_option_list:
-                          anyOf:
-                          - type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: number
-                                value:
-                                  type: string
-                              required:
-                              - id
-                              - value
-                              additionalProperties: false
-                          - type: 'null'
-                      required:
-                      - id
-                      - mandatory
-                      - order
-                      - label
-                      - type
-                      - multi
-                      additionalProperties: false
-                    - type: 'null'
-                - type: 'null'
-            required:
-            - id
-            additionalProperties: false
-          - type: 'null'
-      required:
-      - id
-      - name
-      - qualio_managed
-      - status
-      - template_matrix_id
-      additionalProperties: false
-      description: A single resource library template
-      example:
-        id: 10
-        name: Test
-        qualio_managed: false
-        status: effective
-        template_matrix_id: aaaa-bbbb-cccc-dddd
-        major_version: 1
-        minor_version: 0
-        description: Test description
-        domain_form_template:
-          id: 10
-          fields:
-          - id: 10
-            mandatory: false
-            order: 0
-            label: Test
-            helptext: Test helptext
-            type: text
-            multi: false
-            default_content: Test default content
-            form_option_list:
-            - id: 10
-              value: Test value
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
-    createResourceLibraryItemSuccessResp:
-      type: object
-      properties:
-        item_id:
-          type: number
-      required:
-      - item_id
-      additionalProperties: false
-      description: A successful resource library item creation
-      example:
-        item_id: 21
     genericBadRequest400PathResponse:
       type: object
       properties:
@@ -883,16 +676,76 @@ components:
         - location: path
           name: user_id
           description: user_id is not an integer
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
     orderBy:
       description: A property to order the results by
       example: name
       type: string
       enum:
       - name
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    createResourceLibraryItemSuccessResp:
+      type: object
+      properties:
+        item_id:
+          type: number
+      required:
+      - item_id
+      additionalProperties: false
+      description: A successful resource library item creation
+      example:
+        item_id: 21
+    createResourceLibraryItem:
+      type: object
+      properties:
+        template_matrix_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        display_id:
+          type: string
+      required:
+      - template_matrix_id
+      - name
+      - display_id
+      description: A resource library item. display_id is what will show as 'ID' in the UI and must be unique.
+      example:
+        template_matrix_id: aaaa-bbbb-cccc-dddd
+        name: My Resource Library Item
+        description: Test description
+        display_id: RES-10
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
     resourceLibraryItemResp:
       type: object
       properties:
@@ -1028,16 +881,6 @@ components:
         qri: null
         source: DEV_API
         domain_form_item: null
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -1068,6 +911,159 @@ components:
         - location: body
           name: email
           description: Email missing from payload
+    resourceLibrarySingleTemplateResp:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        qualio_managed:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - effective
+          - archived
+          - superseded
+          - draft
+        template_matrix_id:
+          type: string
+        major_version:
+          type: number
+        minor_version:
+          type: number
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        domain_form_template:
+          anyOf:
+          - type: object
+            properties:
+              id:
+                type: number
+              fields:
+                anyOf:
+                - type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: number
+                        mandatory:
+                          type: boolean
+                        order:
+                          type: number
+                        label:
+                          type: string
+                        helptext:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                        type:
+                          type: string
+                        multi:
+                          type: boolean
+                        default_content:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                        form_option_list:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: number
+                                value:
+                                  type: string
+                              required:
+                              - id
+                              - value
+                              additionalProperties: false
+                          - type: 'null'
+                      required:
+                      - id
+                      - mandatory
+                      - order
+                      - label
+                      - type
+                      - multi
+                      additionalProperties: false
+                    - type: 'null'
+                - type: 'null'
+            required:
+            - id
+            additionalProperties: false
+          - type: 'null'
+      required:
+      - id
+      - name
+      - qualio_managed
+      - status
+      - template_matrix_id
+      additionalProperties: false
+      description: A single resource library template
+      example:
+        id: 10
+        name: Test
+        qualio_managed: false
+        status: effective
+        template_matrix_id: aaaa-bbbb-cccc-dddd
+        major_version: 1
+        minor_version: 0
+        description: Test description
+        domain_form_template:
+          id: 10
+          fields:
+          - id: 10
+            mandatory: false
+            order: 0
+            label: Test
+            helptext: Test helptext
+            type: text
+            multi: false
+            default_content: Test default content
+            form_option_list:
+            - id: 10
+              value: Test value
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
     resourceLibraryTemplateQueryResp:
       type: object
       properties:
@@ -1132,6 +1128,10 @@ components:
           minor_version: 1
           description: null
         total: 2
+    query:
+      description: A search query to filter the results by
+      example: test
+      type: string
   securitySchemes:
     api_key:
       type: apiKey

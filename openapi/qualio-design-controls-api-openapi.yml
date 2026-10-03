@@ -3013,148 +3013,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    riskConflictResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-              message:
-                type: string
-            required:
-            - message
-            additionalProperties: false
-          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
-      required:
-      - errors
-      additionalProperties: false
-      example:
-        errors:
-        - field: id
-          message: A risk with this id already exists
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    testCaseId:
-      type: string
-      format: uuid
-      description: The unique identifier of the test case to update. This is the id returned when the test case was created.
-      example: 123e4567-e89b-12d3-a456-426614174001
-    riskId:
-      type: string
-      format: uuid
-      description: The unique identifier of the risk to update. This is the id returned when the risk was created.
-      example: 333e4567-e89b-12d3-a456-426614174003
-    testCaseConflictResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-              message:
-                type: string
-            required:
-            - message
-            additionalProperties: false
-          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
-      required:
-      - errors
-      additionalProperties: false
-      example:
-        errors:
-        - field: id
-          message: A test case with this id already exists
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    requirementConflictResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-              message:
-                type: string
-            required:
-            - message
-            additionalProperties: false
-          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
-      required:
-      - errors
-      additionalProperties: false
-      example:
-        errors:
-        - field: id
-          message: A requirement with this id already exists
-    requirementId:
-      type: string
-      format: uuid
-      description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
-      example: 223e4567-e89b-12d3-a456-426614174002
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
     genericBadRequest400PathResponse:
       type: object
       properties:
@@ -3185,11 +3043,67 @@ components:
         - location: path
           name: user_id
           description: user_id is not an integer
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
     dcProductId:
       type: string
       format: uuid
       description: A design control product id
       example: 123e4567-e89b-12d3-a456-426614174000
+    testCaseConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A test case with this id already exists
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    riskId:
+      type: string
+      format: uuid
+      description: The unique identifier of the risk to update. This is the id returned when the risk was created.
+      example: 333e4567-e89b-12d3-a456-426614174003
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -3220,6 +3134,92 @@ components:
         - location: body
           name: email
           description: Email missing from payload
+    riskConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A risk with this id already exists
+    requirementConflictResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - message
+            additionalProperties: false
+          description: One or more error objects describing the conflict. The field property identifies which request field caused the conflict.
+      required:
+      - errors
+      additionalProperties: false
+      example:
+        errors:
+        - field: id
+          message: A requirement with this id already exists
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    testCaseId:
+      type: string
+      format: uuid
+      description: The unique identifier of the test case to update. This is the id returned when the test case was created.
+      example: 123e4567-e89b-12d3-a456-426614174001
+    requirementId:
+      type: string
+      format: uuid
+      description: The unique identifier of the requirement to update. This is the id returned when the requirement was created.
+      example: 223e4567-e89b-12d3-a456-426614174002
   securitySchemes:
     api_key:
       type: apiKey

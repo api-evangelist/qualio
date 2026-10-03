@@ -1355,16 +1355,48 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    throttledResponse:
+    genericBadRequest400PathResponse:
       type: object
       properties:
-        message:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
           type: string
+          const: error
       required:
-      - message
+      - errors
+      - status
       additionalProperties: false
       example:
-        message: You have exceeded what is allowed in the fair use policy for this API
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    userId:
+      type: number
+      description: A unique identifier for a user in Qualio
+      example: 12345
     userList:
       type: object
       properties:
@@ -1418,7 +1450,7 @@ components:
           role: quality
           is_admin: false
         total: 1
-    reassignmentResponse:
+    deleteUserResp:
       type: object
       properties:
         message:
@@ -1426,66 +1458,70 @@ components:
       required:
       - message
       additionalProperties: false
-      description: A response confirming the reassignment was successful
+      description: A message indicating the user has been removed
       example:
-        message: User reassignments updated
-    reassignmentRequest:
+        message: User removed successfully
+    groupList:
       type: object
       properties:
-        destination_user_id:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              group_id:
+                type: number
+              name:
+                type: string
+            required:
+            - group_id
+            - name
+            additionalProperties: false
+        total:
           type: number
-        reassignments:
-          type: object
-          properties:
-            document_owner:
-              type: array
-              items:
-                type: number
-            document_reviewer:
-              type: array
-              items:
-                type: number
-            document_approver:
-              type: array
-              items:
-                type: number
-            event_owner:
-              type: array
-              items:
-                type: number
-            event_template_owner:
-              type: array
-              items:
-                type: number
-            event_template_default_owner:
-              type: array
-              items:
-                type: number
-            change_request_owner:
-              type: array
-              items:
-                type: number
-            task_owner:
-              type: array
-              items:
-                type: number
-            doc_template_owner:
-              type: array
-              items:
-                type: number
       required:
-      - destination_user_id
-      - reassignments
-      description: A request to reassign all entities from one user to another
+      - items
+      - total
+      additionalProperties: false
+      description: An array of groups within your Qualio instance
       example:
-        destination_user_id: 67890
-        reassignments:
-          document_owner:
-          - 101
-          - 102
-          event_owner:
-          - 103
-    genericForbiddenResponse:
+        items:
+        - group_id: 1
+          name: Quality Team
+        - group_id: 2
+          name: Engineering Team
+        total: 1
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
+    userGroupResp:
       type: object
       properties:
         message:
@@ -1493,8 +1529,9 @@ components:
       required:
       - message
       additionalProperties: false
+      description: A message confirming the user group addition was successful
       example:
-        message: User is not authorized to access this resource with an explicit deny
+        message: User added to group
     userHasAssignmentsError:
       type: object
       properties:
@@ -1567,70 +1604,6 @@ components:
           - 402
           task_owner:
           - 501
-    invite:
-      type: object
-      properties:
-        email:
-          type: string
-        role:
-          type: string
-          enum:
-          - quality
-          - normal
-          - basic
-        can_access_billing:
-          type: boolean
-        is_admin:
-          type: boolean
-      required:
-      - email
-      - role
-      description: An invite for a user to join your Qualio instance
-      example:
-        email: testuser1@example.com
-        role: quality
-        is_admin: false
-        can_access_billing: false
-    user:
-      type: object
-      properties:
-        user_id:
-          type: number
-        email:
-          type: string
-        full_name:
-          type: string
-        invite_status:
-          type: string
-          enum:
-          - pending
-          - accepted
-          - declined
-          - canceled
-        role:
-          type: string
-          enum:
-          - quality
-          - normal
-          - basic
-        is_admin:
-          type: boolean
-      required:
-      - user_id
-      - email
-      - full_name
-      - invite_status
-      - role
-      - is_admin
-      additionalProperties: false
-      description: A Qualio user
-      example:
-        user_id: 1
-        email: testuser1@example.com
-        full_name: John Doe
-        invite_status: pending
-        role: quality
-        is_admin: false
     me:
       type: object
       properties:
@@ -1646,6 +1619,20 @@ components:
       example:
         user_id: 1
         full_name: John Doe
+    groupId:
+      type: number
+      description: A unique identifier for a group in Qualio
+      example: 1
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
     userGroupRemoveResp:
       type: object
       properties:
@@ -1657,7 +1644,7 @@ components:
       description: A message confirming the user group removal was successful
       example:
         message: User removed from group
-    userGroupResp:
+    reassignmentResponse:
       type: object
       properties:
         message:
@@ -1665,21 +1652,9 @@ components:
       required:
       - message
       additionalProperties: false
-      description: A message confirming the user group addition was successful
+      description: A response confirming the reassignment was successful
       example:
-        message: User added to group
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    userId:
-      type: number
-      description: A unique identifier for a user in Qualio
-      example: 12345
+        message: User reassignments updated
     userAssignmentMapping:
       type: object
       properties:
@@ -1736,101 +1711,47 @@ components:
         - 402
         task_owner:
         - 501
-    genericBadRequestResponse:
+    user:
       type: object
       properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
-    groupList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              group_id:
-                type: number
-              name:
-                type: string
-            required:
-            - group_id
-            - name
-            additionalProperties: false
-        total:
+        user_id:
           type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: An array of groups within your Qualio instance
-      example:
-        items:
-        - group_id: 1
-          name: Quality Team
-        - group_id: 2
-          name: Engineering Team
-        total: 1
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
+        email:
           type: string
-          const: error
+        full_name:
+          type: string
+        invite_status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - declined
+          - canceled
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        is_admin:
+          type: boolean
       required:
-      - errors
-      - status
+      - user_id
+      - email
+      - full_name
+      - invite_status
+      - role
+      - is_admin
       additionalProperties: false
+      description: A Qualio user
       example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
-    groupId:
-      type: number
-      description: A unique identifier for a group in Qualio
-      example: 1
-    deleteUserResp:
+        user_id: 1
+        email: testuser1@example.com
+        full_name: John Doe
+        invite_status: pending
+        role: quality
+        is_admin: false
+    throttledResponse:
       type: object
       properties:
         message:
@@ -1838,9 +1759,88 @@ components:
       required:
       - message
       additionalProperties: false
-      description: A message indicating the user has been removed
       example:
-        message: User removed successfully
+        message: You have exceeded what is allowed in the fair use policy for this API
+    reassignmentRequest:
+      type: object
+      properties:
+        destination_user_id:
+          type: number
+        reassignments:
+          type: object
+          properties:
+            document_owner:
+              type: array
+              items:
+                type: number
+            document_reviewer:
+              type: array
+              items:
+                type: number
+            document_approver:
+              type: array
+              items:
+                type: number
+            event_owner:
+              type: array
+              items:
+                type: number
+            event_template_owner:
+              type: array
+              items:
+                type: number
+            event_template_default_owner:
+              type: array
+              items:
+                type: number
+            change_request_owner:
+              type: array
+              items:
+                type: number
+            task_owner:
+              type: array
+              items:
+                type: number
+            doc_template_owner:
+              type: array
+              items:
+                type: number
+      required:
+      - destination_user_id
+      - reassignments
+      description: A request to reassign all entities from one user to another
+      example:
+        destination_user_id: 67890
+        reassignments:
+          document_owner:
+          - 101
+          - 102
+          event_owner:
+          - 103
+    invite:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        can_access_billing:
+          type: boolean
+        is_admin:
+          type: boolean
+      required:
+      - email
+      - role
+      description: An invite for a user to join your Qualio instance
+      example:
+        email: testuser1@example.com
+        role: quality
+        is_admin: false
+        can_access_billing: false
   securitySchemes:
     api_key:
       type: apiKey

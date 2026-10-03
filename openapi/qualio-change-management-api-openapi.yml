@@ -444,64 +444,10 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    createCC:
-      type: object
-      properties:
-        document_id:
-          type: number
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              content:
-                type: string
-              position:
-                type: number
-            required:
-            - content
-            - position
-      required:
-      - document_id
-      - sections
-      description: The request to create a change control, the sections must match those in the change control template, and position starts at 1
-      example:
-        document_id: 1
-        sections:
-        - content: This change is to our privacy policy to bring it in line with GDPR
-          position: 1
-        - content: There is no impact to our other documented processes, and employees will be trained on this document before it becomes effective
-          position: 2
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
     throttledResponse:
       type: object
       properties:
@@ -512,70 +458,6 @@ components:
       additionalProperties: false
       example:
         message: You have exceeded what is allowed in the fair use policy for this API
-    createdCC:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-        status:
-          type: string
-        owner:
-          type: string
-        created_time:
-          type: string
-          format: date-time
-        closed_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        change_items:
-          type: array
-          items:
-            type: object
-            properties:
-              title:
-                type: string
-              code:
-                type: string
-              version:
-                type: string
-              type:
-                type: string
-                enum:
-                - document
-                - supplier
-                - event
-            required:
-            - title
-            - code
-            - version
-            - type
-            additionalProperties: false
-      required:
-      - id
-      - title
-      - status
-      - owner
-      - created_time
-      - closed_time
-      - change_items
-      additionalProperties: false
-      description: A successfully created change control
-      example:
-        id: CC-1-123
-        title: Test Change Control
-        status: open
-        created_time: '2024-07-30T18:00:00.000Z'
-        closed_time: '2024-07-29T18:00:00.000Z'
-        owner: Kai Havertz
-        change_items:
-        - title: Test Policy
-          code: POL-1
-          version: '1.0'
-          type: document
     changeControlResp:
       type: object
       properties:
@@ -663,22 +545,40 @@ components:
       additionalProperties: false
       example:
         message: User is not authorized to access this resource with an explicit deny
-    statusParam:
-      description: The status of a domain object
-      example: Closed
-      type: string
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
     orderByParam:
       description: The field to order the results by
       example: created_date
       type: string
+    genericBadRequestResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: body
+          name: email
+          description: Email missing from payload
     changeRequestResp:
       type: object
       properties:
@@ -756,7 +656,39 @@ components:
             code: POL-1
             version: '2.0'
             type: document
-    genericBadRequestResponse:
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    createCC:
+      type: object
+      properties:
+        document_id:
+          type: number
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+              position:
+                type: number
+            required:
+            - content
+            - position
+      required:
+      - document_id
+      - sections
+      description: The request to create a change control, the sections must match those in the change control template, and position starts at 1
+      example:
+        document_id: 1
+        sections:
+        - content: This change is to our privacy policy to bring it in line with GDPR
+          position: 1
+        - content: There is no impact to our other documented processes, and employees will be trained on this document before it becomes effective
+          position: 2
+    genericBadRequest400ParametersResponse:
       type: object
       properties:
         errors:
@@ -783,9 +715,77 @@ components:
       example:
         status: error
         errors:
-        - location: body
-          name: email
-          description: Email missing from payload
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    statusParam:
+      description: The status of a domain object
+      example: Closed
+      type: string
+    createdCC:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+        owner:
+          type: string
+        created_time:
+          type: string
+          format: date-time
+        closed_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        change_items:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              code:
+                type: string
+              version:
+                type: string
+              type:
+                type: string
+                enum:
+                - document
+                - supplier
+                - event
+            required:
+            - title
+            - code
+            - version
+            - type
+            additionalProperties: false
+      required:
+      - id
+      - title
+      - status
+      - owner
+      - created_time
+      - closed_time
+      - change_items
+      additionalProperties: false
+      description: A successfully created change control
+      example:
+        id: CC-1-123
+        title: Test Change Control
+        status: open
+        created_time: '2024-07-30T18:00:00.000Z'
+        closed_time: '2024-07-29T18:00:00.000Z'
+        owner: Kai Havertz
+        change_items:
+        - title: Test Policy
+          code: POL-1
+          version: '1.0'
+          type: document
   securitySchemes:
     api_key:
       type: apiKey
