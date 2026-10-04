@@ -4755,6 +4755,14 @@ paths:
                 $ref: '#/components/schemas/throttledResponse'
 components:
   schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
     genericBadRequest400PathResponse:
       type: object
       properties:
@@ -4785,34 +4793,6 @@ components:
         - location: path
           name: user_id
           description: user_id is not an integer
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -4873,6 +4853,26 @@ components:
         - location: query
           name: document_id
           description: document_id is not an integer
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
   securitySchemes:
     api_key:
       type: apiKey

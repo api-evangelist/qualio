@@ -2239,7 +2239,109 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    genericBadRequest400PathResponse:
+    documentVersionsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              document_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - approval_declined
+                - approved
+                - deleted
+                - draft
+                - effective
+                - for_approval
+                - for_review
+                - for_retirement
+                - retired
+                - superseded
+              code:
+                type: string
+              type:
+                type: string
+              document_format:
+                type: string
+                enum:
+                - qualio_document
+                - file_document
+                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+                example: qualio_document
+              title:
+                type: string
+              version:
+                type: string
+              document_matrix_id:
+                anyOf:
+                - type: string
+                - type: 'null'
+              created_at:
+                type: string
+                format: date-time
+              effective_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              modified_at:
+                type: string
+                format: date-time
+              url:
+                type: string
+              next_periodic_review_due_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              effective_upon_approval:
+                type: boolean
+            required:
+            - document_id
+            - status
+            - code
+            - type
+            - document_format
+            - title
+            - version
+            - document_matrix_id
+            - created_at
+            - effective_at
+            - modified_at
+            - url
+            - next_periodic_review_due_at
+            - effective_upon_approval
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: All versions of a Qualio document, with a summary of each version
+      example:
+        items:
+        - document_id: 1
+          status: effective
+          code: POL-1
+          type: Policy
+          document_format: qualio_document
+          title: Security policy
+          version: '1.0'
+          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+          created_at: '2025-05-01T14:48:43.472Z'
+          effective_at: '2025-05-07T14:48:43.472Z'
+          modified_at: '2025-05-07T14:48:43.472Z'
+          url: https://app.qualio.com/library/documents/1
+          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+          effective_upon_approval: false
+        total: 1
+    genericBadRequestResponse:
       type: object
       properties:
         errors:
@@ -2266,40 +2368,12 @@ components:
       example:
         status: error
         errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    createDocumentPayload:
+        - location: body
+          name: email
+          description: Email missing from payload
+    documentTemplateContentResponse:
       type: object
       properties:
-        template_matrix_id:
-          type: string
-        title:
-          type: string
-        effective_on_approval:
-          type: boolean
-        training_required:
-          type: boolean
-        approver_user_ids:
-          type: array
-          items:
-            type: number
-        reviewer_user_ids:
-          type: array
-          items:
-            type: number
-        editor_user_ids:
-          type: array
-          items:
-            type: number
         sections:
           type: array
           items:
@@ -2307,32 +2381,414 @@ components:
             properties:
               content:
                 type: string
+                description: The section content as HTML.
               position:
                 type: number
+              title:
+                type: string
             required:
             - content
             - position
+            - title
+            additionalProperties: false
       required:
-      - template_matrix_id
-      - title
-      - effective_on_approval
-      - training_required
       - sections
-      description: A request to create a new draft document. The template matrix id determines the type of the document created. Section positions start at 1, and the number of sections must not exceed what is defined in the corresponding template
+      additionalProperties: false
+      description: The content of a document template
       example:
-        title: Security Policy
         sections:
-        - content: This is the content in the first section of the document
+        - title: Introduction
           position: 1
-        template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
-        effective_on_approval: false
-        training_required: false
-        approver_user_ids:
-        - 1
-        - 2
-        editor_user_ids:
-        - 3
-        - 4
+          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients, healthcare providers, and regulatory stakeholders.</p>
+        - title: Purpose
+          position: 2
+          content: <p>The purpose of this Security Policy is to:</p><ul><li><strong>Establish a systematic security approach</strong> for protecting our systems and data</li><li><strong>Define roles and responsibilities</strong> for security across the organization</li><li><strong>Ensure compliance</strong> with applicable standards and regulatory requirements</li></ul>
+        - title: Policy
+          position: 3
+          content: <h3>1. Scope</h3><p>This policy applies to all employees, contractors, and systems handling company or customer data.</p><h3>2. Access Control</h3><p>Access to systems shall be granted on a least-privilege basis and reviewed quarterly.</p>
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    documentSummaryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              document_id:
+                type: number
+              status:
+                type: string
+                enum:
+                - approval_declined
+                - approved
+                - deleted
+                - draft
+                - effective
+                - for_approval
+                - for_review
+                - for_retirement
+                - retired
+                - superseded
+              code:
+                type: string
+              type:
+                type: string
+              document_format:
+                type: string
+                enum:
+                - qualio_document
+                - file_document
+                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+                example: qualio_document
+              title:
+                type: string
+              version:
+                type: string
+              document_matrix_id:
+                anyOf:
+                - type: string
+                - type: 'null'
+              created_at:
+                type: string
+                format: date-time
+              effective_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              modified_at:
+                type: string
+                format: date-time
+              url:
+                type: string
+              next_periodic_review_due_at:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              effective_upon_approval:
+                type: boolean
+            required:
+            - document_id
+            - status
+            - code
+            - type
+            - document_format
+            - title
+            - version
+            - document_matrix_id
+            - created_at
+            - effective_at
+            - modified_at
+            - url
+            - next_periodic_review_due_at
+            - effective_upon_approval
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A summary of the main attributes of a Qualio document version
+      example:
+        items:
+        - document_id: 1
+          status: effective
+          code: POL-1
+          type: Policy
+          document_format: qualio_document
+          title: Security policy
+          version: '1.0'
+          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+          created_at: '2025-05-01T14:48:43.472Z'
+          effective_at: '2025-05-07T14:48:43.472Z'
+          modified_at: '2025-05-07T14:48:43.472Z'
+          url: https://app.qualio.com/library/documents/1
+          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+          effective_upon_approval: false
+        total: 1
+    attachment:
+      type: object
+      properties:
+        id:
+          type: number
+        filename:
+          type: string
+        date_added:
+          type: number
+        file_size:
+          anyOf:
+          - type: number
+          - type: 'null'
+      required:
+      - id
+      - filename
+      - date_added
+      - file_size
+      additionalProperties: false
+      description: Metadata for a Qualio attachment
+      example:
+        id: 1
+        filename: attachment.docx
+        date_added: 1782415612
+        file_size: 100000
+    documentCommentsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                enum:
+                - comment
+                - suggestion
+              status:
+                type: string
+                enum:
+                - Open
+                - Resolved
+                - Removed
+                - Accepted
+                - Rejected
+              content:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+              author_full_name:
+                anyOf:
+                - type: string
+                - type: 'null'
+              content_commented_on:
+                anyOf:
+                - type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      data:
+                        type: string
+                    required:
+                    - name
+                    - data
+                    additionalProperties: false
+                - type: 'null'
+              last_updated_time:
+                anyOf:
+                - type: string
+                  format: date-time
+                - type: 'null'
+              replies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    content:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    author_full_name:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                  required:
+                  - id
+                  - content
+                  - created_at
+                  additionalProperties: false
+            required:
+            - id
+            - type
+            - status
+            - content
+            - created_at
+            - replies
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: The comment threads on a Qualio document version
+      example:
+        items:
+        - id: c1a2b3c4-0001-4000-8000-000000000001
+          type: comment
+          status: Open
+          content: Please clarify the retention period referenced in section 2.
+          created_at: '2025-06-01T09:15:00.000Z'
+          author_full_name: Jane Doe
+          content_commented_on:
+          - name: Section 2
+            data: retention period of 7 years
+          last_updated_time: '2025-06-01T09:15:00.000Z'
+          replies:
+          - id: c1a2b3c4-0002-4000-8000-000000000002
+            content: Updated to 10 years per legal guidance.
+            created_at: '2025-06-01T10:00:00.000Z'
+            author_full_name: John Smith
+        total: 1
+    documentId:
+      type: number
+      description: A unique identifier for a document version
+      example: 12345
+    updateDocumentContentPayload:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: number
+                description: The 1-indexed position of the section within the document, as defined by the document template. Sections not included in the request are left unchanged.
+                example: 1
+              content:
+                type: string
+                description: The new HTML content for the section. Must be valid HTML. Plain text is also accepted and will be stored as-is.
+                example: <p>Updated section content.</p>
+            required:
+            - position
+            - content
+          description: A list of sections to update, identified by position. Only the sections included here are modified; all other sections retain their existing content. To update all sections, include every section position defined by the document template.
+      required:
+      - sections
+      description: A partial update to the HTML section content of a draft document. Only sections included in the request are modified; all other sections retain their existing content.
+      example:
+        sections:
+        - position: 1
+          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients and regulatory stakeholders.</p>
+    createDocumentResponse:
+      type: object
+      properties:
+        document_id:
+          type: number
+        status:
+          type: string
+          enum:
+          - approval_declined
+          - approved
+          - deleted
+          - draft
+          - effective
+          - for_approval
+          - for_review
+          - for_retirement
+          - retired
+          - superseded
+        code:
+          type: string
+        type:
+          type: string
+        document_format:
+          type: string
+          enum:
+          - qualio_document
+          - file_document
+          description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
+          example: qualio_document
+        title:
+          type: string
+        version:
+          type: string
+        document_matrix_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+        created_at:
+          type: string
+          format: date-time
+        effective_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        modified_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+        next_periodic_review_due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        effective_upon_approval:
+          type: boolean
+      required:
+      - document_id
+      - status
+      - code
+      - type
+      - document_format
+      - title
+      - version
+      - document_matrix_id
+      - created_at
+      - effective_at
+      - modified_at
+      - url
+      - next_periodic_review_due_at
+      - effective_upon_approval
+      additionalProperties: false
+      description: The newly created draft document, including its generated identifiers (document_id, code) and url
+      example:
+        document_id: 1
+        status: effective
+        code: POL-1
+        type: Policy
+        document_format: qualio_document
+        title: Security policy
+        version: '1.0'
+        document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
+        created_at: '2025-05-01T14:48:43.472Z'
+        effective_at: '2025-05-07T14:48:43.472Z'
+        modified_at: '2025-05-07T14:48:43.472Z'
+        url: https://app.qualio.com/library/documents/1
+        next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
+        effective_upon_approval: false
     documentContentResponse:
       type: object
       properties:
@@ -2388,6 +2844,24 @@ components:
           attachments:
           - id: 1
             filename: Policy.docx
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
+    documentCode:
+      type: string
+      description: A unique code identifier for a document (e.g. SOP-1, POL-42)
+      example: SOP-1
     documentTemplateResponse:
       type: object
       properties:
@@ -2415,6 +2889,124 @@ components:
         prefix: POL
         template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
         status: effective
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    updateDocumentPayload:
+      type: object
+      properties:
+        quality_approver_user_ids:
+          description: The complete list of quality approver user IDs for this document. Replaces the current quality approvers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 1
+          - 2
+          type: array
+          items:
+            type: number
+        other_approver_user_ids:
+          description: The complete list of non-quality approver user IDs for this document. Replaces the current other approvers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 3
+          - 4
+          type: array
+          items:
+            type: number
+        reviewer_user_ids:
+          description: The complete list of reviewer user IDs for this document. Replaces the current reviewers. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 5
+          - 6
+          type: array
+          items:
+            type: number
+        editor_user_ids:
+          description: The complete list of editor user IDs for this document. Replaces the current editors. Omit to leave unchanged. Only permitted on draft documents.
+          example:
+          - 7
+          - 8
+          type: array
+          items:
+            type: number
+        tag_ids:
+          description: The complete list of tag IDs to apply to this document. Replaces the current tags. Omit to leave unchanged.
+          example:
+          - 10
+          - 11
+          type: array
+          items:
+            type: number
+      description: "A partial update to the people and tags on a draft document. Supply only the fields you want to change â\x80\x94 omitted fields are left unchanged. Each supplied list fully replaces the current set for that role."
+      example:
+        quality_approver_user_ids:
+        - 1
+        - 2
+        other_approver_user_ids:
+        - 3
+        - 4
+        reviewer_user_ids:
+        - 5
+        - 6
+        editor_user_ids:
+        - 7
+        - 8
+        tag_ids:
+        - 10
+        - 11
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    documentTemplatesQueryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              prefix:
+                type: string
+              template_matrix_id:
+                type: string
+              status:
+                type: string
+            required:
+            - id
+            - name
+            - prefix
+            - template_matrix_id
+            - status
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: A list of document templates
+      example:
+        items:
+        - id: 1
+          name: Policy
+          prefix: POL
+          template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
+          status: effective
+        total: 1
     documentDetailed:
       type: object
       properties:
@@ -2601,395 +3193,6 @@ components:
           user_id: 1
           is_done: false
           done_at: null
-    documentCode:
-      type: string
-      description: A unique code identifier for a document (e.g. SOP-1, POL-42)
-      example: SOP-1
-    documentCommentsResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              type:
-                type: string
-                enum:
-                - comment
-                - suggestion
-              status:
-                type: string
-                enum:
-                - Open
-                - Resolved
-                - Removed
-                - Accepted
-                - Rejected
-              content:
-                type: string
-              created_at:
-                type: string
-                format: date-time
-              author_full_name:
-                anyOf:
-                - type: string
-                - type: 'null'
-              content_commented_on:
-                anyOf:
-                - type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      data:
-                        type: string
-                    required:
-                    - name
-                    - data
-                    additionalProperties: false
-                - type: 'null'
-              last_updated_time:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              replies:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    content:
-                      type: string
-                    created_at:
-                      type: string
-                      format: date-time
-                    author_full_name:
-                      anyOf:
-                      - type: string
-                      - type: 'null'
-                  required:
-                  - id
-                  - content
-                  - created_at
-                  additionalProperties: false
-            required:
-            - id
-            - type
-            - status
-            - content
-            - created_at
-            - replies
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: The comment threads on a Qualio document version
-      example:
-        items:
-        - id: c1a2b3c4-0001-4000-8000-000000000001
-          type: comment
-          status: Open
-          content: Please clarify the retention period referenced in section 2.
-          created_at: '2025-06-01T09:15:00.000Z'
-          author_full_name: Jane Doe
-          content_commented_on:
-          - name: Section 2
-            data: retention period of 7 years
-          last_updated_time: '2025-06-01T09:15:00.000Z'
-          replies:
-          - id: c1a2b3c4-0002-4000-8000-000000000002
-            content: Updated to 10 years per legal guidance.
-            created_at: '2025-06-01T10:00:00.000Z'
-            author_full_name: John Smith
-        total: 1
-    documentId:
-      type: number
-      description: A unique identifier for a document version
-      example: 12345
-    attachment:
-      type: object
-      properties:
-        id:
-          type: number
-        filename:
-          type: string
-        date_added:
-          type: number
-        file_size:
-          anyOf:
-          - type: number
-          - type: 'null'
-      required:
-      - id
-      - filename
-      - date_added
-      - file_size
-      additionalProperties: false
-      description: Metadata for a Qualio attachment
-      example:
-        id: 1
-        filename: attachment.docx
-        date_added: 1782415612
-        file_size: 100000
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
-    genericBadRequestResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: body
-          name: email
-          description: Email missing from payload
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
-    changeDocumentStatusPayload:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - draft
-          - for_review
-          - for_approval
-          - deleted
-          description: 'The target lifecycle status for the document. Only transitions that do not require electronic signature are supported. Invalid or esign-required transitions are rejected with a 400. Common sequences: draft to for_review, draft to for_approval, for_review to for_approval. Reverting to draft is supported from for_review, for_approval, and approval_declined.'
-          example: for_review
-        comment:
-          description: An optional comment to record alongside the status change, visible in the document's audit trail.
-          example: Reviewed by legal, ready for approval.
-          type: string
-      required:
-      - status
-      description: A request to advance or revert the lifecycle status of a draft document.
-      example:
-        status: for_review
-        comment: "Reviewed by legal â\x80\x94 ready for sign-off."
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
-    createDocumentResponse:
-      type: object
-      properties:
-        document_id:
-          type: number
-        status:
-          type: string
-          enum:
-          - approval_declined
-          - approved
-          - deleted
-          - draft
-          - effective
-          - for_approval
-          - for_review
-          - for_retirement
-          - retired
-          - superseded
-        code:
-          type: string
-        type:
-          type: string
-        document_format:
-          type: string
-          enum:
-          - qualio_document
-          - file_document
-          description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
-          example: qualio_document
-        title:
-          type: string
-        version:
-          type: string
-        document_matrix_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-        created_at:
-          type: string
-          format: date-time
-        effective_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        modified_at:
-          type: string
-          format: date-time
-        url:
-          type: string
-        next_periodic_review_due_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        effective_upon_approval:
-          type: boolean
-      required:
-      - document_id
-      - status
-      - code
-      - type
-      - document_format
-      - title
-      - version
-      - document_matrix_id
-      - created_at
-      - effective_at
-      - modified_at
-      - url
-      - next_periodic_review_due_at
-      - effective_upon_approval
-      additionalProperties: false
-      description: The newly created draft document, including its generated identifiers (document_id, code) and url
-      example:
-        document_id: 1
-        status: effective
-        code: POL-1
-        type: Policy
-        document_format: qualio_document
-        title: Security policy
-        version: '1.0'
-        document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
-        created_at: '2025-05-01T14:48:43.472Z'
-        effective_at: '2025-05-07T14:48:43.472Z'
-        modified_at: '2025-05-07T14:48:43.472Z'
-        url: https://app.qualio.com/library/documents/1
-        next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
-        effective_upon_approval: false
-    documentTemplatesQueryResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: number
-              name:
-                type: string
-              prefix:
-                type: string
-              template_matrix_id:
-                type: string
-              status:
-                type: string
-            required:
-            - id
-            - name
-            - prefix
-            - template_matrix_id
-            - status
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: A list of document templates
-      example:
-        items:
-        - id: 1
-          name: Policy
-          prefix: POL
-          template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
-          status: effective
-        total: 1
-    attachmentId:
-      type: number
-      description: A unique identifier for an attachment
-      example: 1
-    updateDocumentContentPayload:
-      type: object
-      properties:
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              position:
-                type: number
-                description: The 1-indexed position of the section within the document, as defined by the document template. Sections not included in the request are left unchanged.
-                example: 1
-              content:
-                type: string
-                description: The new HTML content for the section. Must be valid HTML. Plain text is also accepted and will be stored as-is.
-                example: <p>Updated section content.</p>
-            required:
-            - position
-            - content
-          description: A list of sections to update, identified by position. Only the sections included here are modified; all other sections retain their existing content. To update all sections, include every section position defined by the document template.
-      required:
-      - sections
-      description: A partial update to the HTML section content of a draft document. Only sections included in the request are modified; all other sections retain their existing content.
-      example:
-        sections:
-        - position: 1
-          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients and regulatory stakeholders.</p>
     documentStatusChangeResponse:
       type: object
       properties:
@@ -3079,111 +3282,62 @@ components:
         url: https://app.qualio.com/library/documents/1
         next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
         effective_upon_approval: false
-    genericForbiddenResponse:
+    attachmentId:
+      type: number
+      description: A unique identifier for an attachment
+      example: 1
+    genericBadRequest400PathResponse:
       type: object
       properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    updateDocumentPayload:
-      type: object
-      properties:
-        quality_approver_user_ids:
-          description: The complete list of quality approver user IDs for this document. Replaces the current quality approvers. Omit to leave unchanged. Only permitted on draft documents.
-          example:
-          - 1
-          - 2
-          type: array
-          items:
-            type: number
-        other_approver_user_ids:
-          description: The complete list of non-quality approver user IDs for this document. Replaces the current other approvers. Omit to leave unchanged. Only permitted on draft documents.
-          example:
-          - 3
-          - 4
-          type: array
-          items:
-            type: number
-        reviewer_user_ids:
-          description: The complete list of reviewer user IDs for this document. Replaces the current reviewers. Omit to leave unchanged. Only permitted on draft documents.
-          example:
-          - 5
-          - 6
-          type: array
-          items:
-            type: number
-        editor_user_ids:
-          description: The complete list of editor user IDs for this document. Replaces the current editors. Omit to leave unchanged. Only permitted on draft documents.
-          example:
-          - 7
-          - 8
-          type: array
-          items:
-            type: number
-        tag_ids:
-          description: The complete list of tag IDs to apply to this document. Replaces the current tags. Omit to leave unchanged.
-          example:
-          - 10
-          - 11
-          type: array
-          items:
-            type: number
-      description: "A partial update to the people and tags on a draft document. Supply only the fields you want to change â\x80\x94 omitted fields are left unchanged. Each supplied list fully replaces the current set for that role."
-      example:
-        quality_approver_user_ids:
-        - 1
-        - 2
-        other_approver_user_ids:
-        - 3
-        - 4
-        reviewer_user_ids:
-        - 5
-        - 6
-        editor_user_ids:
-        - 7
-        - 8
-        tag_ids:
-        - 10
-        - 11
-    documentTemplateContentResponse:
-      type: object
-      properties:
-        sections:
+        errors:
           type: array
           items:
             type: object
             properties:
-              content:
+              description:
                 type: string
-                description: The section content as HTML.
-              position:
-                type: number
-              title:
+              location:
+                type: string
+              name:
                 type: string
             required:
-            - content
-            - position
-            - title
+            - description
             additionalProperties: false
+        status:
+          type: string
+          const: error
       required:
-      - sections
+      - errors
+      - status
       additionalProperties: false
-      description: The content of a document template
       example:
-        sections:
-        - title: Introduction
-          position: 1
-          content: <p>At Acme Medical Software, we recognize that the security of our software systems is critical to ensuring the safety, privacy, and trust of patients, healthcare providers, and regulatory stakeholders.</p>
-        - title: Purpose
-          position: 2
-          content: <p>The purpose of this Security Policy is to:</p><ul><li><strong>Establish a systematic security approach</strong> for protecting our systems and data</li><li><strong>Define roles and responsibilities</strong> for security across the organization</li><li><strong>Ensure compliance</strong> with applicable standards and regulatory requirements</li></ul>
-        - title: Policy
-          position: 3
-          content: <h3>1. Scope</h3><p>This policy applies to all employees, contractors, and systems handling company or customer data.</p><h3>2. Access Control</h3><p>Access to systems shall be granted on a least-privilege basis and reviewed quarterly.</p>
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
+    changeDocumentStatusPayload:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - draft
+          - for_review
+          - for_approval
+          - deleted
+          description: 'The target lifecycle status for the document. Only transitions that do not require electronic signature are supported. Invalid or esign-required transitions are rejected with a 400. Common sequences: draft to for_review, draft to for_approval, for_review to for_approval. Reverting to draft is supported from for_review, for_approval, and approval_declined.'
+          example: for_review
+        comment:
+          description: An optional comment to record alongside the status change, visible in the document's audit trail.
+          example: Reviewed by legal, ready for approval.
+          type: string
+      required:
+      - status
+      description: A request to advance or revert the lifecycle status of a draft document.
+      example:
+        status: for_review
+        comment: "Reviewed by legal â\x80\x94 ready for sign-off."
     documentStatus:
       type: string
       enum:
@@ -3199,220 +3353,66 @@ components:
       - superseded
       description: The different states of a document in Qualio
       example: effective
-    throttledResponse:
+    createDocumentPayload:
       type: object
       properties:
-        message:
+        template_matrix_id:
           type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    documentVersionsResponse:
-      type: object
-      properties:
-        items:
+        title:
+          type: string
+        effective_on_approval:
+          type: boolean
+        training_required:
+          type: boolean
+        approver_user_ids:
+          type: array
+          items:
+            type: number
+        reviewer_user_ids:
+          type: array
+          items:
+            type: number
+        editor_user_ids:
+          type: array
+          items:
+            type: number
+        sections:
           type: array
           items:
             type: object
             properties:
-              document_id:
+              content:
+                type: string
+              position:
                 type: number
-              status:
-                type: string
-                enum:
-                - approval_declined
-                - approved
-                - deleted
-                - draft
-                - effective
-                - for_approval
-                - for_review
-                - for_retirement
-                - retired
-                - superseded
-              code:
-                type: string
-              type:
-                type: string
-              document_format:
-                type: string
-                enum:
-                - qualio_document
-                - file_document
-                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
-                example: qualio_document
-              title:
-                type: string
-              version:
-                type: string
-              document_matrix_id:
-                anyOf:
-                - type: string
-                - type: 'null'
-              created_at:
-                type: string
-                format: date-time
-              effective_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              modified_at:
-                type: string
-                format: date-time
-              url:
-                type: string
-              next_periodic_review_due_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              effective_upon_approval:
-                type: boolean
             required:
-            - document_id
-            - status
-            - code
-            - type
-            - document_format
-            - title
-            - version
-            - document_matrix_id
-            - created_at
-            - effective_at
-            - modified_at
-            - url
-            - next_periodic_review_due_at
-            - effective_upon_approval
-            additionalProperties: false
-        total:
-          type: number
+            - content
+            - position
       required:
-      - items
-      - total
-      additionalProperties: false
-      description: All versions of a Qualio document, with a summary of each version
+      - template_matrix_id
+      - title
+      - effective_on_approval
+      - training_required
+      - sections
+      description: A request to create a new draft document. The template matrix id determines the type of the document created. Section positions start at 1, and the number of sections must not exceed what is defined in the corresponding template
       example:
-        items:
-        - document_id: 1
-          status: effective
-          code: POL-1
-          type: Policy
-          document_format: qualio_document
-          title: Security policy
-          version: '1.0'
-          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
-          created_at: '2025-05-01T14:48:43.472Z'
-          effective_at: '2025-05-07T14:48:43.472Z'
-          modified_at: '2025-05-07T14:48:43.472Z'
-          url: https://app.qualio.com/library/documents/1
-          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
-          effective_upon_approval: false
-        total: 1
-    documentSummaryResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              document_id:
-                type: number
-              status:
-                type: string
-                enum:
-                - approval_declined
-                - approved
-                - deleted
-                - draft
-                - effective
-                - for_approval
-                - for_review
-                - for_retirement
-                - retired
-                - superseded
-              code:
-                type: string
-              type:
-                type: string
-              document_format:
-                type: string
-                enum:
-                - qualio_document
-                - file_document
-                description: The format of the document. `qualio_document` is a native Qualio document with section-based content; `file_document` is a document whose main content is an uploaded file
-                example: qualio_document
-              title:
-                type: string
-              version:
-                type: string
-              document_matrix_id:
-                anyOf:
-                - type: string
-                - type: 'null'
-              created_at:
-                type: string
-                format: date-time
-              effective_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              modified_at:
-                type: string
-                format: date-time
-              url:
-                type: string
-              next_periodic_review_due_at:
-                anyOf:
-                - type: string
-                  format: date-time
-                - type: 'null'
-              effective_upon_approval:
-                type: boolean
-            required:
-            - document_id
-            - status
-            - code
-            - type
-            - document_format
-            - title
-            - version
-            - document_matrix_id
-            - created_at
-            - effective_at
-            - modified_at
-            - url
-            - next_periodic_review_due_at
-            - effective_upon_approval
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: A summary of the main attributes of a Qualio document version
-      example:
-        items:
-        - document_id: 1
-          status: effective
-          code: POL-1
-          type: Policy
-          document_format: qualio_document
-          title: Security policy
-          version: '1.0'
-          document_matrix_id: 40a6a13f-f227-4274-807f-694a4d90f175
-          created_at: '2025-05-01T14:48:43.472Z'
-          effective_at: '2025-05-07T14:48:43.472Z'
-          modified_at: '2025-05-07T14:48:43.472Z'
-          url: https://app.qualio.com/library/documents/1
-          next_periodic_review_due_at: '2025-07-07T14:48:43.472Z'
-          effective_upon_approval: false
-        total: 1
+        title: Security Policy
+        sections:
+        - content: This is the content in the first section of the document
+          position: 1
+        template_matrix_id: sdfsdf-sdfsdf-sdcvvv-vcvc
+        effective_on_approval: false
+        training_required: false
+        approver_user_ids:
+        - 1
+        - 2
+        editor_user_ids:
+        - 3
+        - 4
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
   securitySchemes:
     api_key:
       type: apiKey

@@ -115,7 +115,7 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    throttledResponse:
+    genericForbiddenResponse:
       type: object
       properties:
         message:
@@ -124,7 +124,7 @@ components:
       - message
       additionalProperties: false
       example:
-        message: You have exceeded what is allowed in the fair use policy for this API
+        message: User is not authorized to access this resource with an explicit deny
     tagsResponse:
       type: object
       properties:
@@ -153,7 +153,7 @@ components:
         - tag_id: 99
           name: Engineering
         total: 1
-    genericForbiddenResponse:
+    throttledResponse:
       type: object
       properties:
         message:
@@ -162,7 +162,7 @@ components:
       - message
       additionalProperties: false
       example:
-        message: User is not authorized to access this resource with an explicit deny
+        message: You have exceeded what is allowed in the fair use policy for this API
   securitySchemes:
     api_key:
       type: apiKey

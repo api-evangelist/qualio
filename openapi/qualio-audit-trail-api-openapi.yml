@@ -195,68 +195,10 @@ components:
       description: Filter results from this date onwards (ISO 8601 format)
       example: '2025-01-01T00:00:00Z'
       type: string
-    limitParam:
-      type: number
-      description: The maximum number of results to return. This is typically used with offset to paginate results.
-      example: 30
-    throttledResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: You have exceeded what is allowed in the fair use policy for this API
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    offsetParam:
-      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
-      example: 0
-      type: number
     userIdParam:
       description: A unique identifier for a user in Qualio
       example: 12345
       type: number
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
     auditTrailResp:
       type: object
       properties:
@@ -305,6 +247,64 @@ components:
       description: Filter results up to this date (ISO 8601 format)
       example: '2025-12-31T23:59:59Z'
       type: string
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
+    limitParam:
+      type: number
+      description: The maximum number of results to return. This is typically used with offset to paginate results.
+      example: 30
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    offsetParam:
+      description: A start point for the batch to be returned. For example, a value of 5 will start at the 6th element in the overall population
+      example: 0
+      type: number
+    throttledResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: You have exceeded what is allowed in the fair use policy for this API
   securitySchemes:
     api_key:
       type: apiKey
