@@ -35,3 +35,31 @@ plans:
   price_text: Custom pricing. Custom implementation.
   period: none
   included_quota: Enterprise complexity, multi-site, dedicated success and support
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units: []
+  plans:
+  - name: Foundation
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Growth
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Scale
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
