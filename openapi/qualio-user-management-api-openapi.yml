@@ -1355,6 +1355,38 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    generic404:
+      anyOf:
+      - type: object
+        properties: {}
+        additionalProperties: false
+      - type: 'null'
+      description: A generic response when a resource can't be found
+      example: {}
+    invite:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        can_access_billing:
+          type: boolean
+        is_admin:
+          type: boolean
+      required:
+      - email
+      - role
+      description: An invite for a user to join your Qualio instance
+      example:
+        email: testuser1@example.com
+        role: quality
+        is_admin: false
+        can_access_billing: false
     genericBadRequestResponse:
       type: object
       properties:
@@ -1385,45 +1417,6 @@ components:
         - location: body
           name: email
           description: Email missing from payload
-    invite:
-      type: object
-      properties:
-        email:
-          type: string
-        role:
-          type: string
-          enum:
-          - quality
-          - normal
-          - basic
-        can_access_billing:
-          type: boolean
-        is_admin:
-          type: boolean
-      required:
-      - email
-      - role
-      description: An invite for a user to join your Qualio instance
-      example:
-        email: testuser1@example.com
-        role: quality
-        is_admin: false
-        can_access_billing: false
-    deleteUserResp:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      description: A message indicating the user has been removed
-      example:
-        message: User removed successfully
-    userId:
-      type: number
-      description: A unique identifier for a user in Qualio
-      example: 12345
     throttledResponse:
       type: object
       properties:
@@ -1434,65 +1427,6 @@ components:
       additionalProperties: false
       example:
         message: You have exceeded what is allowed in the fair use policy for this API
-    me:
-      type: object
-      properties:
-        user_id:
-          type: number
-        full_name:
-          type: string
-      required:
-      - user_id
-      - full_name
-      additionalProperties: false
-      description: Retrieve the current user's id and name
-      example:
-        user_id: 1
-        full_name: John Doe
-    groupId:
-      type: number
-      description: A unique identifier for a group in Qualio
-      example: 1
-    user:
-      type: object
-      properties:
-        user_id:
-          type: number
-        email:
-          type: string
-        full_name:
-          type: string
-        invite_status:
-          type: string
-          enum:
-          - pending
-          - accepted
-          - declined
-          - canceled
-        role:
-          type: string
-          enum:
-          - quality
-          - normal
-          - basic
-        is_admin:
-          type: boolean
-      required:
-      - user_id
-      - email
-      - full_name
-      - invite_status
-      - role
-      - is_admin
-      additionalProperties: false
-      description: A Qualio user
-      example:
-        user_id: 1
-        email: testuser1@example.com
-        full_name: John Doe
-        invite_status: pending
-        role: quality
-        is_admin: false
     reassignmentResponse:
       type: object
       properties:
@@ -1560,95 +1494,6 @@ components:
           - 102
           event_owner:
           - 103
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
-    groupList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              group_id:
-                type: number
-              name:
-                type: string
-            required:
-            - group_id
-            - name
-            additionalProperties: false
-        total:
-          type: number
-      required:
-      - items
-      - total
-      additionalProperties: false
-      description: An array of groups within your Qualio instance
-      example:
-        items:
-        - group_id: 1
-          name: Quality Team
-        - group_id: 2
-          name: Engineering Team
-        total: 1
-    userGroupResp:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      description: A message confirming the user group addition was successful
-      example:
-        message: User added to group
-    generic404:
-      anyOf:
-      - type: object
-        properties: {}
-        additionalProperties: false
-      - type: 'null'
-      description: A generic response when a resource can't be found
-      example: {}
-    genericBadRequest400PathResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: path
-          name: user_id
-          description: user_id is not an integer
     userList:
       type: object
       properties:
@@ -1702,6 +1547,17 @@ components:
           role: quality
           is_admin: false
         total: 1
+    deleteUserResp:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A message indicating the user has been removed
+      example:
+        message: User removed successfully
     userGroupRemoveResp:
       type: object
       properties:
@@ -1713,6 +1569,36 @@ components:
       description: A message confirming the user group removal was successful
       example:
         message: User removed from group
+    genericBadRequest400PathResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: path
+          name: user_id
+          description: user_id is not an integer
     userAssignmentMapping:
       type: object
       properties:
@@ -1841,6 +1727,120 @@ components:
           - 402
           task_owner:
           - 501
+    groupId:
+      type: number
+      description: A unique identifier for a group in Qualio
+      example: 1
+    userGroupResp:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      description: A message confirming the user group addition was successful
+      example:
+        message: User added to group
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
+    user:
+      type: object
+      properties:
+        user_id:
+          type: number
+        email:
+          type: string
+        full_name:
+          type: string
+        invite_status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - declined
+          - canceled
+        role:
+          type: string
+          enum:
+          - quality
+          - normal
+          - basic
+        is_admin:
+          type: boolean
+      required:
+      - user_id
+      - email
+      - full_name
+      - invite_status
+      - role
+      - is_admin
+      additionalProperties: false
+      description: A Qualio user
+      example:
+        user_id: 1
+        email: testuser1@example.com
+        full_name: John Doe
+        invite_status: pending
+        role: quality
+        is_admin: false
+    userId:
+      type: number
+      description: A unique identifier for a user in Qualio
+      example: 12345
+    groupList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              group_id:
+                type: number
+              name:
+                type: string
+            required:
+            - group_id
+            - name
+            additionalProperties: false
+        total:
+          type: number
+      required:
+      - items
+      - total
+      additionalProperties: false
+      description: An array of groups within your Qualio instance
+      example:
+        items:
+        - group_id: 1
+          name: Quality Team
+        - group_id: 2
+          name: Engineering Team
+        total: 1
+    me:
+      type: object
+      properties:
+        user_id:
+          type: number
+        full_name:
+          type: string
+      required:
+      - user_id
+      - full_name
+      additionalProperties: false
+      description: Retrieve the current user's id and name
+      example:
+        user_id: 1
+        full_name: John Doe
   securitySchemes:
     api_key:
       type: apiKey

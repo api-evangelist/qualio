@@ -4755,6 +4755,36 @@ paths:
                 $ref: '#/components/schemas/throttledResponse'
 components:
   schemas:
+    genericBadRequest400ParametersResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              location:
+                type: string
+              name:
+                type: string
+            required:
+            - description
+            additionalProperties: false
+        status:
+          type: string
+          const: error
+      required:
+      - errors
+      - status
+      additionalProperties: false
+      example:
+        status: error
+        errors:
+        - location: query
+          name: document_id
+          description: document_id is not an integer
     generic404:
       anyOf:
       - type: object
@@ -4793,6 +4823,16 @@ components:
         - location: path
           name: user_id
           description: user_id is not an integer
+    genericForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      additionalProperties: false
+      example:
+        message: User is not authorized to access this resource with an explicit deny
     genericBadRequestResponse:
       type: object
       properties:
@@ -4823,46 +4863,6 @@ components:
         - location: body
           name: email
           description: Email missing from payload
-    genericBadRequest400ParametersResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              location:
-                type: string
-              name:
-                type: string
-            required:
-            - description
-            additionalProperties: false
-        status:
-          type: string
-          const: error
-      required:
-      - errors
-      - status
-      additionalProperties: false
-      example:
-        status: error
-        errors:
-        - location: query
-          name: document_id
-          description: document_id is not an integer
-    genericForbiddenResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      additionalProperties: false
-      example:
-        message: User is not authorized to access this resource with an explicit deny
     throttledResponse:
       type: object
       properties:
